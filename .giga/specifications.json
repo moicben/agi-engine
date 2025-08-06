@@ -1,0 +1,22 @@
+[
+  {
+    "fileName": "main-overview.mdc",
+    "description": "Complete system overview documenting the core WhatsApp automation architecture, workflow orchestration, and component interactions"
+  },
+  {
+    "fileName": "workflow-algorithms.mdc",
+    "description": "Detailed documentation of the core workflow algorithms for WhatsApp account setup, branding, linking, and message sending, including parallel execution strategies and rate limiting"
+  },
+  {
+    "fileName": "device-management.mdc",
+    "description": "Comprehensive documentation of device management implementation across different environments (BlueStacks, MoreLogin, cloud), including ADB interaction patterns and device state management"
+  },
+  {
+    "fileName": "data-flow.mdc",
+    "description": "Documentation of data flow between components, including SMS verification, OCR processing, database interactions, and message handling pipelines"
+  },
+  {
+    "fileName": "service-integration.mdc",
+    "description": "Documentation of service layer interactions between WhatsApp, SMS, device management, and database services, including error handling and retry mechanisms"
+  }
+]

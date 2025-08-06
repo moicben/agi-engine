@@ -1,0 +1,45 @@
+{
+  "name": "wa-setup",
+  "version": "3.0.0",
+  "description": "WhatsApp Account Creation & Migration - Version Simplifiée Unifiée",
+  "main": "src/workflow.js",
+  "scripts": {
+    "start": "node run.js",
+    "test": "node tests/test-workflow.js",
+    "lint": "eslint src/"
+  },
+  "keywords": [
+    "whatsapp",
+    "automation",
+    "account-creation",
+    "account-migration",
+    "ocr",
+    "tesseract",
+    "bluestack",
+    "sms",
+    "simplified",
+    "unified"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@devicefarmer/adbkit": "^3.2.3",
+    "@supabase/supabase-js": "^2.53.0",
+    "axios": "^1.6.0",
+    "dotenv": "^17.2.0",
+    "hs": "^2.0.1",
+    "puppeteer": "^22.0.0",
+    "robotjs": "^0.6.0",
+    "tesseract.js": "^6.0.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "devDependencies": {
+    "eslint": "^9.31.0"
+  }
+}
