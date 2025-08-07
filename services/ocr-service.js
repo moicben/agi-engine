@@ -31,7 +31,7 @@ async function analyzeScreenshot(filename, options = {}) {
 async function checkSubmission(device) {
     const filename = await deviceService.takeScreenshot(device);
     return analyzeScreenshot(filename);
-}
+} 
 
 async function checkWhatsAppStatus(device) {
     try {

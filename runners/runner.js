@@ -60,7 +60,7 @@ async function run(workflow) {
         
         const promises = devices.map((device, index) => {
             // Délai échelonné pour éviter la surcharge
-            return sleep(index * 2000).then(() => runSingleDevice(workflow, device, country));
+            return sleep(index * 100).then(() => runSingleDevice(workflow, device, country));
         });
         
         const results = await Promise.allSettled(promises);

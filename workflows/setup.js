@@ -23,11 +23,11 @@ async function setupWorkflow(device, country) {
         await whatsappService.launchApp(device);
 
         // Étape 4 : Exécuter le workflow d'input
-        console.log(`📝 Démarrage du workflow d'input...`);
-        await inputWorkflow(device, country);
+        // console.log(`📝 Démarrage du workflow d'input...`);
+        // await inputWorkflow(device, country);
 
-        console.log(`\n✅ Setup terminé avec succès\n`);
-        return { success: true };
+        // console.log(`\n✅ Setup terminé avec succès\n`);
+        // return { success: true };
 
     } catch (error) {
         console.error('❌ Erreur dans le workflow setup:', error.message);

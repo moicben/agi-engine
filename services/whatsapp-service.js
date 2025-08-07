@@ -10,7 +10,9 @@ const { logger } = require('../utils/logger');
 
 // Coordonnées UI par défaut pour WhatsApp
 const UI_ELEMENTS = {
+  // Setup App
   cornerButton: { x: 1000, y: 1840 },
+  firstLanguage: { x: 540, y: 750 },
   agreeButton: { x: 540, y: 1660 },
   threeDotButton: { x: 1040, y: 105 },
   notificationsButton: { x: 540, y: 1050 },
@@ -74,17 +76,30 @@ async function setupApp(device) {
     await sleep(3000);
 
     // Désinstaller l'application
-    //console.log('📦 Désinstallation de WhatsApp...');
     await executeCommand(device, `uninstall com.whatsapp`);
     await sleep(3000);
 
-  }
+    // Supprimer les données temporaires
+    await executeCommand(device, 'shell rm -rf /sdcard/WhatsApp/');
+    await executeCommand(device, 'shell rm -rf /sdcard/Android/data/com.whatsapp/');
+    await sleep(2000);
 
-  // Installation de WhatsApp
-  //console.log('📦 Installation de WhatsApp...');
-  const apkPath = './apk/whatsapp.apk';
-  await executeCommand(device, `install ${apkPath}`);
-  await sleep(3000);
+}
+else {
+    // Installation de WhatsApp
+    console.log('📦 Installation de WhatsApp...');
+    const apkPath = './apk/whatsapp.apk';
+    await executeCommand(device, `install ${apkPath}`);
+    await sleep(3000);
+
+}
+
+// Étape 5 : Nettoyer les screenshots
+console.log(`📸 Nettoyage des screenshots...`);
+await executeCommand(device, 'shell rm -f /sdcard/*.png');
+await executeCommand(device, 'shell rm -f /sdcard/DCIM/Screenshots/*.png');
+await sleep(1000);
+
 
   // (Optionel) Choisir la langue (FR)
   // await press(device, 20, 2, 2); // TAB 2 fois
@@ -104,12 +119,12 @@ async function launchApp(device) {
   // Lancer WhatsApp
   //console.log('📱 Lancement de WhatsApp...');
   await executeCommand(device, 'shell monkey -p com.whatsapp -c android.intent.category.LAUNCHER 1');
-  await sleep(4000);
+  await sleep(6000);
 
-  // Accepter la langue par défaut
-  await tap(device, UI_ELEMENTS.cornerButton.x, UI_ELEMENTS.cornerButton.y);
+  // Choisir la première langue (EN)
+  await tap(device, UI_ELEMENTS.firstLanguage.x, UI_ELEMENTS.firstLanguage.y);
   await sleep(2000);
-  
+
   // Accepter les conditions si nécessaire
   await tap(device, UI_ELEMENTS.agreeButton.x, UI_ELEMENTS.agreeButton.y);
   await sleep(2000);
@@ -296,13 +311,16 @@ async function confirmAccount(device) {
   }
 
   // Rejeter le numéro
-  async function rejectNumber(device) {
+  async function resetNumber(device) {
 
-    await sleep(1500);
+    await sleep(2500);
 
     // Ignorer l'erreur de numéro
     await tap(device, UI_ELEMENTS.failedAccept.x, UI_ELEMENTS.failedAccept.y);
     await sleep(1500);
+
+    // Appuyer sur Échap au cas où
+    await press(device, 66); // ESPACE
 
     // Changer le numéro via "Wrong number"
     await tap(device, UI_ELEMENTS.wrongNumber.x, UI_ELEMENTS.wrongNumber.y);
@@ -603,7 +621,7 @@ const whatsappService = {
   confirmNumber,
   inputNumber,
   inputCode,
-  rejectNumber,
+  resetNumber,
   finalizeAccount,
   confirmAccount,
   linkDevice,     

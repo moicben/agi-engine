@@ -47,7 +47,7 @@ async function orchestrator(submissionResult, device, country, recurse) {
         await recurse(device, country);
     }
     // Pour 'return', on laisse simplement la fonction se terminer
-}
+} 
 
 // Fonctions d'actions légères
 async function handleSuccess(message) {
@@ -56,7 +56,7 @@ async function handleSuccess(message) {
 }
 async function handleRejected(device, message, recurse) {
     console.log(message);
-    await whatsappService.rejectNumber(device);
+    await whatsappService.resetNumber(device);
     return { action: 'recurse' };
 }
 async function handleFrozen(device, message, recurse) {
@@ -83,7 +83,7 @@ async function inputWorkflow(device, country) {
     // Obtenir un numéro WhatsApp du pays spécifié  
     //console.log(`🔍 Récupération du numéro WhatsApp pour le pays ${country} (code: ${countryCode})...`);
     const phoneNumber = await smsService.getPhoneNumber(countryCode, 25);
-    await randomSleep(100, 1000);
+    await randomSleep(50, 500);
 
     // Changer de VPN IOS
     // await vpnIosService.changeVPN(country);
