@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <long name="last_ntp_client_time" value="1754569158828" />
+    <boolean name="async_tasks_pending_for_version_change" value="false" />
+    <long name="last_contact_full_sync" value="1754141692671" />
+    <boolean name="app_lock_auth_needed" value="true" />
+    <boolean name="run_on_connect_tasks_for_version_change" value="false" />
+    <boolean name="force_db_check" value="false" />
+    <int name="most_recent_navigated_to_home_tab_id" value="200" />
+    <int name="year_class_cached_value_pref" value="2012" />
+    <int name="startup_migrated_version" value="18" />
+    <int name="profile_photo_full_id" value="-1" />
+    <string name="version">2.25.21.78</string>
+    <long name="client_server_time_diff" value="-4000" />
+    <int name="year_class_cached_value_2016_pref" value="2013" />
+    <int name="profile_photo_thumb_id" value="-1" />
+    <long name="client_ntp_time_diff" value="1667" />
+    <string name="pref_device_type">Foldable</string>
+    <int name="registration_state" value="3" />
+    <boolean name="force_backup_check" value="true" />
+    <string name="push_name">Coco Bigos</string>
+</map>

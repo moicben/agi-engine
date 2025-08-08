@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <long name="wa-db_backup_size" value="9108" />
+    <int name="stickers-db_backup_status" value="2" />
+    <int name="gdrive_state" value="0" />
+    <int name="commerce-db_backup_status" value="2" />
+    <long name="backup-settings_backup_size" value="0" />
+    <long name="avatar-token_backup_size" value="0" />
+    <long name="backup-settings_backup_media_size" value="0" />
+    <long name="chatlock_backup_backup_size" value="0" />
+    <long name="restore_process_time" value="1754564321434" />
+    <long name="stickers-db_backup_size" value="0" />
+    <long name="gdrive_next_prompt_for_setup_timestamp" value="1755169125054" />
+    <int name="chat-settings_backup_status" value="0" />
+    <boolean name="restore_funnel_logging_enabled" value="true" />
+    <int name="chatlock_backup_backup_status" value="3" />
+    <int name="payment-backgrounds-v2_backup_status" value="3" />
+    <long name="chat-settings_backup_size" value="1216" />
+    <boolean name="restore_second_verification_needed" value="false" />
+    <long name="commerce-db_backup_media_size" value="0" />
+    <string name="last_seen_app_version">2.25.21.78</string>
+    <string name="backup_encryption_method">unencrypted</string>
+    <long name="commerce-db_backup_size" value="0" />
+    <long name="payment-backgrounds-v2_backup_size" value="0" />
+    <long name="msg_backup_timestamp" value="1754590104613" />
+    <string name="msg_backup_result">0</string>
+    <int name="wa-db_backup_status" value="0" />
+    <int name="backup-settings_backup_status" value="2" />
+    <long name="stickers_backup_size" value="74202" />
+    <int name="avatar-token_backup_status" value="3" />
+    <long name="BACKUP_LAST_CHECK_TIMESTAMP" value="1754564726434" />
+    <int name="stickers_backup_status" value="0" />
+</map>

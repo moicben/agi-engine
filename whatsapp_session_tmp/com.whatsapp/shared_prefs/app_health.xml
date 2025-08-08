@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <set name="battery:wake_ups_time">
+        <string>com.whatsapp.alarm.CLIENT_PING_PERIODIC,295166,1013299,1088483,2693815,2830518,3724068</string>
+        <string>com.whatsapp.MessageHandler.RECONNECT_ACTION,6599416,6629675,6670474,7537983</string>
+    </set>
+</map>

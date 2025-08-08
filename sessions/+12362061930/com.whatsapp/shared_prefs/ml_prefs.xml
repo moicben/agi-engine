@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <boolean name="seamless_nano_ggml:9_cancel" value="true" />
+    <boolean name="machine-translation__es_XX-en_XX:8_cancel" value="true" />
+    <boolean name="machine-translation__pt_XX-en_XX:4_cancel" value="true" />
+    <boolean name="machine-translation__en_XX-es_XX:8_cancel" value="true" />
+    <boolean name="machine-translation__en_XX-hi_IN:10_cancel" value="true" />
+    <boolean name="machine-translation__ru_RU-en_XX:4_cancel" value="true" />
+    <boolean name="machine-translation__en_XX-ar_AR:4_cancel" value="true" />
+    <boolean name="machine-translation__en_XX-pt_XX:4_cancel" value="true" />
+    <boolean name="language_detection_et_wa_dialects:16_cancel" value="true" />
+    <boolean name="machine-translation__ar_AR-en_XX:4_cancel" value="true" />
+    <boolean name="machine-translation__hi_IN-en_XX:10_cancel" value="true" />
+    <boolean name="machine-translation__en_XX-ru_RU:4_cancel" value="true" />
+    <boolean name="gen_ai_embeddings_psi:-1_cancel" value="true" />
+</map>

@@ -5,7 +5,7 @@ const { deviceService } = require('../services/device-service');
 const { inputWorkflow } = require('./input');
 
 // Fonction principale du workflow
-async function setupWorkflow(device, country) {
+async function setupWorkflow(device) {
     try {
         console.log(`⚙️  Initialisation du workflow setup...`);
         console.log(`📱 Device: ${device}`);

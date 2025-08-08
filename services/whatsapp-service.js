@@ -7,6 +7,7 @@ const { executeCommand, takeScreenshot } = require('../utils/adb');
 const { sleep, tap, press, writeContent, randomName } = require('../utils/helpers');
 const { ocrService } = require('./ocr-service');
 const { logger } = require('../utils/logger');
+const { deviceService } = require('./device-service');
 
 // Coordonnées UI par défaut pour WhatsApp
 const UI_ELEMENTS = {
@@ -14,6 +15,7 @@ const UI_ELEMENTS = {
   cornerButton: { x: 1000, y: 1840 },
   firstLanguage: { x: 540, y: 750 },
   agreeButton: { x: 540, y: 1660 },
+  ignoreROM: { x: 630, y: 1080 },
   threeDotButton: { x: 1040, y: 105 },
   notificationsButton: { x: 540, y: 1050 },
   // Input Number
@@ -35,7 +37,7 @@ const UI_ELEMENTS = {
   skipButton: { x: 540, y: 1000 },
   confirmNameButton: { x: 540, y: 1730 },
   // Link Devices
-  settingsButton: { x: 1040, y: 656 },
+  settingsButton: { x: 1040, y: 800 },
   profileButton: { x: 540, y: 250 },
   linkedDevicesOption: { x: 1040, y: 420 },
   linkDeviceButton: { x: 540, y: 630 },
@@ -85,20 +87,18 @@ async function setupApp(device) {
     await sleep(2000);
 
 }
-else {
-    // Installation de WhatsApp
-    console.log('📦 Installation de WhatsApp...');
-    const apkPath = './apk/whatsapp.apk';
-    await executeCommand(device, `install ${apkPath}`);
-    await sleep(3000);
 
-}
+  // Installation de WhatsApp dans tous les cas
+  console.log('📦 Installation de WhatsApp...');
+  const apkPath = './apk/whatsapp.apk';
+  await executeCommand(device, `install ${apkPath}`);
+  await sleep(6000);
 
-// Étape 5 : Nettoyer les screenshots
-console.log(`📸 Nettoyage des screenshots...`);
-await executeCommand(device, 'shell rm -f /sdcard/*.png');
-await executeCommand(device, 'shell rm -f /sdcard/DCIM/Screenshots/*.png');
-await sleep(1000);
+  // Étape 5 : Nettoyer les screenshots
+  console.log(`📸 Nettoyage des screenshots...`);
+  await executeCommand(device, 'shell rm -f /sdcard/*.png');
+  await executeCommand(device, 'shell rm -f /sdcard/DCIM/Screenshots/*.png');
+  await sleep(1000);
 
 
   // (Optionel) Choisir la langue (FR)
@@ -116,13 +116,21 @@ await sleep(1000);
  */
 async function launchApp(device) {
 
+  // Fermer l'application WhatsApp
+  await executeCommand(device, 'shell am force-stop com.whatsapp');
+  await sleep(5000);
+
   // Lancer WhatsApp
   //console.log('📱 Lancement de WhatsApp...');
   await executeCommand(device, 'shell monkey -p com.whatsapp -c android.intent.category.LAUNCHER 1');
-  await sleep(6000);
+  await sleep(7000);
 
   // Choisir la première langue (EN)
   await tap(device, UI_ELEMENTS.firstLanguage.x, UI_ELEMENTS.firstLanguage.y);
+  await sleep(2000);
+
+  // Ignorer le ROM (si demandé)
+  await tap(device, UI_ELEMENTS.ignoreROM.x, UI_ELEMENTS.ignoreROM.y);
   await sleep(2000);
 
   // Accepter les conditions si nécessaire
@@ -145,6 +153,13 @@ async function launchApp(device) {
 
   return true;
 }
+
+// Fermer l'application WhatsApp
+async function closeApp(device) {
+  await executeCommand(device, 'shell am force-stop com.whatsapp');
+  await sleep(2000);
+}
+
 
 // Specific inputNumber per country
 async function inputNewNumber(device, phoneNumber, country) {
@@ -195,8 +210,10 @@ async function inputNewNumber(device, phoneNumber, country) {
   await sleep(2000);
 
   // Appuyer sur "Next"
-  await tap(device, UI_ELEMENTS.nextButton.x, UI_ELEMENTS.nextButton.y);
-  await sleep(2000);
+  await press(device, 20, 1); // TAB 
+  await sleep(500);
+  await press(device, 66); // ESPACE
+  await sleep(6000);
 }
 
 async function confirmNumber(device) {
@@ -342,13 +359,7 @@ async function finalizeAccount(device) {
     // Continuer si nécessaire
     await tap(device, UI_ELEMENTS.continueButton.x, UI_ELEMENTS.continueButton.y);
     await sleep(2000);
-    
-    // Entrer un nom par défaut
-    await tap(device, UI_ELEMENTS.nameInput.x, UI_ELEMENTS.nameInput.y);
-    await sleep(500);
-    await executeCommand(device, 'shell input text "User"');
-    await sleep(1000);
-    
+
     // Valider
     await tap(device, UI_ELEMENTS.nextButton.x, UI_ELEMENTS.nextButton.y);
     await sleep(2000);
@@ -367,9 +378,11 @@ async function finalizeAccount(device) {
     await sleep(1000);
 
     // Confirmer le nom
-    await tap(device, UI_ELEMENTS.confirmNameButton.x, UI_ELEMENTS.confirmNameButton.y);
+    await press(device, 20, 1); // TAB
+    await sleep(500);
+    await press(device, 66); // ESPACE
     await sleep(8000);
-  
+
   //console.log('✅ Compte WhatsApp créé avec succès');
   return true;
 }
@@ -391,11 +404,14 @@ async function goToSettings(device) {
   // 1. Cliquer sur les 3 points
   //console.log('📍 Clic sur le menu (3 points)...');
   await tap(device, UI_ELEMENTS.threeDotButton.x, UI_ELEMENTS.threeDotButton.y);
-  await sleep(3000);
+  await sleep(2000);
+
+  // Obtenir la position des paramètres
+  const settingsPosition = await ocrService.getSettingsPosition(device);
 
   // 2. Cliquer sur les paramètres
   //console.log('📱 Clic sur les paramètres...');
-  await tap(device, UI_ELEMENTS.settingsButton.x, UI_ELEMENTS.settingsButton.y);
+  await tap(device, settingsPosition.x, settingsPosition.y);
   await sleep(3000);
 
   // 2. Afficher le profil
@@ -406,35 +422,7 @@ async function goToSettings(device) {
   return true;
 }
 
-/** 
- * Obtenir le numéro WhatsApp du compte actif
- */
-async function getPhoneNumber(device) {
-  
-  console.log('🔄 Récupération du numéro WhatsApp...');
 
-  // 1. Se rendre dans les paramètres du compte
-  await goToSettings(device);
-
-  // 3. Prendre une capture d'écran du profil
-  //console.log('📸 Capture de l\'écran de profil...');
-  const screenshotFilename = `profile-${Date.now()}.png`;
-  const screenshotPath = await takeScreenshot(device, screenshotFilename);
-  await sleep(2000);
-
-  // 4. Analyser le numéro de téléphone via OCR
-  //console.log('🔍 Analyse OCR pour extraire le numéro...');
-  const ocrResult = await ocrService.extractPhoneFromProfile(device);
-  
-  if (!ocrResult.success) {
-    throw new Error(`Impossible d'extraire le numéro: ${ocrResult.error}`);
-  }
-  
-  const phoneNumber = ocrResult.phoneNumber;
-  
-  //console.log(`✅ Numéro extrait: ${phoneNumber}`);
-  return phoneNumber;
-}
 
 // Paramètres du compte WhatsApp
 async function brandAccount(device, brand) {
@@ -518,7 +506,7 @@ async function linkDevice(device) {
   try {
 
     // 1. Récupérer numéro WhatsApp du compte actif
-    const phoneNumber = await getPhoneNumber(device);
+    const phoneNumber = await ocrService.extractPhoneFromProfile(device);
     const sessionId = device.port.toString();
     //console.log('📱 Session ID:', sessionId);
     await sleep(1000);
@@ -574,44 +562,44 @@ async function linkDevice(device) {
   }
 }
 
+// Ouvrir le menu des notifications
+async function openPhoneNotifs(device) {
+  // Revenir au bureau du téléphone
+  await executeCommand(device, 'shell input keyevent KEYCODE_HOME');
+    await sleep(2000);
+
+  // Ouvrir le menu des notifications du téléphone
+  console.log('📱 Ouvrir le menu des notifications du téléphone...');
+  await executeCommand(device, 'shell input swipe 540 10 540 600 600');
+}
+
+// Obtenir le code de transfert
+async function getTransferCode(device) {
+
+  // Analyse OCR des notifications
+  const code = await ocrService.extractTransferCode(device);
+
+  return code;
+}
+
 /**
  * Entrer le code de connexion depuis la notification
  */
-async function inputLinkCode(device, code) {
+async function inputTransferCode(device, code) {
   console.log('🔗 Entrer le code de connexion depuis la notification...');
   
-  try {
 
-    // 1. Afficher le menu des notifs du device
-    //console.log('📱 Afficher le menu des notifications...');
-    
-    // Presser un clic tout en haut de l'écran (x: 540, y: 100), slider de 200 pixels vers le bas et le relacher
-    await executeCommand(device, 'shell input swipe 540 10 540 600 600');
-    await sleep(4000);
-
-    // 1. Cliquer sur la notification de connexion
-    //console.log('📱 Clic sur la notification de connexion...');
-    await tap(device, UI_ELEMENTS.notificationBox.x, UI_ELEMENTS.notificationBox.y);
-    await sleep(4000);
-
-    // 2. Confirmer la connexion
-    //console.log('📱 Confirmer la connexion...');
-    await tap(device, UI_ELEMENTS.nextButton.x, UI_ELEMENTS.nextButton.y);
-    await sleep(4000);
-
-    // 3. Entrer le code
+    // 1. Taper le code
     //console.log('📱 Entrer le code...');
     await executeCommand(device, `shell input text "${code}"`);
     
     //console.log('🔄 Code saisi, attendre 8 secondes...');
-    await sleep(8000);
+    await sleep(1200);
     
-    
-  } catch (error) {
-    console.error('❌ Erreur scan QR:', error.message);
-    throw error;
-  }
+
 }
+  
+  //console.log(`✅ Numéro extrait: ${phoneNumber}`);
 
 
 const whatsappService = {
@@ -625,7 +613,12 @@ const whatsappService = {
   finalizeAccount,
   confirmAccount,
   linkDevice,     
-  inputLinkCode,  
+  inputTransferCode,  
+  brandAccount,
+  goToSettings,
+  closeApp,
+  getTransferCode,
+  openPhoneNotifs
 }
 
 module.exports = { whatsappService };

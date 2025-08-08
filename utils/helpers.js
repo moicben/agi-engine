@@ -13,6 +13,16 @@ async function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+
+async function execAsync(command) {
+  return new Promise((resolve, reject) => {
+    exec(command, (error, stdout, stderr) => {
+      if (error) reject(error);
+      resolve({ stdout, stderr });
+    });
+  });
+}
+
 async function randomSleep(min, max) {
   const delay = Math.floor(Math.random() * (max - min + 1)) + min;
   //console.log(`⌛️ Délai de ${delay}ms...`);
@@ -199,5 +209,6 @@ module.exports = {
   press,
   writeContent,
   parseArgs,
-  randomName
+  randomName,
+  execAsync
 };

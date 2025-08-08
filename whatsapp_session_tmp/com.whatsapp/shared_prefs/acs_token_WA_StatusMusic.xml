@@ -1,0 +1,16 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <string name="original_token_string">GZYs_JOeNdoHJGFKordU_03Da_qo8Li3WWjf0Svko98=</string>
+    <int name="redeem_count" value="1" />
+    <string name="shared_secret_string">wLoyRQKZWudVzVh-4k4B8AKEQOuhmTFqa8QvszTXM9LsnEqZhK8wBOMWAuUSo56FWkNchaE97mXuDw-KVCU_cg==</string>
+    <long name="max_time_to_live_in_sec" value="86400" />
+    <long name="sign_retry_interval_sec" value="30" />
+    <int name="token_length" value="32" />
+    <long name="base_timestamp" value="1754564821" />
+    <int name="lead_time_to_prefetch_sec" value="7200" />
+    <int name="lead_redeem_count_to_prefetch" value="48" />
+    <string name="public_key_string">29OaFpYAWqTVjRa9-BBE8X8zvzMBAFevIk32bhGhVe0=</string>
+    <int name="max_redeem_count" value="50" />
+    <int name="max_sign_retry_count" value="2" />
+    <int name="shared_secret_length" value="32" />
+</map>

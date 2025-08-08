@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <set name="ab_offline_props:offline_exposure_hash_strings">
+        <string>1377|android_eula_animation_value_prop_prod_20</string>
+    </set>
+    <string name="server_props:hash">1e1547c3aa928cc0e9b8333ef9bcf7dfdc8b0efee5f81ddce6db57816deb73b8</string>
+    <string name="ab_props:hash_v2">[2,&quot;RLGGJhaIcmTmRl7+W5ZL1LI3IR5aLBEZVt4eVv7OnZsu0rL0BS9oRTSCdhSazB+Rj21JvettFCjOr4dTyKTjpw&quot;,&quot;Z9yc+fmC\/nDcHpkOWNV5gw&quot;,&quot;Q7Tjcw&quot;,&quot;wx5YPoa\/e5BVdQRDpRnj3Q&quot;]</string>
+    <set name="ab_offline_props:offline_exposure_strings">
+        <string>android_eula_animation_value_prop_prod_20|android_eula_animation_experiment_prod_20|test</string>
+    </set>
+</map>

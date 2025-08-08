@@ -28,7 +28,9 @@ async function executeCommand(device, command) {
 async function takeScreenshot(device, filename) {
     try {
         const screenshotPath = path.join(__dirname, '..', 'screenshots');
-        
+        //const filename = `screenshot_${Date.now()}.png`;
+        //const filename = `screenshot.png`;
+
         // Créer le dossier screenshots s'il n'existe pas
         if (!fs.existsSync(screenshotPath)) {
             fs.mkdirSync(screenshotPath, { recursive: true });
@@ -37,13 +39,14 @@ async function takeScreenshot(device, filename) {
         const fullPath = path.join(screenshotPath, filename);
         
         // Prendre le screenshot sur le device
-        await executeCommand(device, 'shell screencap -p /sdcard/screenshot.png');
+        await executeCommand(device, `root`);
+        await executeCommand(device, `shell screencap -p /sdcard/${filename}`);
         
         // Télécharger le screenshot
-        await executeCommand(device, `pull /sdcard/screenshot.png "${fullPath}"`);
+        await executeCommand(device, `pull /sdcard/${filename} "${fullPath}"`);
         
         // Nettoyer le screenshot sur le device
-        await executeCommand(device, 'shell rm /sdcard/screenshot.png');
+        await executeCommand(device, `shell rm /sdcard/${filename}`);
         
         //console.log(`📸 Screenshot sauvegardé: ${filename}`);
         return fullPath;

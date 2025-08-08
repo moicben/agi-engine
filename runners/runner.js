@@ -1,39 +1,56 @@
 // Runner des workflows input, clear, brand, send
-// node runners/runner.js --workflow=input --device=6075 --country=ca
+// Exemples d'utilisation:
+// INPUT: node runners/runner.js --workflow=input --device=6075 --country=ca
+// BRAND: node runners/runner.js --workflow=brand --device=emulator-5554,127.0.0.1:6075
+// SEND: node runners/runner.js --workflow=send --device=émulateur-5554
+// CLEAR: node runners/runner.js --workflow=clear --device=all
+// TRANSFER: node runners/runner.js --workflow=transfer --device=6075 --country=ca
+// IMPORT: node runners/runner.js --workflow=import --device=emulator-5554 --session=+12362061930
 
-const { inputWorkflow } = require('../workflows/input');
-const { clearWorkflow } = require('../workflows/clear');
-const { brandWorkflow } = require('../workflows/brand');
-const { sendWorkflow } = require('../workflows/send');
-const { setupWorkflow } = require('../workflows/setup');
 const { parseArgs, sleep } = require('../utils/helpers');
-const { getDevice } = require('../services/device-service');
+const { deviceService, getDevice } = require('../services/device-service');
 
 
 // Récupérer le device et le pays
 const args = parseArgs();
 
 if (!args.device) {
-    console.error('❌ Erreur: Device non spécifié, utiliser node runners/runner.js --workflow=<workflow> --device=<device> ou --device=<device1,device2,device3> et --country=<country>');
+    console.error('❌ Erreur: Device non spécifié, utiliser node runners/runner.js --workflow=<workflow> --device=<device> et --country=<country> --phone=<phone> --session=<session_phone>');
     process.exit(1);
 }
 
 // Exécuter le workflow pour un device unique
 async function runSingleDevice(workflow, device, country) {
-
     try {
         console.log(`🚀 Démarrage du workflow ${workflow} pour device ${device}...`);
 
         if (workflow === 'input') {
+            const { inputWorkflow } = require('../workflows/input');
             await inputWorkflow(device, country);
         } else if (workflow === 'clear') {
+            const { clearWorkflow } = require('../workflows/clear');
             await clearWorkflow(device);
         } else if (workflow === 'brand') {
+            const { brandWorkflow } = require('../workflows/brand');
             await brandWorkflow(device);
         } else if (workflow === 'send') {
+            const { sendWorkflow } = require('../workflows/send');
             await sendWorkflow(device);
         } else if (workflow === 'setup') {
+            const { setupWorkflow } = require('../workflows/setup');
             await setupWorkflow(device, country);
+        }
+        else if (workflow === 'transfer') {
+            const { transferWorkflow } = require('../workflows/transfer');
+            await transferWorkflow(device, country);
+        }
+        else if (workflow === 'extract') {
+            const { extractWorkflow } = require('../workflows/extract');
+            await extractWorkflow(device);
+        }
+        else if (workflow === 'import') {
+            const { importWorkflow } = require('../workflows/import');
+            await importWorkflow(device, `./sessions/${args.session}/`);
         }
 
         console.log(`✅ Device ${device}: Workflow ${workflow} terminé avec succès`);
@@ -45,9 +62,11 @@ async function runSingleDevice(workflow, device, country) {
 }
 
 async function run(workflow) {
-    const devices = Array.isArray(args.device) ? args.device.map(getDevice) : [getDevice(args.device)];
+    const rawDevices = Array.isArray(args.device) ? args.device : [args.device];
+    const devices = rawDevices.map(getDevice);
     const country = args.country;
-    
+    // console.log(`📱 Devices bruts reçus: ${rawDevices.join(', ')}`);
+    // console.log(`📱 Devices normalisés: ${devices.join(', ')}`);
     console.log(`📱 Lancement sur ${devices.length} device(s): ${devices.join(', ')}`);
     console.log(`🌍 Pays: ${country || 'défaut'}\n`);
     
@@ -100,7 +119,10 @@ async function run(workflow) {
 
 // Exécuter le workflow si le fichier est lancé directement
 if (require.main === module) {
-    run(args.workflow);
+    run(args.workflow).catch(error => {
+        console.error('❌ Erreur:', error.message);
+        process.exit(1);
+    });
 }
 
 module.exports = { run };

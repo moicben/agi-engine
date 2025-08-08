@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <set name="ab_offline_props:offline_exposure_hash_strings" />
+    <string name="server_props:hash">44e6e60f98c5d2602283609463e46e027f9d0cf7ac2f83c647881e456eb0d37a</string>
+    <string name="ab_props:hash_v2">[2,&quot;Pv6TEBnGb1TRe5aFIFQnBdatxThHMv7c\/dmNY7XdLycYGQmMAH0v\/TtkvREFpr86Rpg5YFkERm\/VI7zbuYv6GQ&quot;,&quot;SaflVLIERweYVGVRHBOYZQ&quot;,&quot;ERAnfw&quot;,&quot;XVO+yPDZFaz59wlb+Cbajw&quot;]</string>
+    <set name="ab_offline_props:offline_exposure_strings" />
+</map>
