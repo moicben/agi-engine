@@ -33,11 +33,9 @@ async function launchMoreLoginDevice(deviceId, config) {
 }
 
 // Implémentations Studio Emulator
-async function launchStudioDevice(deviceName) {
-  console.log(`🚀 Recherche de l'émulateur Studio: ${deviceName}`);
-  
-  if (deviceName === 'MASTER' || deviceName === 'MASTER2') {
-    const deviceId = 'emulator-5554';
+async function launchStudioDevice(deviceId) {
+  console.log(`🚀 Recherche de l'émulateur Studio: ${deviceId}`);
+
     
     // Vérifier si l'émulateur est déjà démarré
     try {
@@ -50,7 +48,7 @@ async function launchStudioDevice(deviceName) {
       try {
         // Lancer l'émulateur en arrière-plan (sans attendre)
         console.log(`🚀 Démarrage de l'émulateur en arrière-plan...`);
-        execAsync(`nohup emulator -avd ${deviceName} > /dev/null 2>&1 &`).catch(() => {
+        execAsync(`nohup emulator -avd ${deviceId} > /dev/null 2>&1 &`).catch(() => {
           // Ignorer les erreurs du démarrage en arrière-plan
         });
         
@@ -76,10 +74,9 @@ async function launchStudioDevice(deviceName) {
         console.log(`💡 Veuillez démarrer manuellement: emulator -avd MASTER`);
         return deviceId;
       }
-    }
-  } else {
-    throw new Error(`Device Studio Emulator non supporté: ${deviceName}`);
   }
+
+  return deviceId;
 }
 
 // Implémentations BlueStacks
@@ -98,7 +95,35 @@ async function launchBlueStacksDevice(deviceId, config) {
   return device;
 }
 
+// Discover Bluestacks Instances by bulk connection
+async function discoverBluestacksInstance(startPort = 5555) {
+  const deviceIp = "127.0.0.1:"
+  // Découper la vérification en lots de 10 ports à la fois
+  const devicesPorts = [];
+  // 10 ports par batch, 10 batches, 100 ports total
+  for (let batch = 0; batch < 10; batch++) {
+    // 10 ports par batch
+    const start = startPort + batch * 10;
+    // Incrémenter de 10 en 10 dans le batch
+    for (let i = 0; i < 10; i+=10) {
+      devicesPorts.push(start + i);
+    }
+  }
+  const deviceList = devicesPorts.map(port => `${deviceIp}${port}`);
+  const connectedDevices = [];
 
+  for (const device of deviceList) {
+    const result = await execAsync(`adb connect ${device}`);
+    // Ensure result is a string before calling includes
+    const resultStr = typeof result === 'string' ? result : (result && result.stdout ? String(result.stdout) : String(result));
+    if (resultStr.includes('connected')) {
+      console.log(`✅ Device ${device} connecté`);
+      connectedDevices.push(device);
+    } 
+  }
+  
+  return connectedDevices;
+}
 
 
 /**
@@ -142,7 +167,7 @@ function getDevice(device) {
 // Se connecter à un device
 async function connectDevice(device) {
   try {
-      console.log(`🔌 Connexion au device ${device}...`);
+      // console.log(`🔌 Connexion au device ${device}...`);
       
       // Les émulateurs sont généralement déjà connectés, pas besoin de adb connect
       if (device.match(/^(emulator|émulateur)-\d+$/i)) {
@@ -169,7 +194,8 @@ const deviceService = {
   launchStudioDevice,
   launchBlueStacksDevice,
   connectDevice,
+  discoverBluestacksInstance,
   getDevice
 };
 
-module.exports = { deviceService, getDevice };
+module.exports = { deviceService };

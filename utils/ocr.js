@@ -41,7 +41,7 @@ async function extractTextFromImage(filename, lang = 'eng') {
     const { data: { text } } = await Tesseract.recognize(filename, lang);
     const cleanedText = text.toLowerCase().replace(/\s+/g, ' ');
     
-    console.log("Texte extrait: ", cleanedText);
+    //console.log("Texte extrait: ", cleanedText);
     return { success: true, text: cleanedText };
   } catch (error) {
     console.error('❌ Erreur OCR:', error.message);

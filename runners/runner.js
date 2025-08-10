@@ -1,14 +1,16 @@
 // Runner des workflows input, clear, brand, send
 // Exemples d'utilisation:
+// SETUP: node runners/runner.js --workflow=setup --device=emulator-5554
 // INPUT: node runners/runner.js --workflow=input --device=6075 --country=ca
 // BRAND: node runners/runner.js --workflow=brand --device=emulator-5554,127.0.0.1:6075
 // SEND: node runners/runner.js --workflow=send --device=émulateur-5554
 // CLEAR: node runners/runner.js --workflow=clear --device=all
-// TRANSFER: node runners/runner.js --workflow=transfer --device=6075 --country=ca
-// IMPORT: node runners/runner.js --workflow=import --device=emulator-5554 --session=+12362061930
+// TRANSFER: node runners/runner.js --workflow=transfer --device=6085 --target=emulator-5554 --country=ca
+// EXTRACT: node runners/runner.js --workflow=extract --device=emulator-5554
+// IMPORT: node runners/runner.js --workflow=import --device=emulator-5554 --session=+12362062469
 
 const { parseArgs, sleep } = require('../utils/helpers');
-const { deviceService, getDevice } = require('../services/device-service');
+const { deviceService } = require('../services/device-service');
 
 
 // Récupérer le device et le pays
@@ -20,7 +22,7 @@ if (!args.device) {
 }
 
 // Exécuter le workflow pour un device unique
-async function runSingleDevice(workflow, device, country) {
+async function runSingleDevice(workflow, device, country, target) {
     try {
         console.log(`🚀 Démarrage du workflow ${workflow} pour device ${device}...`);
 
@@ -42,7 +44,7 @@ async function runSingleDevice(workflow, device, country) {
         }
         else if (workflow === 'transfer') {
             const { transferWorkflow } = require('../workflows/transfer');
-            await transferWorkflow(device, country);
+            await transferWorkflow(device, country, target);
         }
         else if (workflow === 'extract') {
             const { extractWorkflow } = require('../workflows/extract');
@@ -63,23 +65,25 @@ async function runSingleDevice(workflow, device, country) {
 
 async function run(workflow) {
     const rawDevices = Array.isArray(args.device) ? args.device : [args.device];
-    const devices = rawDevices.map(getDevice);
+    const devices = rawDevices.map(deviceService.getDevice);
     const country = args.country;
+    const target = args.target;
     // console.log(`📱 Devices bruts reçus: ${rawDevices.join(', ')}`);
     // console.log(`📱 Devices normalisés: ${devices.join(', ')}`);
-    console.log(`📱 Lancement sur ${devices.length} device(s): ${devices.join(', ')}`);
-    console.log(`🌍 Pays: ${country || 'défaut'}\n`);
+    console.log(`\n📱 Device(s): ${devices.join(', ')}`);
+    console.log(`${target ? `🎯 Target: ${target}` : ''}`);
+    console.log(`${country ? `🌍 Pays: ${country}` : ''}`);
     
     if (devices.length === 1) {
         // Un seul device - exécution simple
-        await runSingleDevice(workflow, devices[0], country);
+        await runSingleDevice(workflow, devices[0], country, target);
     } else {
         // Plusieurs devices - exécution en parallèle
         console.log('🔄 Exécution en parallèle...\n');
         
         const promises = devices.map((device, index) => {
             // Délai échelonné pour éviter la surcharge
-            return sleep(index * 100).then(() => runSingleDevice(workflow, device, country));
+            return sleep(index * 100).then(() => runSingleDevice(workflow, device, country, target));
         });
         
         const results = await Promise.allSettled(promises);

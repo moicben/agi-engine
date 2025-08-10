@@ -21,10 +21,10 @@ async function changeVPN(country) {
         return;
     }
     
-    // Si quelqu'un est en train de changer, attendre
+    // Si quelqu'un est en train de changer, ou a récemment changé, attendre
     while (isChangingVPN) {
         console.log(`⏳ [VPN] Changement en cours, attente...`);
-        await sleep(20000);
+        await sleep(15000);
     }
     
     // Double-check après l'attente
@@ -42,7 +42,8 @@ async function changeVPN(country) {
             console.log(`🔌 [VPN] Connexion: ${server}`);
 
             // 0. Focus sur l'app VPN iOS
-            await clickScreen(2400, 975, 1000);
+            await clickScreen(2400, 975, 1500);
+            await clickScreen(2400, 975, 500);
 
             // 1. Cliquer sur le bouton "i"
             await clickScreen(2520, 975, 2000);
@@ -64,16 +65,23 @@ async function changeVPN(country) {
             await sleep(4500);
             
             vpnChanged = true; // Marquer comme changé
-            console.log(`✅ [VPN] Changé pour ${country} - Fini pour cette session`);
+            // console.log(`✅ [VPN] Changé pour ${country} - Fini pour cette session`);
         } finally {
             isChangingVPN = false;
         }
     }
 }
 
+// Fonction pour reset le VPN au début d'un nouveau cycle
+async function resetVPNCycle() {
+    vpnChanged = false;
+    console.log(`🔄 [VPN] Reset pour nouveau cycle`);
+}
+
 const vpnIosService = {
     changeVPN,
-    getRandomServer
+    getRandomServer,
+    resetVPNCycle
 };
 
 module.exports = { vpnIosService };

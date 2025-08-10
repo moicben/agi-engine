@@ -111,6 +111,21 @@ async function setupApp(device) {
   return true;
 }
 
+//effacer les données de l'app
+async function clearApp(device) {
+
+  // Effacer les données pour un compte propre
+  await executeCommand(device, 'shell pm clear com.whatsapp');
+  await sleep(3000);
+
+  // Supprimer les données temporaires (si besoin)
+  await executeCommand(device, 'shell rm -rf /sdcard/WhatsApp/');
+  await executeCommand(device, 'shell rm -rf /sdcard/Android/data/com.whatsapp/');
+  await sleep(2000);
+  
+  return true;
+}
+
 /**
  * Lancer WhatsApp sur le device
  */
@@ -127,15 +142,15 @@ async function launchApp(device) {
 
   // Choisir la première langue (EN)
   await tap(device, UI_ELEMENTS.firstLanguage.x, UI_ELEMENTS.firstLanguage.y);
-  await sleep(2000);
+  await sleep(3000);
 
   // Ignorer le ROM (si demandé)
   await tap(device, UI_ELEMENTS.ignoreROM.x, UI_ELEMENTS.ignoreROM.y);
-  await sleep(2000);
+  await sleep(3000);
 
   // Accepter les conditions si nécessaire
   await tap(device, UI_ELEMENTS.agreeButton.x, UI_ELEMENTS.agreeButton.y);
-  await sleep(2000);
+  await sleep(3500);
 
   // REMOVE MODE LINKED DEVICES (OPTIONAL)
   // await tap(device, UI_ELEMENTS.threeDotButton.x, UI_ELEMENTS.threeDotButton.y);
@@ -149,7 +164,7 @@ async function launchApp(device) {
 
   // Accepter les notifications What's App
   await tap(device, UI_ELEMENTS.notificationsButton.x, UI_ELEMENTS.notificationsButton.y);
-  await sleep(2000);
+  await sleep(4000);
 
   return true;
 }
@@ -182,6 +197,7 @@ async function inputNewNumber(device, phoneNumber, country) {
 
   // Cliquer sur le champ de sélection du pays
   await tap(device, UI_ELEMENTS.countrySelector.x, UI_ELEMENTS.countrySelector.y);
+  await tap(device, UI_ELEMENTS.countrySelector.x, UI_ELEMENTS.countrySelector.y);
   await sleep(2000);
 
   // Appuyer sur l'icone de recherche
@@ -213,7 +229,7 @@ async function inputNewNumber(device, phoneNumber, country) {
   await press(device, 20, 1); // TAB 
   await sleep(500);
   await press(device, 66); // ESPACE
-  await sleep(6000);
+  await sleep(8000);
 }
 
 async function confirmNumber(device) {
@@ -287,7 +303,7 @@ async function inputNumber(device, phoneNumber) {
   }
 
 // Confirmation du compte (si besoin)
-async function confirmAccount(device) {
+async function confirmAccount(device, confirmStep = false) {
   console.log('🔄 Confirmation du compte...');
 
   // Refuser les permissions (si demandé)
@@ -300,6 +316,12 @@ async function confirmAccount(device) {
   await executeCommand(device, `shell input text "${accountName}"`);
   await sleep(1500);
 
+  if (confirmStep) {
+    // Confirmer le nom avec les touches Tab + Espace
+    await press
+  }
+
+
   // Confirmer le nom
   await tap(device, UI_ELEMENTS.confirmNameButton.x, UI_ELEMENTS.confirmNameButton.y);
   await sleep(14000);
@@ -310,19 +332,18 @@ async function confirmAccount(device) {
   /**
   * Entrer le code SMS
   */
-  async function inputCode(device, code) {
+  async function inputSMSCode(device, code) {
     console.log(`📨 Saisie du code: ${code}`);
 
     // Cliquer sur le champ de code
     await tap(device, UI_ELEMENTS.codeInput.x, UI_ELEMENTS.codeInput.y);
-    await sleep(1000);
+    await sleep(2000);
             
     // Saisir le code
     await executeCommand(device, `shell input text "${code}"`);
-    await sleep(2000);
     
     // WhatsApp valide automatiquement généralement
-    await sleep(8000);
+    await sleep(12000);
 
     return true;
   }
@@ -392,17 +413,14 @@ async function goToSettings(device) {
   console.log('🔄 Navigation vers les paramètres...');
   
   // Fermer l'application WhatsApp
-  //console.log('🔄 Fermeture de WhatsApp...');
   await executeCommand(device, 'shell am force-stop com.whatsapp');
   await sleep(5000);
 
   // Ouvrir WhatsApp (sans reset)
-  //console.log('📱 Lancement de WhatsApp (sans reset)...');
   await executeCommand(device, 'shell monkey -p com.whatsapp -c android.intent.category.LAUNCHER 1');
   await sleep(5000);
   
   // 1. Cliquer sur les 3 points
-  //console.log('📍 Clic sur le menu (3 points)...');
   await tap(device, UI_ELEMENTS.threeDotButton.x, UI_ELEMENTS.threeDotButton.y);
   await sleep(2000);
 
@@ -414,8 +432,13 @@ async function goToSettings(device) {
   await tap(device, settingsPosition.x, settingsPosition.y);
   await sleep(3000);
 
-  // 2. Afficher le profil
-  console.log('📱 Afficher le profil...');
+  // (préventif) Pour éviter le clic sur la bannière "Notifications"
+  await tap(device, UI_ELEMENTS.profileButton.x, UI_ELEMENTS.profileButton.y);
+  await sleep(3000);
+  await tap(device, UI_ELEMENTS.backButton.x, UI_ELEMENTS.backButton.y); 
+  await sleep(3000);
+
+  // 3. Afficher le profil
   await tap(device, UI_ELEMENTS.profileButton.x, UI_ELEMENTS.profileButton.y);
   await sleep(3000);
 
@@ -605,10 +628,11 @@ async function inputTransferCode(device, code) {
 const whatsappService = {
   setupApp,
   launchApp,
+  clearApp,
   inputNewNumber,
   confirmNumber,
   inputNumber,
-  inputCode,
+  inputSMSCode,
   resetNumber,
   finalizeAccount,
   confirmAccount,

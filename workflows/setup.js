@@ -8,26 +8,22 @@ const { inputWorkflow } = require('./input');
 async function setupWorkflow(device) {
     try {
         console.log(`⚙️  Initialisation du workflow setup...`);
-        console.log(`📱 Device: ${device}`);
+        // console.log(`📱 Device: ${device}`);
 
         // Étape 1 : Connexion adb au device
-        console.log(`⚙️ Connexion adb au device...`);
+        // console.log(`⚙️ Connexion adb au device...`);
         await deviceService.connectDevice(device);
 
         // Étape 2 : Reset WhatsApp
-        console.log(`⚙️ Reset WhatsApp...`);
+        // console.log(`⚙️ Reset WhatsApp...`);
         await whatsappService.setupApp(device);
 
         // Étape 3 : Ouvrir WhatsApp et commencer la configuration
-        console.log(`📱 Ouverture de WhatsApp...`);
+        //console.log(`📱 Ouverture de WhatsApp...`);
         await whatsappService.launchApp(device);
 
-        // Étape 4 : Exécuter le workflow d'input
-        // console.log(`📝 Démarrage du workflow d'input...`);
-        // await inputWorkflow(device, country);
-
-        // console.log(`\n✅ Setup terminé avec succès\n`);
-        // return { success: true };
+        //  console.log(`\n✅ Setup terminé avec succès\n`);
+        return { success: true };
 
     } catch (error) {
         console.error('❌ Erreur dans le workflow setup:', error.message);

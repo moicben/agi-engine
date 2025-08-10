@@ -16,7 +16,10 @@ async function testStudio() {
     // const code = await ocrService.extractTransferCode(device);
     // console.log(code);
 
-    await whatsappService.finalizeAccount(device);
+    const deviceStudio = await deviceService.launchStudioDevice(device);
+    console.log(deviceStudio);
+
+    // await whatsappService.finalizeAccount(device);
 
 }
 

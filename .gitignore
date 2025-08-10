@@ -103,3 +103,6 @@ out/
 .claude
 eng.traineddata
  
+# WhatsApp Sessions
+sessions/
+whatsapp_session_tmp/
