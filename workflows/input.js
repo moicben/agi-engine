@@ -54,7 +54,7 @@ async function orchestrator(submissionResult, device, country, phoneNumber, recu
 async function handleSuccess(message, phoneNumber, device, country) {
     console.log(message);
     
-    // Marquer comme prêt à recevoir SMS puis attendre
+    // Marquer comme prêt à recevoir SMS puis attendre 
     const countryCode = country.toUpperCase() === 'CANADA' ? 'CA' : country.toUpperCase();
     
     try {
