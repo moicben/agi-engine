@@ -10,7 +10,7 @@ export default function Home() {
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [campaignId, setCampaignId] = useState(null);
   const [campaignData, setCampaignData] = useState(null);
- 
+  
   useEffect(() => {
     const c = typeof window !== 'undefined'
       ? new URLSearchParams(window.location.search).get('c')
