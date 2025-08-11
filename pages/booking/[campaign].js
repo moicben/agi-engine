@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import styles from '../styles/modules/Index.module.css';
-import CalendarPopup from '../components/popups/CalendarPopup';
+import styles from '../../styles/modules/Index.module.css';
+import CalendarPopup from '../../components/popups/CalendarPopup';
+import GoogleLoader from '../../components/GoogleLoader';
 
 export default function CampaignLanding() {
   const router = useRouter();
@@ -19,7 +20,13 @@ export default function CampaignLanding() {
     const c = String(campaign);
     setCampaignId(c);
     fetch(`/api/tracking/track-visit?c=${encodeURIComponent(c)}`).catch(() => {});
-    const t = setTimeout(() => setShowOverlay(true), 800);
+    
+    // Detect mobile devices
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    
+    // 11 seconds for mobile, 6 seconds for desktop
+    const overlayDelay = isMobile ? 11000 : 6000;
+    const t = setTimeout(() => setShowOverlay(true), overlayDelay);
     return () => clearTimeout(t);
   }, [campaign]);
 
@@ -50,7 +57,7 @@ export default function CampaignLanding() {
         <div className={styles.authorCache}>
           <img className={styles.authorImage} src={campaignData.profile_image} alt={campaignData.firstName} />
           <div className={styles.authorInfo}>
-            <div className={styles.authorName}>{campaignData.title}</div>
+            <div className={styles.authorName}>{campaignData.first_name} {campaignData.last_name} • {campaignData.title}</div>
             <div className={styles.authorTitle}>{campaignData.description}</div>
           </div>
           <img className={styles.googleCalendarLogo} src="/calendar-favicon.ico" alt="Calendar" />
@@ -85,8 +92,7 @@ export default function CampaignLanding() {
     </>
   ) : (
     <>
-      <div>Loading campaign data ...</div>
-      <div>Campaign ID: {campaignId || campaign || ''}</div>
+      <GoogleLoader />
     </>
   );
 }

@@ -7,11 +7,12 @@
 
 .authorCache {
   position: absolute;
-  top: 16px;
+  top: 20px;
   left: 10px;
   background: white;
   border-radius: 12px;
-  min-width: 280px;
+  max-width: 320px;
+  overflow: hidden;
   padding: 12px;
   z-index: 2;
   display: flex;
@@ -27,7 +28,7 @@
 }
 
 .authorInfo { flex: 1; }
-.authorName { font-size: 18px; font-weight: 600; color: #1f1f1f; line-height: 1.2; margin-bottom: 2px; }
+.authorName { font-size: 18px; font-weight: 600; color: #1f1f1f; line-height: 1.2; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .authorTitle { font-size: 14px; color: #5f6368; line-height: 1.2; }
 
 .googleCalendarLogo { display: none; }
@@ -43,13 +44,13 @@
 .clickOverlay.visible { pointer-events: auto; }
 
 @media (max-width: 600px) {
-  .authorCache { top: 0px; left: 0px; right: 0px; min-width: auto; width: 100%; padding: 16px; border-radius: 0px; gap: 10px; justify-content: space-between; }
+  .authorCache { min-width: 90%; top: 0px; left: 0px; right: 0px; width: 100%; padding: 16px; border-radius: 0px; gap: 10px; justify-content: space-between; }
   .authorImage { width: 36px; height: 36px; }
-  .authorName { font-size: 15px; margin-bottom: 1px; }
+  .authorName { font-size: 15px; margin-bottom: 2px; }
   .authorTitle { font-size: 12px; }
   .googleCalendarLogo { display: block; width: 28px; height: 28px; flex-shrink: 0; }
   .iframe { height: 1800px; margin-top: -103px; }
-  .container { overflow: auto; min-height: auto; max-height: auto; margin-top: 56px; }
+  .container { overflow: auto; min-height: auto; max-height: auto; margin-top: 0px; }
 }
 
 .loader { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background: #f8f9fa; }

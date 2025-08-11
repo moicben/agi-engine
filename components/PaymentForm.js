@@ -98,7 +98,7 @@ export default function PaymentForm({ email, firstName, campaign }) {
       </div>
 
       <div className="notice" aria-live="polite">
-        Carte de crédit/débit • Vérification du titulaire
+         Vérification du titulaire • Aucun paiement à effectuer
       </div>
 
       <button type="submit" className="button" style={{ width: '100%' }} disabled={isSubmitting}>

