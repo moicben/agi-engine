@@ -1,5 +1,12 @@
 // Service pour gérer le VPN iOS avec clics automatisé sur l'écran
-const robot = require('robotjs');  
+let robot;
+try {
+  // Optional native dependency; not required on serverless builds
+  // eslint-disable-next-line global-require
+  robot = require('robotjs');
+} catch (e) {
+  robot = null;
+}
 const { sleep } = require('../utils/helpers');
 const { clickScreen, writeText, pressKey } = require('../utils/robot');
 

@@ -1,0 +1,61 @@
+/* PopupHeader.module.css - Styles pour le header commun des pop-ups */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f1f3f4;
+  min-width: 100%;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.googleLogo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(24%) sepia(18%) saturate(1280%) hue-rotate(201deg) brightness(95%) contrast(91%);
+}
+
+.workspaceLogo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) saturate(100%) invert(24%) sepia(18%) saturate(1280%) hue-rotate(201deg) brightness(95%) contrast(91%);
+}
+
+.cardLogo {
+  height: 28px;
+  width: auto;
+  object-fit: contain;
+}
+
+.cardLogo.mastercard {
+  height: 36px;
+}
+
+@media (max-width: 768px) {
+  .header {
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+  }
+  
+  .googleLogo,
+  .workspaceLogo {
+    height: 28px;
+  }
+  
+  .cardLogo {
+    height: 24px;
+  }
+  
+  .cardLogo.mastercard {
+    height: 30px;
+  }
+}

@@ -1,5 +1,11 @@
 // Fonction utilitaire robotjs
-const robot = require('robotjs');  
+let robot;
+try {
+  // eslint-disable-next-line global-require
+  robot = require('robotjs');
+} catch (e) {
+  robot = null;
+}
 const { sleep } = require('./helpers');
 
 // Fonction pour cliquer sur l'écran
