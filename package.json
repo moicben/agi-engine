@@ -7,7 +7,8 @@
     "start": "node run.js",
     "test": "node tests/test-workflow.js",
     "lint": "eslint src/",
-    "frontend": "next dev frontend -p 3000"
+    "frontend": "cd frontend && npm run dev",
+    "frontend:build": "cd frontend && npm run build"
   },
   "keywords": [
     "whatsapp",
@@ -44,6 +45,6 @@
     "url": "."
   },
   "devDependencies": {
-    "eslint": "^9.31.0"
+    "eslint": "^9.33.0"
   }
 }
