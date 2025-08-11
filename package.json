@@ -4,11 +4,12 @@
   "description": "WhatsApp Account Creation & Migration - Version Simplifiée Unifiée",
   "main": "src/workflow.js",
   "scripts": {
+    "dev": "next dev",
     "start": "node run.js",
     "test": "node tests/test-workflow.js",
     "lint": "eslint .",
     "build": "next build",
-    "vercel-build": "next build"
+    "vercel-build": "next build" 
   },
   "keywords": [
     "whatsapp",
