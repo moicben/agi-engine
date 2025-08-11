@@ -1,0 +1,25 @@
+mutation rentoDebug {
+  goto(url: "https://www.example.com", waitUntil: networkIdle) {
+    status
+  }
+  checkUrl: evaluate(
+    content: """
+    document.location.href.includes('example') ?
+      throw new Error('Workflow stopped: URL contains "example"');
+    :
+      return 'continue';
+    """
+  ) {
+    value
+  }
+  delayForCheck: waitForTimeout(time: 10000) {
+    time
+  }
+  currentUrl: evaluate(
+    content: """
+    document.location.href.includes('example') ? 'yes2' : 'no';
+    """
+  ) {
+    value
+  }
+}

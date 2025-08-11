@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <boolean name="restoration_registration_complete_logging_sent" value="true" />
+    <long name="enter_integrity_pass_timestamp" value="1754721782976" />
+    <string name="encryption_secret_key">CAISIPdAvVNbegV14XPFXxSJuWdDUawDmjQ5Qr11hpcZFS89</string>
+    <boolean name="backup_contacts_updated" value="true" />
+    <boolean name="upsell_banner_is_shown" value="false" />
+    <int name="migration_version" value="2" />
+    <int name="integrity_status" value="1" />
+    <string name="encryption_secret_key_list">CiQIAhIg90C9U1t6BXXhc8VfFIm5Z0NRrAOaNDlCvXWGlxkVLz0KJAgBEiBnGS6fUTw0tYJfpqyz/osC8Tj6Q47bd+rFnjyVRM4QMQ==</string>
+    <long name="enter_integrity_pending_timestamp" value="0" />
+    <long name="enter_integrity_unknown_timestamp" value="0" />
+    <long name="download_timestamp" value="1754721847762" />
+    <int name="phone_number_change_state" value="0" />
+    <long name="enter_integrity_timelock_timestamp" value="0" />
+    <boolean name="backup_contacts" value="true" />
+    <boolean name="nux_shown" value="false" />
+    <long name="nux_onboard_time" value="0" />
+</map>

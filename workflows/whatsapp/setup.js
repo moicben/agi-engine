@@ -1,6 +1,6 @@
 // Workflow de configuration d'un compte WhatsApp
 
-const { whatsappService } = require('../../services/whatsapp-service');
+const { whatsappService } = require('../../services/whatsapp/app-service');
 const { deviceService } = require('../../services/device-service');
 const { inputWorkflow } = require('./input');
 

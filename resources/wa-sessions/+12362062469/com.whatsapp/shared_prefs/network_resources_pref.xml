@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <int name="downloadstate/meta_ai_imagine_me_consent_page_2" value="3" />
+    <int name="downloadstate/meta_ai_imagine_me_consent_page_1" value="3" />
+    <int name="downloadstate/v1_Two_hearts_1F495_test" value="3" />
+    <int name="downloadstate/android_to_ios_start" value="3" />
+    <int name="downloadstate/sticker_sample_love" value="3" />
+    <int name="downloadstate/android_to_ios_in_progress_night" value="3" />
+    <int name="downloadstate/v1_Sparkles_2728_test" value="3" />
+    <int name="downloadstate/android_to_ios_error" value="3" />
+    <int name="downloadstate/v1_Faceblownbyakiss_1F618_test" value="3" />
+    <int name="downloadstate/v1_Heart_2764_FE0F_test" value="3" />
+    <int name="downloadstate/ai_home_explore_card_v1" value="3" />
+    <int name="downloadstate/v1_Winking_face_1F609_test" value="3" />
+    <int name="downloadstate/android_to_ios_error_night" value="3" />
+    <int name="downloadstate/android_to_ios_start_night" value="3" />
+    <int name="downloadstate/v1_Hundred_points_1F4AF_test" value="3" />
+    <int name="downloadstate/v1_Smiling_face_with_sunglasses_1F60E_test" value="3" />
+    <int name="downloadstate/sticker_sample_celebrate" value="3" />
+    <int name="downloadstate/sticker_sample_laugh" value="3" />
+    <int name="downloadstate/chat_transfer_android_to_android_lottie_animation" value="3" />
+    <int name="downloadstate/android_to_ios_in_progress" value="3" />
+</map>

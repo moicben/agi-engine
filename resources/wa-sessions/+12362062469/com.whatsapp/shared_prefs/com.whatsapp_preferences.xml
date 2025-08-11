@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <set name="ab_offline_props:offline_exposure_hash_strings">
+        <string>1862|disable_next_button_android_phone_number_screen_50_prod_universe</string>
+        <string>5460|android_offline_allocation_improvement_universe</string>
+    </set>
+    <string name="server_props:hash">9cf4089bf0aff6f20aa514b8a8bac3ecde0fb90f2be082bccfd46468983057f5</string>
+    <string name="ab_props:hash_v2">[2,&quot;lkTpx6DtpW3+\/X2I\/jgLou7zyXMSF+sOq2\/qJrWtZ9rr6tzjtuDnrvLlBz+GDDjDi74zWX9W\/KKMuLvuwe8gMg&quot;,&quot;0aUF5B9oqRLExCng8i7A4Q&quot;,&quot;2tCbAg&quot;,&quot;cVhwemRczRr5lQeCgc7VKw&quot;]</string>
+    <set name="ab_offline_props:offline_exposure_strings">
+        <string>disable_next_button_android_phone_number_screen_50_prod_universe|disable_next_button_android_enter_phone_number_prod_50_experiment_v2|control</string>
+        <string>android_offline_allocation_improvement_universe|wa_growth_android_offline_aa_experiment|test</string>
+    </set>
+</map>

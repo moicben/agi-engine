@@ -1,9 +1,9 @@
 // Workflow d'extraction de la session What's App
 
-const { whatsappService } = require('../../services/whatsapp-service');
+const { whatsappService } = require('../../services/whatsapp/app-service');
 const { deviceService } = require('../../services/device-service');
-const { ocrService } = require('../../services/ocr-service');
-const { sessionService } = require('../../services/session-service');
+const { ocrService } = require('../../services/whatsapp/ocr-service');
+const { sessionService } = require('../../services/whatsapp/session-service');
 
 
 // Workflow pour extraire la session What's App

@@ -1,10 +1,10 @@
 // Workflow d'envoi de messages à de nouveaux contacts
 
 const { getNewContacts, updateContactStatus } = require('../../utils/supabase');
-const { getSenderService } = require('../../services/sender-service');
+const { getSenderService } = require('../../services/whatsapp/sender-service');
 const config = require('../../config');
 const { randomSleep, sleep } = require('../../utils/helpers');
-const { connectDevice } = require('../../utils/adb');
+const { deviceService } = require('../../services/device-service');
 
 // Fonction principale du workflow
 async function sendWorkflow(campaign, device) {
@@ -22,7 +22,7 @@ async function sendWorkflow(campaign, device) {
 
         // Étape 1 : Connexion adb au device (préventive)
         console.log(`⚙️ Connexion adb au device...`);
-        await connectDevice(device);
+        await deviceService.connectDevice(device);
 
         // Étape 2 : Récupérer les nouveaux contacts à traiter
         const contacts = await getNewContacts(campaign.query, campaign.count);

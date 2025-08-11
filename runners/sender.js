@@ -1,6 +1,6 @@
 // Runner du workflow send.js
 
-const { sendWorkflow } = require('../workflows/send');
+const { sendWorkflow } = require('../workflows/whatsapp/send');
 const config = require('../config');
 const { parseArgs } = require('../utils/helpers');
 

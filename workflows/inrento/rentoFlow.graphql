@@ -1,0 +1,166 @@
+# rentoFlow GraphQL Query with variables
+
+mutation rentoFlow(
+  $cardNumber: String!
+  $cardExpiry: String!
+  $cardCvx: String!
+  $billingName: String!
+  $amount: String!
+) {
+  openLoginPage: goto(
+    url: "https://inrento.com/login"
+    waitUntil: firstContentfulPaint
+  ) {
+    status
+  }
+  login: screenshot(type: jpeg) {
+    base64
+  }
+  typeEmail: type(
+    selector: "input#signinSrEmail"
+    text: "benedikt.strokin@gmail.com"
+    delay: [50, 120]
+  ) {
+    time
+  }
+  typePassword: type(
+    selector: "input#signinSrPassword"
+    text: "D&veloppe2018!"
+    delay: [50, 120]
+  ) {
+    time
+  }
+  clickLogin: click(
+    selector: "button.btn.btn-primary.btn-block.btn-lg"
+    wait: true
+    visible: true
+  ) {
+    time
+  }
+  waitBeforeRedirect: waitForTimeout(time: 14000) {
+    time
+  }
+  openPortfolio: goto(
+    url: "https://inrento.com/portfolio/"
+    waitUntil: firstContentfulPaint
+  ) {
+    status
+  }
+  portfolio: screenshot(type: jpeg) {
+    base64
+  }
+  waitBeforeDeposit: waitForTimeout(time: 2000) {
+    time
+  }
+  clickDepositButton: evaluate(
+    content: """
+    document.querySelectorAll("button.btn.btn-primary.btn-lg.deposit-button.js-open-modal")[1].click();
+    """
+  ) {
+    value
+  }
+  deposit: screenshot(type: jpeg) {
+    base64
+  }
+  waitBeforeTyping: waitForTimeout(time: 2000) {
+    time
+  }
+  focusAmountInput: click(
+    selector: "input#deposit_mango_pay_wallet_amount"
+    wait: true
+  ) {
+    time
+  }
+  typeAmount: type(
+    selector: "input#deposit_mango_pay_wallet_amount"
+    text: $amount
+    delay: [300, 400]
+    wait: true
+  ) {
+    time
+  }
+  amount: screenshot(type: jpeg) {
+    base64
+  }
+  waitBeforeEnter: waitForTimeout(time: 2000) {
+    time
+  }
+  clicAddFunds: evaluate(
+    content: """
+    document.querySelectorAll("button#btn-continue")[1].click();
+    """
+  ) {
+    value
+  }
+  waitForMongoPay: waitForTimeout(time: 12000) {
+    time
+  }
+  typeCardNumber: type(
+    selector: "input#cardNumber"
+    text: $cardNumber
+    delay: [300, 400]
+  ) {
+    time
+  }
+  typeCardExpiry: type(
+    selector: "input#cardExpiry"
+    text: $cardExpiry
+    delay: [300, 400]
+  ) {
+    time
+  }
+  typeCardCvx: type(
+    selector: "input#cardCvx"
+    text: $cardCvx
+    delay: [300, 400]
+  ) {
+    time
+  }
+  typeBillingName: type(
+    selector: "input#billingName"
+    text: $billingName
+    delay: [50, 120]
+  ) {
+    time
+  }
+  cardDetails: screenshot(type: jpeg) {
+    base64
+  }
+  waitAfterTyping: waitForTimeout(time: 3000) {
+    time
+  }
+  clickButton: evaluate(
+    content: """
+    document.querySelectorAll("button")[document.querySelectorAll("button").length - 1].click();
+    """
+  ) {
+    value
+  }
+  submited: screenshot(type: jpeg) {
+    base64
+  }
+  delayForPayVerif: waitForTimeout(time: 60000) {
+    time
+  }
+  pending: screenshot(type: jpeg) {
+    base64
+  }
+  delayForPayVerif2: waitForTimeout(time: 60000) {
+    time
+  }
+
+  final: screenshot(type: jpeg) {
+    base64
+  }
+
+  finalStatus: evaluate(
+    content: """
+    document.location.href.includes('mangopay') ?
+      'elapsed'
+    :
+      'success';
+    """
+  ) {
+    value
+  }
+}

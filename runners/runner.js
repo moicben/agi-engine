@@ -27,31 +27,31 @@ async function runSingleDevice(workflow, device, country, target) {
         console.log(`🚀 Démarrage du workflow ${workflow} pour device ${device}...`);
 
         if (workflow === 'input') {
-            const { inputWorkflow } = require('../workflows/input');
+            const { inputWorkflow } = require('../workflows/whatsapp/input');
             await inputWorkflow(device, country);
         } else if (workflow === 'clear') {
-            const { clearWorkflow } = require('../workflows/clear');
+            const { clearWorkflow } = require('../workflows/whatsapp/clear');
             await clearWorkflow(device);
         } else if (workflow === 'brand') {
-            const { brandWorkflow } = require('../workflows/brand');
+            const { brandWorkflow } = require('../workflows/whatsapp/brand');
             await brandWorkflow(device);
         } else if (workflow === 'send') {
-            const { sendWorkflow } = require('../workflows/send');
+            const { sendWorkflow } = require('../workflows/whatsapp/send');
             await sendWorkflow(device);
         } else if (workflow === 'setup') {
-            const { setupWorkflow } = require('../workflows/setup');
+            const { setupWorkflow } = require('../workflows/whatsapp/setup');
             await setupWorkflow(device, country);
         }
         else if (workflow === 'transfer') {
-            const { transferWorkflow } = require('../workflows/transfer');
+            const { transferWorkflow } = require('../workflows/whatsapp/transfer');
             await transferWorkflow(device, country, target);
         }
         else if (workflow === 'extract') {
-            const { extractWorkflow } = require('../workflows/extract');
+            const { extractWorkflow } = require('../workflows/whatsapp/extract');
             await extractWorkflow(device);
         }
         else if (workflow === 'import') {
-            const { importWorkflow } = require('../workflows/import');
+            const { importWorkflow } = require('../workflows/whatsapp/import');
             await importWorkflow(device, `./sessions/${args.session}/`);
         }
 

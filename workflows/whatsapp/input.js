@@ -1,10 +1,10 @@
 // Workflow pour entrer un numéro de téléphone
 
-const { whatsappService } = require('../../services/whatsapp-service');
+const { whatsappService } = require('../../services/whatsapp/app-service');
 const { deviceService } = require('../../services/device-service');
 const { vpnIosService } = require('../../services/vpnios-service');
 const { smsService } = require('../../services/sms-service');
-const { ocrService } = require('../../services/ocr-service');
+const { ocrService } = require('../../services/whatsapp/ocr-service');
 const { randomSleep, sleep } = require('../../utils/helpers');
 
 /**

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <boolean name="restore_funnel_logging_enabled" value="true" />
+    <boolean name="restore_second_verification_needed" value="false" />
+    <string name="last_seen_app_version">2.25.20.77</string>
+    <string name="backup_encryption_method">unencrypted</string>
+    <int name="gdrive_state" value="0" />
+    <long name="restore_process_time" value="1754722712318" />
+    <long name="gdrive_next_prompt_for_setup_timestamp" value="1755327516368" />
+</map>

@@ -1,9 +1,9 @@
 // Workflow de paramètres des informations du compte WhatsApp
 
-const { getWhatsAppService } = require('../../services/whatsapp-service');
-const { connectDevice } = require('../../services/device-service');
+const { getWhatsAppService } = require('../../services/whatsapp/app-service');
+const { deviceService } = require('../../services/device-service');
 const config = require('../../config');
-const { getSenderService } = require('../../services/sender-service');
+const { getSenderService } = require('../../services/whatsapp/sender-service');
 const { sleep } = require('../../utils/helpers');
 
 async function brandWorkflow(brandConfig, device) {
@@ -20,8 +20,8 @@ async function brandWorkflow(brandConfig, device) {
 
         // Étape 1 : Connexion adb au device (préventive)
         console.log(`⚙️ Connexion adb au device...`);
-        await connectDevice(device);
-        await connectDevice(senderDevice);
+        await deviceService.connectDevice(device);
+        await deviceService.connectDevice(senderDevice);
 
         // Étape 2 : Récupérer le numéro WhatsApp du compte actif
         console.log(`⚙️ Récupération du numéro WhatsApp...`);

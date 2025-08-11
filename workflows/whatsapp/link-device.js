@@ -1,6 +1,6 @@
 // Workflow de liaison d'un device WhatsApp
 
-const { getWhatsAppService } = require('../../services/whatsapp-service');
+const { getWhatsAppService } = require('../../services/whatsapp/app-service');
 const config = require('../../config');
 const { randomSleep, sleep } = require('../../utils/helpers');
 const { connectDevice, executeCommand, takeScreenshot } = require('../../utils/adb');
