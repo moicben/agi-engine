@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<map>
-    <int name="session_id" value="1907431909" />
-    <long name="last_interaction_timestamp" value="1754575313861" />
-    <long name="session_start_timestamp" value="1754575311363" />
-    <int name="cumulative_bits" value="0" />
-    <int name="bit_array_session_sequence" value="0" />
-</map>

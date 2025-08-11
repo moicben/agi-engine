@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<map>
-    <int name="bot_contact_picker_new_badge_show_count" value="1" />
-    <boolean name="ai_inline_tos_rendered" value="false" />
-</map>

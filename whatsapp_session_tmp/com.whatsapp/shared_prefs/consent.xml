@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<map>
-    <boolean name="dob_verified" value="true" />
-    <boolean name="idv_token_refresh_started" value="false" />
-    <int name="remediation_context" value="0" />
-</map>
