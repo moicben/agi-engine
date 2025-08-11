@@ -106,3 +106,9 @@ eng.traineddata
 # WhatsApp Sessions
 sessions/
 whatsapp_session_tmp/
+
+
+#frontend
+frontend/node_modules/
+frontend/package-lock.json
+frontend/.next/
