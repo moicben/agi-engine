@@ -108,7 +108,7 @@ sessions/
 whatsapp_session_tmp/
 
 
-#frontend
-frontend/node_modules/
-frontend/package-lock.json
-frontend/.next/
+#Next.js
+node_modules/
+package-lock.json
+.next/
