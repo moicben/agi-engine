@@ -5,9 +5,7 @@ module.exports = {
     // Avoid failing the production build on lint errors
     ignoreDuringBuilds: true,
   },
-  experimental: {
-    externalDir: true,
-  },
+
   webpack: (config, { isServer }) => {
     // Allow imports from parent directories
     config.resolve.fallback = {
