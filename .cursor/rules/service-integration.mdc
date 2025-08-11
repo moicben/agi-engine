@@ -1,66 +1,50 @@
 ---
-description: Integration and workflow management between WhatsApp, SMS, device management, and database services
-globs: services/*.js,workflows/*.js,utils/*.js
-alwaysApply: false
+description: Specifications for service layer integrations between WhatsApp, SMS, device management and database services including error handling and retry logic
 ---
 
 
 # service-integration
 
-## Core Service Integration Workflows
+The service integration layer handles interactions between WhatsApp, SMS activation, device management, and database services through several key components:
 
-### WhatsApp Service Integration (Importance: 95)
-- Implements device-specific WhatsApp interactions through ADB commands
-- Manages account creation, verification, and branding processes
-- Handles multi-device synchronization and QR code-based device linking
-- Files: `services/whatsapp-service.js`, `workflows/universal.js`
+### Core Service Integrations
 
-### SMS Integration Service (Importance: 90)
-- Manages SMS verification code acquisition and validation
-- Implements fallback mechanisms for SMS providers with country-specific routing
-- Handles activation timeouts and retries for failed SMS deliveries
-- Files: `services/sms-service.js`, `workflows/setup.js`
+#### WhatsApp Service (Importance: 90)
+- Manages WhatsApp account lifecycle including setup, verification, and messaging
+- Implements retry mechanisms for failed operations with exponential backoff 
+- Handles session management between devices through export/import workflows
+- Coordinates with SMS service for verification codes
 
-### Device Management Integration (Importance: 85)
-- Coordinates device provisioning across multiple platforms (BlueStacks, MoreLogin, cloud)
-- Implements proxy management and device state synchronization
-- Manages parallel device operations with rate limiting
-- Files: `services/device-service.js`, `scripts/createCloudPhone.js`
+#### Device Management Service (Importance: 85)
+- Controls device pools across cloud, BlueStacks and MoreLogin environments
+- Manages device allocation, startup and shutdown
+- Implements device health checks and automatic recovery
+- Coordinates proxy assignments for devices
 
-### Database Integration Layer (Importance: 80)
-- Manages contact retrieval and status updates through Supabase
-- Implements campaign-specific contact filtering and processing
-- Tracks message delivery status and campaign progress
-- Files: `utils/supabase.js`, `workflows/send.js`
+#### SMS Activation Service (Importance: 80)
+- Interfaces with SMS-Activate API for phone number provisioning
+- Implements timeouts and retries for SMS code reception
+- Manages activation state transitions and error recovery
+- Coordinates with WhatsApp service for verification flow
 
-## Integration Workflows
+### Integration Workflows
 
-### Account Setup Workflow (Importance: 85)
-- Coordinates SMS verification, WhatsApp setup, and device configuration
-- Implements retry mechanisms for failed verifications
-- Files: `workflows/setup.js`, `workflows/universal.js`
+#### Account Setup Workflow (Importance: 85)
+- Orchestrates device allocation, SMS activation, and WhatsApp setup
+- Implements parallel account creation with configurable concurrency
+- Handles cleanup and resource release on failures
 
-### Message Delivery Workflow (Importance: 80)
-- Manages contact retrieval, message sending, and status updates
-- Implements rate limiting and parallel processing
-- Files: `workflows/send.js`, `services/sender-service.js`
+#### Message Sending Workflow (Importance: 80)  
+- Coordinates message delivery across multiple WhatsApp instances
+- Implements rate limiting and random delays
+- Handles failed message retries and status tracking
 
-### Device Linking Workflow (Importance: 75)
-- Coordinates QR code generation and scanning between devices
-- Manages multi-device synchronization states
-- Files: `workflows/link-device.js`
+#### Device Transfer Workflow (Importance: 75)
+- Manages WhatsApp session migration between devices
+- Coordinates device state transitions during transfer
+- Implements rollback on failed transfers
 
-## Error Handling and Recovery
-
-### Service Recovery Mechanisms (Importance: 85)
-- Implements exponential backoff for service retries
-- Manages service timeouts and fallback strategies
-- Files: `utils/helpers.js`
-
-### Integration State Management (Importance: 80)
-- Tracks service integration states across workflows
-- Manages recovery from partial workflow completion
-- Files: `workflows/universal.js`, `parallel-runner.js`
+The service integration layer uses a retry mechanism with exponential backoff for handling transient failures, tracks operation status in the database, and implements proper cleanup of resources on failures.
 
 $END$
 

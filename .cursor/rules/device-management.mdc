@@ -1,56 +1,67 @@
 ---
-description: Core device management implementation across environments including ADB interactions, device state handling, and automation workflows
-globs: /workflows/**,/runners/**,/scripts/**,/utils/**,/services/**
-alwaysApply: false
+description: Specifications for managing device connections, states, and interactions across BlueStacks, MoreLogin, and cloud environments
 ---
 
 
 # device-management
 
-## Core Device Management Workflows (Importance: 95)
-- Multi-environment device orchestration across BlueStacks, MoreLogin and cloud platforms
-- Stateful device tracking using global device map with configurations and status
-- Proxy assignment and management for cloud devices with residential proxy prioritization
-- Automated device creation and initialization with environment-specific validations
-- Device state synchronization across parallel workflows
+### Core Device Management Services
 
-## Environment-Specific Implementations (Importance: 90)
-- BlueStacks: Direct ADB command execution and screenshot capture
-- MoreLogin: Simulated commands and local API integration
-- Cloud: Remote device provisioning with proxy configuration
+The device management implementation centers around handling different device environments and ADB interactions:
 
-## Device Interaction Patterns (Importance: 85)
-- Unified ADB interaction layer for device commands
-- Interactive mode for real-time device testing and command execution
-- Screenshot analysis with OCR for state verification
-- Device connection validation and retry mechanisms
-- Custom launch hooks for environment-specific startup sequences
+#### Device Service (`services/device-service.js`)
+- **Importance Score: 95**
+- Creates and launches devices across BlueStacks, MoreLogin and cloud environments 
+- Discovers BlueStacks instances by port scanning and connection attempts
+- Maps device identifiers to valid addresses based on environment
+- Manages device startup sequences and connection verification
 
-## Key Components:
-
-### Device Service (`services/device-service.js`)
-- Environment detection and initialization
-- Device state management
-- Command execution routing
-- Screenshot orchestration
-
-### Device Scripts
-- `scripts/createCloudPhone.js`: Cloud device provisioning
-- `scripts/startPhone.js`: Device initialization workflow
-- `scripts/interactive-phone.js`: Interactive testing mode
-- `scripts/launchWhatsApp.js`: Application launch automation
+#### ADB Interface (`utils/adb.js`)
+- **Importance Score: 85**
+- Handles ADB command execution and device interactions
+- Manages screenshots, input simulation, app installation and device info retrieval
+- Controls device state transitions and verifies connectivity
 
 ### Device Workflows
-- `workflows/brand.js`: Multi-device branding orchestration
-- `workflows/clear.js`: Device state cleaning
-- `workflows/link-device.js`: Device linking automation
-- `workflows/setup.js`: Initial device configuration
 
-### Device Runners
-- `runners/brander.js`: Branding workflow execution
-- `runners/cleaner.js`: Cleaning workflow execution
-- `runners/linker.js`: Linking workflow execution
-- `runners/setter.js`: Setup workflow execution
+#### Device Creation (`scripts/createCloudPhone.js`)
+- **Importance Score: 80**
+- Provisions new cloud devices with proxy configuration
+- Handles device naming and initial setup
+- Validates device readiness and connectivity
+
+#### Device Startup (`scripts/startPhone.js`)
+- **Importance Score: 75**
+- Manages device boot sequence and ADB activation
+- Implements retry logic for failed device starts
+- Handles timeout scenarios and state verification
+
+### Device State Management
+
+#### Session Management (`services/session-service.js`)
+- **Importance Score: 70**
+- Extracts and imports device sessions
+- Maintains session continuity across device restarts
+- Handles session data persistence and recovery
+
+#### State Transitions
+- Device state tracking across boot, ready, and error states
+- Recovery procedures for failed state transitions
+- Environment-specific state management rules
+
+### Key Integration Points
+
+#### VPN Management (`services/vpnios-service.js`)
+- **Importance Score: 65**
+- Controls VPN configurations per device
+- Manages VPN server selection and connection states
+- Handles VPN authentication and session persistence
+
+#### Orchestration (`orchestrator.js`)
+- **Importance Score: 85**
+- Coordinates device creation, startup and teardown
+- Manages parallel device operations
+- Handles environment-specific device coordination
 
 $END$
 

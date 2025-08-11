@@ -1,76 +1,68 @@
 ---
-description: Technical specification for mapping data flows between SMS verification, OCR, database, and messaging components
-globs: workflows/*,utils/*,services/*,scripts/*
-alwaysApply: false
+description: Comprehensive analysis of data flows between components including SMS verification, OCR processing, messaging pipelines and database interactions
 ---
 
 
 # data-flow
 
-## Core Data Flow Components
+The data flow architecture consists of several key pipelines:
 
-### SMS Verification Flow
-- SMS service requests verification codes from external provider
-- Codes flow into WhatsApp setup workflow via OCR validation
-- Status updates sync back to activation management system
-- File paths: `services/sms-service.js`, `utils/ocr.js`
+### SMS Verification Pipeline
+- SMS activation service obtains phone numbers from SMS-Activate API
+- Verification codes retrieved through polling with retry logic
+- OCR service extracts codes from screenshots
+- Results flow to WhatsApp setup workflow
+- File: `services/sms-service.js`
+- Importance Score: 85
 
 ### OCR Processing Pipeline
-- Screenshots captured from device displays
-- Image data processed for text extraction
-- Results validated against expected patterns (phone numbers, status messages)
-- OCR text flows to verification and validation systems
-- File paths: `utils/ocr.js`, `services/whatsapp-service.js`
+- Screenshots captured from device
+- Tesseract OCR extracts text content
+- Text analyzed for phone numbers and status indicators
+- Results flow to verification and session management
+- File: `services/ocr-service.js` 
+- Importance Score: 90
 
-### Database Interaction Flow
-- Contact records retrieved from Supabase based on campaign parameters
-- Status updates flow back after message processing
-- Campaign metrics and results stored for reporting
-- File paths: `utils/supabase.js`, `workflows/send.js`
+### Session Management Pipeline
+- WhatsApp sessions extracted from source devices
+- Session data stored temporarily
+- Sessions imported to target devices
+- Status tracked through database
+- File: `services/session-service.js`
+- Importance Score: 80
 
-### Message Handling Pipeline
-- Campaign configurations define message content and targeting
-- Messages chunked and queued for delivery
-- Delivery status flows back to contact database
-- File paths: `services/sender-service.js`, `workflows/send.js`
+### Message Distribution Pipeline 
+- New contacts retrieved from database
+- Messages selected randomly from templates
+- Sent via WhatsApp with random delays
+- Status updates flow back to database
+- File: `services/sender-service.js`
+- Importance Score: 85
 
-### Device Management Data Flow
-- Device states tracked in global management system
-- Commands flow from workflows to device interfaces
-- Screenshots and interaction results flow back to validation systems
-- File paths: `services/device-service.js`, `utils/adb.js`
+### Device Management Pipeline
+- Device discovery across environments
+- Device status monitoring and updates
+- Screenshots and interaction events
+- Results flow to workflow orchestrator
+- File: `services/device-service.js`
+- Importance Score: 75
 
-### Account Setup Pipeline
-- Phone numbers flow from SMS service to setup workflow
-- Verification codes validated through OCR
-- Account configuration data flows to branding system
-- File paths: `workflows/setup.js`, `workflows/brand.js`
+### Database Integration Pipeline
+- Contact status updates
+- Campaign tracking data
+- Lead storage with deduplication
+- Stats aggregation for reporting
+- File: `utils/supabase.js`
+- Importance Score: 80
 
-### Integration Points
-- SMS verification integrates with OCR validation
-- OCR results feed into workflow decision points
-- Database status updates trigger next workflow stages
-- Device commands coordinate with message delivery system
+Core workflows coordinate these pipelines:
+- Account setup and verification
+- Session transfer between devices  
+- Automated messaging sequences
+- Device linking and synchronization
 
-## Key Data Transformations
-
-### Phone Number Processing
-- Raw numbers transformed to WhatsApp-compatible format
-- Country codes extracted and validated
-- Verification status tracked through workflow stages
-- File paths: `utils/helpers.js`, `services/whatsapp-service.js`
-
-### Message Formatting
-- Campaign messages split into delivery chunks
-- Media attachments prepared for sending
-- Delivery status mapped to database fields
-- File paths: `services/sender-service.js`, `workflows/send.js`
-
-### Device State Management
-- Connection status tracked across workflow stages
-- Command results transformed into workflow decisions
-- Screenshot data prepared for OCR processing
-- File paths: `services/device-service.js`, `utils/adb.js`
+Files: `workflows/whatsapp/*`
+Importance Score: 85
 
 $END$
 

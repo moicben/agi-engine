@@ -1,64 +1,60 @@
 ---
-description: Defines core business workflows for WhatsApp account setup, branding, linking and messaging with parallel execution strategies
-globs: workflows/*,runners/*,services/*,scripts/*,utils/adb.js,utils/ocr.js
-alwaysApply: false
+description: Specification for WhatsApp account management workflows including setup, branding, linking and messaging orchestration
 ---
 
 
 # workflow-algorithms
 
-## Core Workflows
+Key workflow components:
 
-### Account Setup Flow (Importance: 95)
-- Multi-stage workflow for configuring new WhatsApp accounts
-- Retrieves and validates phone numbers 
-- Handles SMS verification code input
-- Manages device linking and QR code scanning
-- Implements retry mechanisms for failed verifications
-- Location: `workflows/setup.js`, `workflows/link-device.js`
+### Core Orchestration
+- Device Discovery & Activation
+- Parallel Account Creation
+- WhatsApp Setup & Verification 
+- Session Management & Transfer
+- Message Sending Coordination
 
-### Branding Flow (Importance: 85)
-- Parallel execution of account branding across multiple devices
-- Implements staggered delays to avoid rate limiting
-- Transfers branding assets between master and target devices
-- Manages WhatsApp profile customization (name, photo, description)
-- Location: `workflows/brand.js`
+The workflows are structured in layers:
 
-### Message Sending Flow (Importance: 90)
-- Campaign-based message distribution system
-- Contact retrieval and status management 
-- Sequential message sending with randomized delays
-- Support for text and image content
-- OCR-based verification of message delivery
-- Location: `workflows/send.js`
+1. Device Layer (`services/device-service.js`, Score: 80)
+- Manages device lifecycle across environments (MoreLogin, BlueStacks, cloud)
+- Handles device creation, launching and discovery
+- Maps device identifiers to addresses
 
-### Device Management Flow (Importance: 80)
-- Environment-specific device handling (MoreLogin, BlueStacks, cloud)
-- Device state tracking and command execution
-- Screenshot capture and analysis
-- ADB connection management and authentication
-- Location: `services/device-service.js`
+2. Session Layer (`services/session-service.js`, Score: 75) 
+- Extracts/imports WhatsApp sessions between devices
+- Manages session data persistence and transfer
+- Handles session verification states
 
-### SMS Integration Flow (Importance: 85)
-- Integration with SMS-Activate API
-- Phone number acquisition by country
-- Activation status management
-- Timeout and retry handling for SMS delivery
-- Location: `services/sms-service.js`
+3. Messaging Layer (`services/sender-service.js`, Score: 85)
+- Manages WhatsApp message sending workflows
+- Handles number formatting and validation
+- Controls rate limiting and parallel sends
+- Manages media attachments
 
-### Universal Flow (Importance: 95) 
-- Orchestrates setup, branding and sending workflows
-- Manages workflow dependencies and sequencing
-- Handles parallel execution across multiple devices
-- Implements comprehensive error recovery
-- Location: `workflows/universal.js`, `runners/universaler.js`
+4. Branding Layer (`workflows/whatsapp/brand.js`, Score: 80)
+- Sets up WhatsApp business profiles
+- Manages profile images and descriptions
+- Handles verification status
 
-### Parallel Execution Strategy (Importance: 90)
-- Validates device availability and connectivity
-- Implements staggered launch delays
-- Collects and aggregates workflow results
-- Manages resource allocation across parallel flows
-- Location: `parallel-runner.js`
+5. Orchestration Layer (`orchestrator.js`, Score: 90)
+- Coordinates all workflow components
+- Manages parallel execution
+- Handles retry logic and error states
+- Controls rate limiting
+
+The workflows are executed through runners:
+
+- `runners/brander.js` (Score: 70) - Executes branding workflows
+- `runners/linker.js` (Score: 60) - Manages device linking
+- `runners/sender.js` (Score: 60) - Controls message sending
+- `runners/universaler.js` (Score: 70) - Handles universal workflows
+
+Key Patterns:
+- Staggered parallel execution 
+- Session state management
+- Rate limiting and retry logic
+- Error handling and recovery
 
 $END$
 
