@@ -1,50 +1,55 @@
 ---
-description: Specifications for service layer integrations between WhatsApp, SMS, device management and database services including error handling and retry logic
+description: Technical specification for service integration patterns across WhatsApp, SMS, device management and data persistence layers
 ---
 
 
 # service-integration
 
-The service integration layer handles interactions between WhatsApp, SMS activation, device management, and database services through several key components:
+Service Layer Integration Architecture:
 
-### Core Service Integrations
+1. WhatsApp Service Integration
+- Bidirectional communication between WhatsApp API and device management layer 
+- Status propagation through event bus for device/account state changes
+- Retry mechanism for failed WhatsApp operations with exponential backoff
+- Cross-service session management for multi-device WhatsApp instances
+File Path: services/whatsapp/app-service.js
+Importance Score: 85
 
-#### WhatsApp Service (Importance: 90)
-- Manages WhatsApp account lifecycle including setup, verification, and messaging
-- Implements retry mechanisms for failed operations with exponential backoff 
-- Handles session management between devices through export/import workflows
-- Coordinates with SMS service for verification codes
+2. SMS Verification Integration 
+- SMS gateway abstraction supporting multiple providers
+- Country-specific number acquisition with price-based routing
+- Verification code extraction and validation pipeline
+- Service health monitoring with fallback provider switching
+File Path: services/sms-service.js
+Importance Score: 80
 
-#### Device Management Service (Importance: 85)
-- Controls device pools across cloud, BlueStacks and MoreLogin environments
-- Manages device allocation, startup and shutdown
-- Implements device health checks and automatic recovery
-- Coordinates proxy assignments for devices
+3. Device Management Integration
+- Centralized device pool management for virtual/physical devices
+- Device state synchronization across WhatsApp/SMS services
+- Automated device cleanup and session recycling
+- Resource locking for concurrent service access
+File Path: services/device-service.js 
+Importance Score: 75
 
-#### SMS Activation Service (Importance: 80)
-- Interfaces with SMS-Activate API for phone number provisioning
-- Implements timeouts and retries for SMS code reception
-- Manages activation state transitions and error recovery
-- Coordinates with WhatsApp service for verification flow
+4. Data Persistence Layer
+- Event sourcing pattern for cross-service state management
+- Transaction coordination across WhatsApp/SMS operations
+- Retry queues for failed operations with deadletter handling
+- Service-specific data partitioning and cleanup policies
+File Path: services/database-service.js
+Importance Score: 70
 
-### Integration Workflows
+Key Integration Patterns:
+- Event-driven communication between services
+- Circuit breaker pattern for external service calls
+- Idempotent operations with deduplication
+- Distributed locking for shared resources
 
-#### Account Setup Workflow (Importance: 85)
-- Orchestrates device allocation, SMS activation, and WhatsApp setup
-- Implements parallel account creation with configurable concurrency
-- Handles cleanup and resource release on failures
-
-#### Message Sending Workflow (Importance: 80)  
-- Coordinates message delivery across multiple WhatsApp instances
-- Implements rate limiting and random delays
-- Handles failed message retries and status tracking
-
-#### Device Transfer Workflow (Importance: 75)
-- Manages WhatsApp session migration between devices
-- Coordinates device state transitions during transfer
-- Implements rollback on failed transfers
-
-The service integration layer uses a retry mechanism with exponential backoff for handling transient failures, tracks operation status in the database, and implements proper cleanup of resources on failures.
+Error Handling:
+- Service-specific retry policies
+- Graceful degradation with fallback services
+- Cross-service transaction rollback
+- Dead letter queues for failed operations
 
 $END$
 

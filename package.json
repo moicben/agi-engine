@@ -1,7 +1,7 @@
 {
-  "name": "wa-infra",
+  "name": "AGI Engine",
   "version": "1.0.0",
-  "description": "WhatsApp Account Creation & Migration - Version Simplifiée Unifiée",
+  "description": "Anti-General-Intelligence Engine - Version Simplifiée Unifiée",
   "main": "src/workflow.js",
   "scripts": {
     "dev": "next dev",
@@ -9,33 +9,38 @@
     "test": "node tests/test-workflow.js",
     "lint": "eslint .",
     "build": "next build",
-    "vercel-build": "next build" 
+    "vercel-build": "next build"
   },
   "keywords": [
-    "whatsapp",
-    "automation",
-    "account-creation",
-    "account-migration",
-    "ocr",
-    "tesseract",
-    "bluestack",
-    "sms",
-    "simplified",
-    "unified"
+    "AGI",
+    "Engine",
+    "Anti-General-Intelligence",
+    "Simplified",
+    "Unified",
+    "BrowserBase",
+    "Browserless",
+    "Puppeteer",
+    "Stagehand",
+    "Gemini",
+    "Google",
+    "LLM"
   ],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@browserbasehq/stagehand": "^2.4.2",
     "@devicefarmer/adbkit": "^3.2.3",
     "@supabase/supabase-js": "^2.54.0",
     "axios": "^1.6.0",
-    "dotenv": "^17.2.1",
+    "dotenv": "^16.6.1",
     "hs": "^2.0.1",
     "next": "^14.2.3",
     "puppeteer": "^22.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tesseract.js": "^6.0.1"
+    "tesseract.js": "^6.0.1",
+    "trae": "^1.4.2",
+    "zod": "^3.25.76"
   },
   "optionalDependencies": {
     "robotjs": "^0.6.0"

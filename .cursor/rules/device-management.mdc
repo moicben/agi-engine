@@ -1,67 +1,61 @@
 ---
-description: Specifications for managing device connections, states, and interactions across BlueStacks, MoreLogin, and cloud environments
+description: Specification for device management implementations across virtualization environments and automation systems
 ---
 
 
 # device-management
 
-### Core Device Management Services
+Core Device Management Components:
 
-The device management implementation centers around handling different device environments and ADB interactions:
+1. Multi-Environment Device Orchestration
+- Integrated management across BlueStacks, MoreLogin and cloud environments
+- Device state synchronization between local and cloud instances
+- Unified device control interface abstracting provider differences
+- Environment-specific startup and shutdown sequences
 
-#### Device Service (`services/device-service.js`)
-- **Importance Score: 95**
-- Creates and launches devices across BlueStacks, MoreLogin and cloud environments 
-- Discovers BlueStacks instances by port scanning and connection attempts
-- Maps device identifiers to valid addresses based on environment
-- Manages device startup sequences and connection verification
+Importance Score: 85/100
 
-#### ADB Interface (`utils/adb.js`)
-- **Importance Score: 85**
-- Handles ADB command execution and device interactions
-- Manages screenshots, input simulation, app installation and device info retrieval
-- Controls device state transitions and verifies connectivity
+2. ADB Communication Layer
+- Custom ADB protocol implementation for device interaction
+- Specialized command patterns for virtual device management 
+- Screenshot and visual state verification system
+- Process-aware device state management
 
-### Device Workflows
+Importance Score: 80/100
 
-#### Device Creation (`scripts/createCloudPhone.js`)
-- **Importance Score: 80**
-- Provisions new cloud devices with proxy configuration
-- Handles device naming and initial setup
-- Validates device readiness and connectivity
+3. Device Pool Management
+- Dynamic device allocation and deallocation
+- State-aware device recycling system
+- Provider-specific device initialization sequences
+- Health monitoring and automatic recovery
 
-#### Device Startup (`scripts/startPhone.js`)
-- **Importance Score: 75**
-- Manages device boot sequence and ADB activation
-- Implements retry logic for failed device starts
-- Handles timeout scenarios and state verification
+Importance Score: 75/100
 
-### Device State Management
+Key Device Workflows:
 
-#### Session Management (`services/session-service.js`)
-- **Importance Score: 70**
-- Extracts and imports device sessions
-- Maintains session continuity across device restarts
-- Handles session data persistence and recovery
+1. Device Initialization
+- Environment detection and configuration
+- Provider-specific startup sequences
+- State verification and readiness checks
+- Failure recovery with automatic retries
 
-#### State Transitions
-- Device state tracking across boot, ready, and error states
-- Recovery procedures for failed state transitions
-- Environment-specific state management rules
+2. Device State Management  
+- Active state tracking across environments
+- Resource cleanup on shutdown/failure
+- Session persistence between operations
+- Provider-specific state synchronization
 
-### Key Integration Points
+3. Device Communication
+- Unified command interface across providers
+- Screenshot-based state verification
+- Process-aware operation sequencing
+- Error recovery with automatic retries
 
-#### VPN Management (`services/vpnios-service.js`)
-- **Importance Score: 65**
-- Controls VPN configurations per device
-- Manages VPN server selection and connection states
-- Handles VPN authentication and session persistence
-
-#### Orchestration (`orchestrator.js`)
-- **Importance Score: 85**
-- Coordinates device creation, startup and teardown
-- Manages parallel device operations
-- Handles environment-specific device coordination
+File Paths:
+/utils/browserbase/deviceManager.js
+/services/device/poolManager.js
+/services/device/stateManager.js
+/workflows/device/initialization.js
 
 $END$
 

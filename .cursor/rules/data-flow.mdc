@@ -1,68 +1,56 @@
 ---
-description: Comprehensive analysis of data flows between components including SMS verification, OCR processing, messaging pipelines and database interactions
+description: Analyze data flow patterns in identity verification, document processing, messaging, and payment systems
 ---
 
 
 # data-flow
 
-The data flow architecture consists of several key pipelines:
+Key Data Flow Pipelines:
 
-### SMS Verification Pipeline
-- SMS activation service obtains phone numbers from SMS-Activate API
-- Verification codes retrieved through polling with retry logic
-- OCR service extracts codes from screenshots
-- Results flow to WhatsApp setup workflow
-- File: `services/sms-service.js`
-- Importance Score: 85
+1. Identity Document Processing
+- Input: Raw document images/scans (ID cards, passports)
+- OCR extraction via Mindee API for French documents
+- GPT-4 Vision analysis for passport data
+- Standardization and field normalization
+- Database storage in Supabase
+- Status tracking (new -> pending -> verified/rejected)
 
-### OCR Processing Pipeline
-- Screenshots captured from device
-- Tesseract OCR extracts text content
-- Text analyzed for phone numbers and status indicators
-- Results flow to verification and session management
-- File: `services/ocr-service.js` 
-- Importance Score: 90
+2. SMS Verification Flow
+- Phone number acquisition from provider pool
+- Country-specific number formatting
+- OTP message interception
+- Verification code extraction via OCR
+- Status updates through verification lifecycle
+- Temporary email verification fallback
 
-### Session Management Pipeline
-- WhatsApp sessions extracted from source devices
-- Session data stored temporarily
-- Sessions imported to target devices
-- Status tracked through database
-- File: `services/session-service.js`
-- Importance Score: 80
+3. Payment Processing Pipeline
+- Card details capture and validation
+- 3D-Secure verification flow
+- Status propagation through verification stages
+- Transaction confirmation tracking
+- Fee calculation and deduction logic
+- Payment provider integration (MangoPay, Western Union)
 
-### Message Distribution Pipeline 
-- New contacts retrieved from database
-- Messages selected randomly from templates
-- Sent via WhatsApp with random delays
-- Status updates flow back to database
-- File: `services/sender-service.js`
-- Importance Score: 85
+4. Message Handling System
+- Contact data normalization and validation
+- Campaign-based message templating
+- Delivery status tracking
+- Rate limiting and throttling
+- Multi-device message synchronization
+- Session state management
 
-### Device Management Pipeline
-- Device discovery across environments
-- Device status monitoring and updates
-- Screenshots and interaction events
-- Results flow to workflow orchestrator
-- File: `services/device-service.js`
-- Importance Score: 75
+Key Integration Points:
+- Identity verification services (Mindee, GPT-4)
+- Payment processors (MangoPay, Western Union)
+- SMS/Email verification providers
+- WhatsApp multi-device messaging
+- Supabase database storage
 
-### Database Integration Pipeline
-- Contact status updates
-- Campaign tracking data
-- Lead storage with deduplication
-- Stats aggregation for reporting
-- File: `utils/supabase.js`
-- Importance Score: 80
-
-Core workflows coordinate these pipelines:
-- Account setup and verification
-- Session transfer between devices  
-- Automated messaging sequences
-- Device linking and synchronization
-
-Files: `workflows/whatsapp/*`
-Importance Score: 85
+Critical Data States:
+- Document verification: new -> pending -> verified/rejected
+- Payment processing: initiated -> pending -> success/declined
+- Message delivery: queued -> sent -> delivered/failed
+- Account verification: new -> processing -> verified/blocked
 
 $END$
 

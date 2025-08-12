@@ -16,7 +16,7 @@ let vpnChanged = false; // Flag pour savoir si le VPN a déjà été changé
 
 // Choisir un aléatoirement un serveur 
 async function getRandomServer(country) {
-    const servers = require(`../resources/vpn/${country}-nordvpn-servers.json`);
+    const servers = require(`../assets/vpn/${country}-nordvpn-servers.json`);
     return servers[Math.floor(Math.random() * servers.length)];
 }
 

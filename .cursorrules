@@ -10,45 +10,42 @@
 - Explain your OBSERVATIONS clearly, then provide REASONING to identify the exact issue. Add console logs when needed to gather more information.
 
 
-The project implements a distributed system with three main business domains:
+IDENTITY DOCUMENT PROCESSING SYSTEM
 
-### Frontend Payment & Tracking
-Core payment processing and user tracking logic distributed across:
-- Campaign-specific landing pages with visit tracking and calendar booking
-- Multi-step payment verification flow integrated with Google login
-- Dynamic popup system for payment status and 3D Secure verification
-- Lead storage and campaign tracking APIs
+Core Business Domains:
 
-Key files:
-- `frontend/components/Checkout.js` - Payment flow orchestration (Score: 85)
-- `frontend/pages/google-login.js` - Login/payment verification (Score: 90)
-- `frontend/pages/api/tracking/track-submission.js` - Lead tracking (Score: 80)
+1. Document Extraction & Analysis
+- French identity card processing using Mindee API with country-specific field mapping
+- Passport data extraction using GPT-4 vision model with specialized JSON normalization
+- Custom MRZ code parsing and validation for official documents
+- Identity document standardization pipeline with status tracking
+Importance Score: 85/100
 
-### Device & Session Management 
-Automated device control and session handling:
-- Multi-environment device management (MoreLogin, BlueStacks, cloud)
-- OCR-based screenshot analysis for verification
-- WhatsApp session extraction and transfer between devices
-- VPN management for iOS devices
+2. Payment Processing Automation 
+- Western Union payment workflow with multi-stage verification
+- Bricks platform integration for investment accounts 
+- Google Ads payment automation with 3D-Secure handling
+- Fraud detection bypass and session management
+Importance Score: 85/100
 
-Key files:
-- `services/device-service.js` - Device orchestration (Score: 80)
-- `services/ocr-service.js` - Image analysis (Score: 90)
-- `services/session-service.js` - Session management (Score: 75)
+3. WhatsApp Business Automation
+- Account creation and phone verification orchestration
+- Multi-device transfer protocol with OCR-based verification
+- Campaign management with rate limiting and status tracking
+- Cloud phone virtualization with proxy management
+Importance Score: 80/100
 
-### WhatsApp Automation
-Comprehensive WhatsApp workflow automation:
-- Account setup and configuration
-- Device linking and transfer
-- Automated message sending
-- Profile branding and management
+Key Implementation Files:
+- utils/identity/extractIdentities.js: French ID card processing
+- utils/identity/extractPassports.js: Passport data extraction
+- workflows/westernunion/westernFlow.js: Payment automation
+- services/whatsapp/app-service.js: WhatsApp account management
 
-Key files:
-- `workflows/whatsapp/input.js` - Number setup orchestration (Score: 90)
-- `workflows/whatsapp/transfer.js` - Account transfer logic (Score: 90)
-- `services/whatsapp-service.js` - Core WhatsApp automation (Score: 85)
-
-The system uses a central orchestrator (`orchestrator.js`, Score: 90) to coordinate workflows across these domains, with configuration-driven customization of behavior patterns.
+Business Logic Integration:
+- Document processing feeds into payment automation
+- Payment verification ties into identity verification
+- WhatsApp automation leverages identity and payment systems
+- All systems share common status tracking and verification patterns
 
 $END$
 

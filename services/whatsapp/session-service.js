@@ -10,7 +10,7 @@ const { deviceService } = require('../device-service');
 
 async function extractSession(device, phoneNumber) {
   // Copier la session dans le dossier sessions local
-  const sessionPath = `./resources/wa-sessions/${phoneNumber}/`;
+  const sessionPath = `./assets/wa-sessions/${phoneNumber}/`;
   await executeCommand(device, `root`);
   await executeCommand(device, `shell mount -o rw,remount /data`);
   await sleep(2000);

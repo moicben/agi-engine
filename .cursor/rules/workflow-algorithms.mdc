@@ -1,60 +1,61 @@
 ---
-description: Specification for WhatsApp account management workflows including setup, branding, linking and messaging orchestration
+description: For analyzing workflow algorithms and automation patterns in WhatsApp account management and messaging systems
 ---
 
 
 # workflow-algorithms
 
-Key workflow components:
+Core WhatsApp Account Management Workflows:
 
-### Core Orchestration
-- Device Discovery & Activation
-- Parallel Account Creation
-- WhatsApp Setup & Verification 
-- Session Management & Transfer
-- Message Sending Coordination
+1. Account Creation Pipeline
+- Multi-stage verification with SMS activation
+- Country-specific phone number acquisition
+- Rate-limited account creation (3 attempts per proxy)
+- Automated device linking between virtual/physical phones
+- Status tracking: pending -> verified -> branded -> active
 
-The workflows are structured in layers:
+2. Parallel Processing Architecture
+- Orchestrated instance management (8-12 concurrent accounts)
+- Master-slave device coordination for brand transfer
+- Queue-based message distribution with rate limiting
+- Device state synchronization with health monitoring
 
-1. Device Layer (`services/device-service.js`, Score: 80)
-- Manages device lifecycle across environments (MoreLogin, BlueStacks, cloud)
-- Handles device creation, launching and discovery
-- Maps device identifiers to addresses
+3. Brand Transfer Workflow
+- Sequential brand profile application
+- Master device coordination for profile verification
+- Automated QR code scanning for device linking
+- Profile image and status synchronization
 
-2. Session Layer (`services/session-service.js`, Score: 75) 
-- Extracts/imports WhatsApp sessions between devices
-- Manages session data persistence and transfer
-- Handles session verification states
+4. Campaign Management
+- Contact batch processing with status tracking
+- Rate-limited message sending (15-20/hour)
+- Contact state management (pending/sent/failed)
+- Automated retry logic for failed messages
 
-3. Messaging Layer (`services/sender-service.js`, Score: 85)
-- Manages WhatsApp message sending workflows
-- Handles number formatting and validation
-- Controls rate limiting and parallel sends
-- Manages media attachments
+File Paths:
+/workflows/whatsapp/
+- input.js - Phone verification workflow
+- transfer.js - Device transfer protocol
+- brand.js - Account branding automation 
+- send.js - Message campaign orchestration
 
-4. Branding Layer (`workflows/whatsapp/brand.js`, Score: 80)
-- Sets up WhatsApp business profiles
-- Manages profile images and descriptions
-- Handles verification status
+/services/whatsapp/
+- app-service.js - Core account management
+- session-service.js - Multi-device coordination
+- sender-service.js - Message distribution system
 
-5. Orchestration Layer (`orchestrator.js`, Score: 90)
-- Coordinates all workflow components
-- Manages parallel execution
-- Handles retry logic and error states
-- Controls rate limiting
+Key Business Rules:
+- SMS verification timeouts (180s)
+- Device transfer retry limit (3 attempts)
+- Message rate limits per account
+- Account cooldown periods between actions
+- Profile transfer verification requirements
 
-The workflows are executed through runners:
-
-- `runners/brander.js` (Score: 70) - Executes branding workflows
-- `runners/linker.js` (Score: 60) - Manages device linking
-- `runners/sender.js` (Score: 60) - Controls message sending
-- `runners/universaler.js` (Score: 70) - Handles universal workflows
-
-Key Patterns:
-- Staggered parallel execution 
-- Session state management
-- Rate limiting and retry logic
-- Error handling and recovery
+Importance Score: 90/100
+- Complex multi-device orchestration
+- Critical business automation workflows
+- Sophisticated rate limiting and verification
+- Domain-specific security handling
 
 $END$
 
