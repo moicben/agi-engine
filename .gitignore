@@ -112,3 +112,10 @@ whatsapp_session_tmp/
 node_modules/
 package-lock.json
 .next/
+
+# Python 
+.venv/
+.python-version
+.ruff_cache/
+.pytest_cache/
+.ropeproject/

@@ -1,0 +1,21 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with: {python-version: '3.9'}
+      - run: pip install -r requirements.txt
+      - run: pip install black pytest
+      - run: black --check .
+      - run: pytest
+      - name: Healthcheck
+        run: |
+          uvicorn core.service.api:api --port 8001 & sleep 5
+          curl -f http://localhost:8001/run -d '{"query":"test","session_id":"test"}' || exit 1
+          kill %1

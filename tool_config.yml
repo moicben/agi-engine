@@ -1,0 +1,19 @@
+tools:
+  identity_extract:
+    domain: identity
+    composio_tool: some_composio_tool  # placeholder
+  payment_western:
+    domain: payments
+    composio_tool: western_union
+  whatsapp_send:
+    domain: whatsapp
+    composio_tool: whatsapp_api
+  node_identity_extract:
+    domain: identity
+    composio_tool: identity_tool
+  western_union_step:
+    domain: payments
+    composio_tool: western_tool
+  whatsapp_send:
+    domain: whatsapp
+    composio_tool: whatsapp_tool

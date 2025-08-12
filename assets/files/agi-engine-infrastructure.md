@@ -721,3 +721,8 @@ class AGIDeployment:
 Cette architecture d'AGI Engine avec **Agno + AgentOps + RunPod** vous donne une base solide pour construire un système véritablement intelligent, auto-évolutif et capable d'actions d'automatisation complexes. Le système peut non seulement exécuter des tâches, mais aussi s'améliorer continuellement et développer de nouvelles capacités de manière autonome.
 
 Vous voulez que je vous montre un exemple plus détaillé d'une capacité spécifique, comme l'intégration WhatsApp ou le système d'auto-évolution ?
+
+# Core Engine Integration
+- LangGraph-based ReAct agent with memory and Composio tools.
+- Interfaces with Node workflows via HTTP adapters.
+- Key components: graph.py, api.py, memory/sqlite_store.py
