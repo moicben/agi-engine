@@ -3,10 +3,10 @@
  * Fonctions utilitaires essentielles
  */
 
-const { executeCommand } = require('./adb');
-const { exec, execSync } = require('child_process');
+import { executeCommand } from './adb.js';
+import { exec, execSync } from 'child_process';
 
-/**
+/**z
  * Attendre un délai en ms
  */
 async function sleep(ms) {
@@ -14,7 +14,7 @@ async function sleep(ms) {
 }
 
 
-async function execAsync(command) {
+export async function execAsync(command) {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
       if (error) reject(error);
@@ -23,7 +23,7 @@ async function execAsync(command) {
   });
 }
 
-async function randomSleep(min, max) {
+export async function randomSleep(min, max) {
   const delay = Math.floor(Math.random() * (max - min + 1)) + min;
   //console.log(`⌛️ Délai de ${delay}ms...`);
   return await sleep(delay);
@@ -32,7 +32,7 @@ async function randomSleep(min, max) {
 /**
  * Réessayer une fonction avec backoff
  */
-async function retry(fn, attempts = 3, delay = 1000) {
+export async function retry(fn, attempts = 3, delay = 1000) {
   for (let i = 0; i < attempts; i++) {
         try {
       return await fn();
@@ -47,7 +47,7 @@ async function retry(fn, attempts = 3, delay = 1000) {
 }
 
 // Noms de compte aléatoires
-async function randomName() {
+export async function randomName() {
 const randomNames = ['John', 'Jane', 'Jim', 'Jill', 'Jack', 'Jill', 'Jim', 'Jane', 'John', 'Jack'];
     const randomSurnames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
     return randomNames[Math.floor(Math.random() * randomNames.length)] + ' ' + randomSurnames[Math.floor(Math.random() * randomSurnames.length)];
@@ -56,7 +56,7 @@ const randomNames = ['John', 'Jane', 'Jim', 'Jill', 'Jack', 'Jill', 'Jim', 'Jane
 /**
  * Parser un numéro de téléphone
  */
-function parsePhone(country, number) {
+export function parsePhone(country, number) {
   const countryPrefixes = {
     'FR': '+33',
     'UK': '+44',
@@ -81,7 +81,7 @@ function parsePhone(country, number) {
 /**
  * Gestionnaire d'erreurs simple
  */
-function errorHandler(error, context = '') {
+export function errorHandler(error, context = '') {
   const message = error.message || 'Erreur inconnue';
   const code = error.code || 'UNKNOWN';
   
@@ -98,7 +98,7 @@ function errorHandler(error, context = '') {
 /**
  * Vérifier si une erreur est retriable
  */
-function isRetryableError(error) {
+export function isRetryableError(error) {
   const retryableCodes = ['ECONNRESET', 'ETIMEDOUT', 'ENOTFOUND'];
   const retryableMessages = ['timeout', 'network', 'temporarily'];
   
@@ -108,7 +108,7 @@ function isRetryableError(error) {
 
 
 // Fonction utilitaire pour tap
-async function tap(device, coords) {
+export async function tap(device, coords) {
   // Si coords est un objet avec x et y
   if (typeof coords === 'object' && coords.x !== undefined && coords.y !== undefined) {
     await executeCommand(device, `shell input tap ${coords.x} ${coords.y}`);
@@ -122,7 +122,7 @@ async function tap(device, coords) {
 }
 
 // Fonction utilitaire pour appuyer sur espace, tab ou enter
-async function press(device, key, repeat = 1) {
+export async function press(device, key, repeat = 1) {
   for (let i = 0; i < repeat; i++) {
     await executeCommand(device, `shell input keyevent ${key}`);
     await sleep(100);
@@ -131,7 +131,7 @@ async function press(device, key, repeat = 1) {
 
 
 // Fonction utilitaire pour écrire une phrase entière avec espace
-async function writeContent(device, sentence) {
+export async function writeContent(device, sentence) {
   // Nettoyer et échapper le texte de manière robuste
   const cleanSentence = sentence
     .replace(/[àáâãäå]/g, 'a')
@@ -159,7 +159,7 @@ async function writeContent(device, sentence) {
 }
 
 // Fonction utilitaire pour parser les arguments nommés
-function parseArgs() {
+export function parseArgs() {
   const args = {};
   process.argv.slice(2).forEach(arg => {
     if (arg.startsWith('--')) {
@@ -197,18 +197,3 @@ function parseArgs() {
 }
         
 
-// Export des fonctions
-module.exports = {
-  sleep,
-  randomSleep,
-  retry,
-  parsePhone,
-  errorHandler,
-  isRetryableError,
-  tap,
-  press,
-  writeContent,
-  parseArgs,
-  randomName,
-  execAsync
-};

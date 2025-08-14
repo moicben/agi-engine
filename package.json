@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "description": "Anti-General-Intelligence Engine - Version Simplifiée Unifiée",
   "main": "src/workflow.js",
+  "type": "module",
+  "bin": {
+    "agi": "./run.js"
+  },
   "scripts": {
-    "dev": "next dev",
+    "dev": "node run.js",
     "start": "node run.js",
     "test": "node tests/test-workflow.js",
     "lint": "eslint .",
@@ -30,11 +34,16 @@
   "dependencies": {
     "@browserbasehq/stagehand": "^2.4.2",
     "@devicefarmer/adbkit": "^3.2.3",
+    "@langchain/community": "^0.3.50",
+    "@langchain/core": "^0.3.70",
+    "@langchain/langgraph": "^0.4.4",
+    "@langchain/openai": "^0.6.7",
     "@supabase/supabase-js": "^2.54.0",
     "axios": "^1.6.0",
     "dotenv": "^16.6.1",
     "hs": "^2.0.1",
     "next": "^14.2.3",
+    "playwright": "^1.54.2",
     "puppeteer": "^22.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

@@ -1,61 +1,89 @@
 ---
-description: Specification for device management implementations across virtualization environments and automation systems
+description: Specification for device management across virtualization platforms including BlueStacks, MoreLogin and cloud environments
 ---
 
-
-# device-management
-
+# === USER INSTRUCTIONS ===
+description: Specification for device management implementations across virtualization environments and automation systems
 Core Device Management Components:
-
 1. Multi-Environment Device Orchestration
 - Integrated management across BlueStacks, MoreLogin and cloud environments
 - Device state synchronization between local and cloud instances
 - Unified device control interface abstracting provider differences
 - Environment-specific startup and shutdown sequences
-
 Importance Score: 85/100
-
 2. ADB Communication Layer
 - Custom ADB protocol implementation for device interaction
 - Specialized command patterns for virtual device management 
 - Screenshot and visual state verification system
 - Process-aware device state management
-
 Importance Score: 80/100
-
 3. Device Pool Management
 - Dynamic device allocation and deallocation
 - State-aware device recycling system
 - Provider-specific device initialization sequences
 - Health monitoring and automatic recovery
-
 Importance Score: 75/100
-
 Key Device Workflows:
-
 1. Device Initialization
 - Environment detection and configuration
 - Provider-specific startup sequences
 - State verification and readiness checks
 - Failure recovery with automatic retries
-
 2. Device State Management  
 - Active state tracking across environments
 - Resource cleanup on shutdown/failure
 - Session persistence between operations
 - Provider-specific state synchronization
-
 3. Device Communication
 - Unified command interface across providers
 - Screenshot-based state verification
 - Process-aware operation sequencing
 - Error recovery with automatic retries
-
 File Paths:
 /utils/browserbase/deviceManager.js
 /services/device/poolManager.js
 /services/device/stateManager.js
 /workflows/device/initialization.js
+# === END USER INSTRUCTIONS ===
+
+# device-management
+
+Device Service (`tools/others/device-service.js`)
+Importance Score: 75/100
+
+Core Device Management Workflows:
+
+1. Multi-Platform Device Orchestration
+- Unified interface for managing devices across MoreLogin, BlueStacks and Studio emulators
+- Dynamic device discovery for BlueStacks instances using port range scanning
+- Platform-specific device ID resolution and connection management
+- Automatic environment detection and platform-specific handling
+
+2. Device State Management 
+- Tracks device status across connection lifecycle
+- Handles state transitions: disconnected -> connecting -> ready
+- Maintains device metadata including platform type and capabilities
+- Synchronizes device state between different management interfaces
+
+3. Connection Management
+- Custom connection retry logic based on platform type
+- BlueStacks-specific port discovery on localhost (5555-5585 range)
+- Device locking mechanism to prevent concurrent access
+- Platform-specific cleanup on disconnect
+
+4. Environment-Specific Logic
+- MoreLogin: Custom cloud device initialization
+- BlueStacks: Local instance management with port mapping
+- Studio: Emulator-specific launch parameters
+
+Key Device States:
+- Uninitialized: Fresh device without configuration
+- Connecting: Device discovered but not ready
+- Ready: Device available for operations
+- Error: Connection/platform issues
+- Locked: Device in use by operation
+
+The system provides a comprehensive device management layer abstracting the differences between virtual device platforms while maintaining consistent state management and access control.
 
 $END$
 

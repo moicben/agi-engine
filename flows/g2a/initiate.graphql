@@ -1,0 +1,141 @@
+# g2aFlow GraphQL Mutation avec corrections pour les arguments
+#https://www.g2a.com/fr/rewarble-visa-gift-card-5-usd-by-rewarble-key-global-i10000502992002?___currency=EUR&___store=english&___locale=fr
+
+mutation g2aFlow {
+
+  # Open random initial page
+  openRandomInitialPage: goto(
+    url: "https://news.ycombinator.com"
+    waitUntil: firstContentfulPaint
+  ) {
+    status
+  }
+
+  # Wait for the page to load
+  waitInitialPage: waitForTimeout(time: 1000) {
+    time
+  }
+
+  # Open the G2A page
+  openG2APage: goto(
+    url: "https://www.g2a.com/fr/rewarble-visa-gift-card-5-usd-by-rewarble-key-global-i10000502992002?___currency=EUR&___store=english&___locale=fr"
+    waitUntil: firstContentfulPaint
+  ) {
+    status
+  }
+
+  # Wait for the page to load
+  waitG2APage: waitForTimeout(time: 5000) {
+    time
+  }
+
+  addToCart: click(
+    selector: "form > button"
+    wait: true
+    visible: true
+  ) {
+    time
+  }
+
+  # Wait for drawer to open
+  waitCartDrawer: waitForTimeout(time: 2000) {
+    time
+  }
+
+
+  goToCart: click(
+    selector: ".rc-drawer-content .light > div > .justify-between a"
+    wait: true
+    visible: true
+  ) {
+    time
+  }
+
+  # Wait for the page to load
+  waitCartDrawer2: waitForTimeout(time: 5000) {
+    time
+  }
+
+  inputEmail: type(
+    selector: "input[type='email']"
+    text: "bendoymclol@gmail.com"
+    wait: true
+    visible: true
+  ) {
+    time
+  }
+
+  # Wait for the step to load
+  waitPaymentPage2: waitForTimeout(time: 4000) {
+    time
+  }
+
+  continueToPayment: click(
+    selector: "button[data-event='cart-continue']"
+    wait: true
+    visible: true
+  ) {
+    time
+  }
+
+  # Wait for the step to load
+  waitPaymentPage: waitForTimeout(time: 4000) {
+    time
+  }
+
+  continuePayByCard: click(
+    selector: "button[data-testid='continue-payment-button']"
+    wait: true
+    visible: true
+  ) {
+    time
+  }
+
+  # Wait for the step to load (IMPORTANT)
+  waitPaymentForm: waitForTimeout(time: 5000) {
+    time
+  }
+
+  # Click sur l'icon du formulaire pour focus curseur
+  focusPaymentForm: click(
+    selector: "section > div div div div div div div div svg"
+    wait: true
+    visible: true
+  ) {
+    time
+  }
+
+  # Wait for the focus to appear
+  waitPaymentForm2: waitForTimeout(time: 1500) {
+    time
+  }
+
+  # Focus next field (replaced unsupported key press by a short wait)
+  waitBeforeTypingCard: waitForTimeout(time: 500) {
+    time
+  }
+  
+  # Type "1234567890"
+  typeCardNumber: type(
+    selector: "input[type='text']"
+    text: "1234567890"
+    wait: true
+    visible: true
+  ) {
+    time
+  }
+
+  # attendre 10 secondes
+  wait10Seconds: waitForTimeout(time: 10000) {
+    time
+  }
+
+  # click sur le bouton "Payer"
+  clickPayButton: click(
+    selector: "button[data-testid='continue-payment-button']"
+    wait: true
+    visible: true
+  ) {
+    time
+  }
+}

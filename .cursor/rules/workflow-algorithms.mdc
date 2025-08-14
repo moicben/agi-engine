@@ -1,61 +1,115 @@
 ---
-description: For analyzing workflow algorithms and automation patterns in WhatsApp account management and messaging systems
+description: Workflow automation and algorithms specification for complex multi-step WhatsApp account creation, branding and messaging
 ---
 
-
-# workflow-algorithms
-
+# === USER INSTRUCTIONS ===
+description: For analyzing workflow algorithms and automation patterns in WhatsApp account management and messaging systems
 Core WhatsApp Account Management Workflows:
-
 1. Account Creation Pipeline
 - Multi-stage verification with SMS activation
 - Country-specific phone number acquisition
 - Rate-limited account creation (3 attempts per proxy)
 - Automated device linking between virtual/physical phones
 - Status tracking: pending -> verified -> branded -> active
-
 2. Parallel Processing Architecture
 - Orchestrated instance management (8-12 concurrent accounts)
 - Master-slave device coordination for brand transfer
 - Queue-based message distribution with rate limiting
 - Device state synchronization with health monitoring
-
 3. Brand Transfer Workflow
 - Sequential brand profile application
 - Master device coordination for profile verification
 - Automated QR code scanning for device linking
 - Profile image and status synchronization
-
 4. Campaign Management
 - Contact batch processing with status tracking
 - Rate-limited message sending (15-20/hour)
 - Contact state management (pending/sent/failed)
 - Automated retry logic for failed messages
-
-File Paths:
 /workflows/whatsapp/
 - input.js - Phone verification workflow
 - transfer.js - Device transfer protocol
 - brand.js - Account branding automation 
 - send.js - Message campaign orchestration
-
 /services/whatsapp/
 - app-service.js - Core account management
 - session-service.js - Multi-device coordination
 - sender-service.js - Message distribution system
-
 Key Business Rules:
 - SMS verification timeouts (180s)
 - Device transfer retry limit (3 attempts)
 - Message rate limits per account
 - Account cooldown periods between actions
 - Profile transfer verification requirements
-
 Importance Score: 90/100
 - Complex multi-device orchestration
 - Critical business automation workflows
 - Sophisticated rate limiting and verification
 - Domain-specific security handling
+# === END USER INSTRUCTIONS ===
+
+# workflow-algorithms
+
+Core WhatsApp Account Workflow:
+
+1. Account Creation Pipeline
+- Phone number validation and formatting for target regions (FR, UK, CA) 
+- Progressive multi-stage verification:
+  * Initial SMS code request
+  * Code validation (OCR extraction)
+  * Account confirmation
+  * Transfer code handling
+- Intelligent retry with exponential backoff on failures
+- VPN rotation between attempts
+
+2. Branding Automation
+- Systematic profile setup sequence:
+  * Name/description insertion
+  * Profile image upload
+  * Business category selection
+  * About text configuration
+- Multi-step navigation through settings
+- Screenshot validation at key steps
+- OCR-based success verification
+
+3. Device Management
+- Coordinated device linking workflow:
+  * QR code detection and capture
+  * Multi-device pairing protocol
+  * Session transfer validation
+  * Account migration confirmation
+
+4. Message Distribution
+- Rate-limited sending with dynamic delays:
+  * Initial 5 message burst
+  * Progressive slowdown
+  * Random intervals (15-45s)
+- Contact verification pre-send
+- Status tracking:
+  * delivered
+  * failed
+  * blocked
+  * not_registered
+- Automatic retry queue for failed attempts
+
+5. Parallel Processing
+- Device pool management
+- Concurrent session handling
+- Synchronized state updates
+- Resource locking for critical operations
+
+Implementation Paths:
+/tools/whatsapp/app-service.js - Account creation workflow
+/tools/whatsapp/ocr-service.js - Verification code extraction
+/tools/whatsapp/sender-service.js - Message distribution
+/flows/whatsapp/brand.js - Profile setup automation
+
+Importance Scores:
+Account Creation: 95/100
+Branding Automation: 85/100
+Device Management: 80/100
+Message Distribution: 90/100
+Parallel Processing: 75/100
 
 $END$
 

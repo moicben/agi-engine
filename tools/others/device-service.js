@@ -4,7 +4,7 @@
  */
 
 const { execAsync } = require('../utils/helpers');
-const config = require('../config');
+const config = require('../../config');
 
 // État global des devices
 const devices = new Map();

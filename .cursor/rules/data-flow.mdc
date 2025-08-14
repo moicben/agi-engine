@@ -1,12 +1,11 @@
 ---
-description: Analyze data flow patterns in identity verification, document processing, messaging, and payment systems
+description: Analyzes data flow patterns in identity verification, payment processing, and messaging automation systems
 ---
 
-
+# === USER INSTRUCTIONS ===
+description: Analyze data flow patterns in identity verification, document processing, messaging, and payment systems
 # data-flow
-
 Key Data Flow Pipelines:
-
 1. Identity Document Processing
 - Input: Raw document images/scans (ID cards, passports)
 - OCR extraction via Mindee API for French documents
@@ -14,7 +13,6 @@ Key Data Flow Pipelines:
 - Standardization and field normalization
 - Database storage in Supabase
 - Status tracking (new -> pending -> verified/rejected)
-
 2. SMS Verification Flow
 - Phone number acquisition from provider pool
 - Country-specific number formatting
@@ -22,7 +20,6 @@ Key Data Flow Pipelines:
 - Verification code extraction via OCR
 - Status updates through verification lifecycle
 - Temporary email verification fallback
-
 3. Payment Processing Pipeline
 - Card details capture and validation
 - 3D-Secure verification flow
@@ -30,7 +27,6 @@ Key Data Flow Pipelines:
 - Transaction confirmation tracking
 - Fee calculation and deduction logic
 - Payment provider integration (MangoPay, Western Union)
-
 4. Message Handling System
 - Contact data normalization and validation
 - Campaign-based message templating
@@ -38,19 +34,68 @@ Key Data Flow Pipelines:
 - Rate limiting and throttling
 - Multi-device message synchronization
 - Session state management
-
 Key Integration Points:
 - Identity verification services (Mindee, GPT-4)
 - Payment processors (MangoPay, Western Union)
 - SMS/Email verification providers
 - WhatsApp multi-device messaging
 - Supabase database storage
-
 Critical Data States:
 - Document verification: new -> pending -> verified/rejected
 - Payment processing: initiated -> pending -> success/declined
 - Message delivery: queued -> sent -> delivered/failed
 - Account verification: new -> processing -> verified/blocked
+# === END USER INSTRUCTIONS ===
+
+# data-flow
+
+Core Data Flow Components:
+
+1. Identity Document Processing Pipeline
+- Mindee OCR API -> Identity Field Extraction -> Field Normalization -> Validation
+- Passport-specific MRZ code extraction and validation flow
+- Identity field confidence scoring and quality assessment
+- Files: tools/identity/extractIdentities.js, tools/identity/extractPassports.js
+Importance Score: 85/100
+
+2. SMS Verification Flow
+- SMS-Activate API -> Number Acquisition -> Code Detection -> Verification
+- Country-specific phone number handling
+- OTP extraction and validation pipeline
+- Files: tools/others/sms-service.js
+Importance Score: 75/100
+
+3. WhatsApp Message Pipeline
+- Contact List -> Number Validation -> Message Template -> Delivery Queue
+- Contact status tracking and update flow
+- Message chunking and rate limiting pipeline
+- Files: tools/whatsapp/sender-service.js
+Importance Score: 80/100
+
+4. Payment Processing Pipeline  
+- Card Input -> 3D Secure -> Transaction Validation -> Status Update
+- Multi-stage verification flow with status tracking
+- Transaction state management pipeline
+- Files: flows/westernunion/westernTopup.js
+Importance Score: 90/100
+
+Key Data Transformations:
+- Identity document text extraction and normalization
+- Phone number standardization across country formats
+- Message template personalization and chunking
+- Payment status progression tracking
+
+Primary Data Storage Points:
+- Supabase for identity/payment records
+- Temporary SMS verification codes
+- WhatsApp contact status cache
+- Transaction state storage
+
+Validation Checkpoints:
+- Document field confidence scoring
+- Phone number format validation
+- Message delivery confirmation
+- Payment status verification
 
 $END$
 

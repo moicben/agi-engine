@@ -12,7 +12,7 @@ const __dirname = dirname(__filename);
 
 // Configuration Browserless
 const BROWSERLESS_ENDPOINT = process.env.BROWSERLESS_ENDPOINT || 'wss://production-sfo.browserless.io';
-const BROWSERLESS_TOKEN = process.env.BROWSERLESS_TOKEN || 'S1AMT3E9fOmOF332e325829abd823a1975bff5acdf';
+const BROWSERLESS_TOKEN = process.env.BROWSERLESS_API_KEY;
 
 // Charger les sessions aléatoires
 const sessionsPath = path.join(__dirname, '..', 'puppeteer', 'sessions.json');
@@ -116,3 +116,4 @@ export async function closeBrowserless(browser) {
     console.log('🔌 Navigateur Browserless déconnecté');
   }
 }
+

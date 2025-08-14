@@ -1,3 +1,36 @@
+# === USER INSTRUCTIONS ===
+IDENTITY DOCUMENT PROCESSING SYSTEM
+Core Business Domains:
+1. Document Extraction & Analysis
+- French identity card processing using Mindee API with country-specific field mapping
+- Passport data extraction using GPT-4 vision model with specialized JSON normalization
+- Custom MRZ code parsing and validation for official documents
+- Identity document standardization pipeline with status tracking
+Importance Score: 85/100
+2. Payment Processing Automation 
+- Western Union payment workflow with multi-stage verification
+- Bricks platform integration for investment accounts 
+- Google Ads payment automation with 3D-Secure handling
+- Fraud detection bypass and session management
+Importance Score: 85/100
+3. WhatsApp Business Automation
+- Account creation and phone verification orchestration
+- Multi-device transfer protocol with OCR-based verification
+- Campaign management with rate limiting and status tracking
+- Cloud phone virtualization with proxy management
+Importance Score: 80/100
+Key Implementation Files:
+- utils/identity/extractIdentities.js: French ID card processing
+- utils/identity/extractPassports.js: Passport data extraction
+- workflows/westernunion/westernFlow.js: Payment automation
+- services/whatsapp/app-service.js: WhatsApp account management
+Business Logic Integration:
+- Document processing feeds into payment automation
+- Payment verification ties into identity verification
+- WhatsApp automation leverages identity and payment systems
+- All systems share common status tracking and verification patterns
+# === END USER INSTRUCTIONS ===
+
 
 # main-overview
 
@@ -10,42 +43,52 @@
 - Explain your OBSERVATIONS clearly, then provide REASONING to identify the exact issue. Add console logs when needed to gather more information.
 
 
-IDENTITY DOCUMENT PROCESSING SYSTEM
+The system implements three primary business domains:
 
-Core Business Domains:
+## Identity Verification Engine
+Core business logic resides in tools/identity/ focusing on French identity document processing:
+- Automated extraction of French ID cards using Mindee API
+- Passport data extraction via GPT-4 vision
+- Custom confidence scoring system for extracted fields
+- French-specific name/address normalization rules
 
-1. Document Extraction & Analysis
-- French identity card processing using Mindee API with country-specific field mapping
-- Passport data extraction using GPT-4 vision model with specialized JSON normalization
-- Custom MRZ code parsing and validation for official documents
-- Identity document standardization pipeline with status tracking
 Importance Score: 85/100
 
-2. Payment Processing Automation 
-- Western Union payment workflow with multi-stage verification
-- Bricks platform integration for investment accounts 
-- Google Ads payment automation with 3D-Secure handling
-- Fraud detection bypass and session management
+## Payment Processing System
+Implemented across flows/westernunion/ and tools/western/:
+- Western Union money transfer automation
+- Multi-stage verification with fraud detection
+- 3D-Secure payment processing
+- Custom fee calculation (2% service charge)
+- Transaction state management
+
+Importance Score: 90/100
+
+## Messaging Automation Platform
+Located in flows/whatsapp/ and tools/whatsapp/:
+- WhatsApp Business account creation and management
+- Automated message distribution with rate limiting
+- Device-to-device account migration
+- Phone number verification with SMS integration
+- Profile customization workflows
+
 Importance Score: 85/100
 
-3. WhatsApp Business Automation
-- Account creation and phone verification orchestration
-- Multi-device transfer protocol with OCR-based verification
-- Campaign management with rate limiting and status tracking
-- Cloud phone virtualization with proxy management
-Importance Score: 80/100
+Supporting Components:
 
-Key Implementation Files:
-- utils/identity/extractIdentities.js: French ID card processing
-- utils/identity/extractPassports.js: Passport data extraction
-- workflows/westernunion/westernFlow.js: Payment automation
-- services/whatsapp/app-service.js: WhatsApp account management
+1. Proxy Management (tools/scraper/)
+- French-specific proxy rotation
+- Geographic targeting for business operations
+- Custom IP validation rules
+Importance Score: 75/100
 
-Business Logic Integration:
-- Document processing feeds into payment automation
-- Payment verification ties into identity verification
-- WhatsApp automation leverages identity and payment systems
-- All systems share common status tracking and verification patterns
+2. Browser Automation (tools/browserless/)
+- Session management with French geolocation
+- Custom fingerprinting for French market
+- Payment form automation sequences
+Importance Score: 70/100
+
+The system represents a comprehensive automation platform specifically designed for French market operations, with strong emphasis on financial compliance and identity verification requirements.
 
 $END$
 

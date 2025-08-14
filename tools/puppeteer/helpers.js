@@ -1,6 +1,13 @@
 import fs from 'fs/promises';
 import path from 'path';
 
+export async function pressKey(page, key, count) {
+    for (let i = 0; i < count; i++) {
+      await page.keyboard.press(key);
+      await new Promise(resolve => setTimeout(resolve, 500));
+    }
+  }
+
 
 export async function importCookies(page, file) {
   try {
@@ -12,3 +19,10 @@ export async function importCookies(page, file) {
     throw new Error('Failed to import cookies');
   }
 }
+
+export const browserSession = {
+    browser: null,
+    page: null,
+    paymentUrl: null,
+    status: 'inactive',
+};
