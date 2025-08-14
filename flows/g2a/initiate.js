@@ -1,4 +1,6 @@
 import { launchBrowser } from '../../tools/puppeteer/client.js';
+import fs from 'fs';
+import path from 'path';
 
 export async function initiateG2AWorkflow() {
 
@@ -7,40 +9,105 @@ export async function initiateG2AWorkflow() {
 	// Email par défaut si non fourni via ENV (évite crash)
 	const email = process.env.G2A_EMAIL || 'test@example.com';
 
+	// Préparer dossier screenshots
+	const screenshotDir = process.env.SCREENSHOT_DIR || path.join(process.cwd(), 'screenshots', 'g2a');
+	if (!fs.existsSync(screenshotDir)) {
+		fs.mkdirSync(screenshotDir, { recursive: true });
+	}
+
+	const screenshotIntervalMs = Number(process.env.SCREENSHOT_INTERVAL_MS || 5000);
+	const stamp = () => new Date().toISOString().replace(/[:.]/g, '-');
+	const log = (...args) => console.log('[G2A]', ...args);
+
+	async function snap(label) {
+		const file = path.join(screenshotDir, `${stamp()}_${label}.png`);
+		try {
+			await page.screenshot({ path: file, fullPage: true });
+			log(`📸 Screenshot: ${file}`);
+		} catch (e) {
+			log(`⚠️ Screenshot failed (${label}):`, e.message);
+		}
+	}
+
+	let intervalHandle = null;
+	function startPeriodicScreenshots() {
+		if (intervalHandle) return;
+		intervalHandle = setInterval(() => {
+			page.screenshot({ path: path.join(screenshotDir, `${stamp()}_auto.png`), fullPage: true }).catch(() => {});
+		}, screenshotIntervalMs);
+		log(`⏱️ Periodic screenshots every ${screenshotIntervalMs}ms started`);
+	}
+	function stopPeriodicScreenshots() {
+		if (intervalHandle) {
+			clearInterval(intervalHandle);
+			intervalHandle = null;
+			log('⏹️ Periodic screenshots stopped');
+		}
+	}
+
+	// Page console piping
+	page.on('console', (msg) => log(`🖥️ page console:`, msg.type(), msg.text()));
+	page.on('pageerror', (err) => log('💥 page error:', err.message));
+
+	startPeriodicScreenshots();
+
+	log('🌐 Navigating to HN...');
 	await page.goto("https://news.ycombinator.com");
+	await snap('after-hn');
 	
 	await new Promise((resolve) => setTimeout(resolve, 3000));
 	
 	
+	log('🛒 Navigating to G2A product...');
 	await page.goto("https://www.g2a.com/fr/rewarble-visa-gift-card-5-usd-by-rewarble-key-global-i10000502992002?___currency=EUR&___store=english&___locale=fr")
+	await snap('after-product');
 	await new Promise((resolve) => setTimeout(resolve, 5000));
 	
 	
+	log('🟠 Click add-to-cart');
 	await page.waitForSelector('form > button', { visible: true, timeout: 30000 });
+	await snap('before-add-to-cart');
 	await page.click('form > button');
+	await snap('after-add-to-cart');
 	
 	
-	  await page.waitForSelector('.rc-drawer-content .light > div > .justify-between a', { visible: true, timeout: 30000 });
+	log('🟠 Open cart drawer');
+	await page.waitForSelector('.rc-drawer-content .light > div > .justify-between a', { visible: true, timeout: 30000 });
+	await snap('before-open-cart');
 	await page.click('.rc-drawer-content .light > div > .justify-between a');
+	await snap('after-open-cart');
 	
 	
-	    await page.waitForSelector("input[type='email']", { visible: true, timeout: 30000 });
-	    await page.click("input[type='email']");
-	    await page.type("input[type='email']", email, { delay: 20 });
-	
-	    
-	    await page.waitForSelector("button[data-event='cart-continue']", { visible: true, timeout: 30000 });
-	    await page.click("button[data-event='cart-continue']");
-	
-	    
-	    await page.waitForSelector("button[data-testid='continue-payment-button']", { visible: true, timeout: 30000 });
-	    await page.click("button[data-testid='continue-payment-button']");
+	log('✉️ Fill email');
+	await page.waitForSelector("input[type='email']", { visible: true, timeout: 30000 });
+	await page.click("input[type='email']");
+	await page.type("input[type='email']", email, { delay: 20 });
+	await snap('after-email');
 	
 	    
-	    const iframeInfo = await page.evaluate(() => {
-	      const iframe = document.querySelector('iframe');
-	      if (!iframe) return null;
-	      return { src: iframe.getAttribute('src') || null, title: iframe.getAttribute('title') || null };
-	    });
+	log('➡️ Continue cart');
+	await page.waitForSelector("button[data-event='cart-continue']", { visible: true, timeout: 30000 });
+	await snap('before-cart-continue');
+	await page.click("button[data-event='cart-continue']");
+	await snap('after-cart-continue');
+	
+	    
+	log('➡️ Continue payment');
+	await page.waitForSelector("button[data-testid='continue-payment-button']", { visible: true, timeout: 30000 });
+	await snap('before-continue-payment');
+	await page.click("button[data-testid='continue-payment-button']");
+	await snap('after-continue-payment');
+	
+	    
+	log('🔎 Inspect iframe');
+	const iframeInfo = await page.evaluate(() => {
+	  const iframe = document.querySelector('iframe');
+	  if (!iframe) return null;
+	  return { src: iframe.getAttribute('src') || null, title: iframe.getAttribute('title') || null };
+	});
+	log('🔎 iframeInfo:', iframeInfo);
+	await snap('after-iframe-inspect');
+
+	stopPeriodicScreenshots();
 	}
 
