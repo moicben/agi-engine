@@ -62,7 +62,7 @@ export async function initiateG2AWorkflow() {
 	await page.goto("https://news.ycombinator.com");
 	await snap('after-hn');
 	
-	await new Promise((resolve) => setTimeout(resolve, 3000));
+	await new Promise((resolve) => setTimeout(resolve, 5000));
 	
 	
 	log('🛒 Navigating to G2A product...');
