@@ -16,11 +16,20 @@ export async function initiateG2AWorkflow() {
 	}
 
 	const screenshotIntervalMs = Number(process.env.SCREENSHOT_INTERVAL_MS || 5000);
-	const stamp = () => new Date().toISOString().replace(/[:.]/g, '-');
+	const shortStamp = () => {
+		const d = new Date();
+		const pad = (n) => String(n).padStart(2, '0');
+		return (
+			`${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}` +
+			`-${pad(d.getHours())}${pad(d.getMinutes())}${pad(d.getSeconds())}`
+		);
+	};
 	const log = (...args) => console.log('[G2A]', ...args);
+	const makeSafe = (label) => String(label).toLowerCase().replace(/[^a-z0-9]+/gi, '-').replace(/^-+|-+$/g, '');
 
 	async function snap(label) {
-		const file = path.join(screenshotDir, `${stamp()}_${label}.png`);
+		const safe = makeSafe(label);
+		const file = path.join(screenshotDir, `${safe}-${shortStamp()}.png`);
 		try {
 			await page.screenshot({ path: file, fullPage: true });
 			log(`📸 Screenshot: ${file}`);
@@ -32,9 +41,7 @@ export async function initiateG2AWorkflow() {
 	let intervalHandle = null;
 	function startPeriodicScreenshots() {
 		if (intervalHandle) return;
-		intervalHandle = setInterval(() => {
-			page.screenshot({ path: path.join(screenshotDir, `${stamp()}_auto.png`), fullPage: true }).catch(() => {});
-		}, screenshotIntervalMs);
+		intervalHandle = setInterval(() => { snap('auto'); }, screenshotIntervalMs);
 		log(`⏱️ Periodic screenshots every ${screenshotIntervalMs}ms started`);
 	}
 	function stopPeriodicScreenshots() {
