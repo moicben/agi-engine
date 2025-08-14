@@ -69,7 +69,7 @@ export async function initiateG2AWorkflow() {
 	await page.goto("https://www.g2a.com/fr/rewarble-visa-gift-card-5-usd-by-rewarble-key-global-i10000502992002?___currency=EUR&___store=english&___locale=fr")
 	await snap('after-product');
 	await new Promise((resolve) => setTimeout(resolve, 5000));
-	
+	 
 	
 	log('🟠 Click add-to-cart');
 	await page.waitForSelector('form > button', { visible: true, timeout: 30000 });
