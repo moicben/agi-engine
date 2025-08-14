@@ -1,22 +1,12 @@
-import playwright from "playwright";
-const BROWSERBASE_API_KEY = "bb_live_m-T9VnahBkG3X3JgErytfc-VUFY";
-const BROWSERBASE_PROJECT_ID = "df923009-d142-47d6-b496-a335041e601f";
+import { launchBrowser } from '../../tools/puppeteer/client.js';
 
-(async () => {
-  const browser = await playwright.chromium.connectOverCDP(`wss://connect.browserbase.com?apiKey=${BROWSERBASE_API_KEY}`);
-	const context = await browser.newContext();
-	const page = await context.newPage();
+export async function initiateG2AWorkflow() {
 
-console.info("Launching browser...");
-	
-	/* To make things easier, we've setup Playwright using the window variables.
-	 You can access it and your API key using playwright or `wss://connect.browserbase.com?apiKey=${BROWSERBASE_API_KEY}`. */
-	console.info('Connected!');
-	
-	
-	await new Promise((resolve) => setTimeout(resolve, 1000));
-	
-	
+	const { browser, page } = await launchBrowser();
+
+	// Email par défaut si non fourni via ENV (évite crash)
+	const email = process.env.G2A_EMAIL || 'test@example.com';
+
 	await page.goto("https://news.ycombinator.com");
 	
 	await new Promise((resolve) => setTimeout(resolve, 3000));
@@ -27,7 +17,7 @@ console.info("Launching browser...");
 	
 	
 	await page.waitForSelector('form > button', { visible: true, timeout: 30000 });
-	await page.click('form > button');xx
+	await page.click('form > button');
 	
 	
 	  await page.waitForSelector('.rc-drawer-content .light > div > .justify-between a', { visible: true, timeout: 30000 });
@@ -52,6 +42,5 @@ console.info("Launching browser...");
 	      if (!iframe) return null;
 	      return { src: iframe.getAttribute('src') || null, title: iframe.getAttribute('title') || null };
 	    });
-	
-	
-})();
+	}
+
