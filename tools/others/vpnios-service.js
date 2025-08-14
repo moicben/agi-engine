@@ -14,11 +14,7 @@ const { clickScreen, writeText, pressKey } = require('../utils/robot');
 let isChangingVPN = false;
 let vpnChanged = false; // Flag pour savoir si le VPN a déjà été changé
 
-// Choisir un aléatoirement un serveur 
-async function getRandomServer(country) {
-    const servers = require(`../assets/vpn/${country}-nordvpn-servers.json`);
-    return servers[Math.floor(Math.random() * servers.length)];
-}
+
 
 // Fonction pour changer de VPN (une seule fois dans toute la session)
 async function changeVPN(country) {
