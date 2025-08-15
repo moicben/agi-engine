@@ -1,7 +1,1 @@
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/booking/[campaign]": "pages/booking/[campaign].js",
-  "/google-login": "pages/google-login.js"
-}
+{"/_app":"pages/_app.js","/_error":"pages/_error.js","/api/campaigns/[id]":"pages/api/campaigns/[id].js","/api/checkout/initiate":"pages/api/checkout/initiate.js","/api/checkout/proceed":"pages/api/checkout/proceed.js","/api/payments/browserless-checkout":"pages/api/payments/browserless-checkout.js","/api/tracking/stats":"pages/api/tracking/stats.js","/api/tracking/track-submission":"pages/api/tracking/track-submission.js","/booking/[campaign]":"pages/booking/[campaign].html","/api/tracking/track-visit":"pages/api/tracking/track-visit.js","/dashboard":"pages/dashboard.html","/google-login":"pages/google-login.html","/":"pages/index.html","/_document":"pages/_document.js","/404":"pages/404.html"}

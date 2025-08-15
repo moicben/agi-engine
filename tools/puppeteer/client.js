@@ -35,7 +35,7 @@ export async function launchBrowser(headlessMode = false, proxy = false) {
     '--disable-dev-shm-usage',
     '--disable-breakpad',
     '--disable-extensions',
-    '--disable-gpu',
+    '--disable-gpu', 
     '--remote-debugging-port=9222',
   ];
 
