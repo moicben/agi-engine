@@ -45,13 +45,13 @@ export async function initiateG2AWorkflow() {
 	await page.goto("https://news.ycombinator.com");
 	await snap('after-hn');
 	
-	await new Promise((resolve) => setTimeout(resolve, 5000));
+	await new Promise((resolve) => setTimeout(resolve, 1000));
 	
 	
 	log('🛒 Navigating to G2A product...');
 	await page.goto("https://www.g2a.com/fr/rewarble-visa-gift-card-5-usd-by-rewarble-key-global-i10000502992002?___currency=EUR&___store=english&___locale=fr")
 	await snap('after-product');
-	await new Promise((resolve) => setTimeout(resolve, 5000));
+	await new Promise((resolve) => setTimeout(resolve, 60000));
 	 
 	
 	log('🟠 Click add-to-cart');
