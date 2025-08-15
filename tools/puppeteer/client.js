@@ -52,15 +52,15 @@ export async function launchBrowser(headlessMode = false, proxy = false) {
   // If headful on Linux without DISPLAY, try to bootstrap Xvfb automatically
   if (!resolvedHeadless && process.platform === 'linux' && !process.env.DISPLAY) {
     try {
-      // Spawn a lightweight virtual framebuffer on :99
-      const xvfb = spawn('Xvfb', [':99', '-screen', '0', '1920x1080x24', '-nolisten', 'tcp', '-ac'], {
+      // Spawn a lightweight virtual framebuffer on :1
+      const xvfb = spawn('Xvfb', [':1', '-screen', '0', '1920x1080x24', '-nolisten', 'tcp', '-ac'], {
         stdio: 'ignore',
         detached: true,
       });
       xvfb.unref();
       // Give Xvfb a moment to start
       await new Promise((r) => setTimeout(r, 500));
-      process.env.DISPLAY = ':99';
+      process.env.DISPLAY = ':1';
       // eslint-disable-next-line no-console
       console.log('[puppeteer] Started Xvfb on :99 for headful mode');
     } catch (e) {
