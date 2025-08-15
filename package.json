@@ -35,7 +35,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@browserbasehq/stagehand": "^2.4.2",
+    "@browserbasehq/stagehand": "^1.14.0",
     "@devicefarmer/adbkit": "^3.2.3",
     "@langchain/community": "^0.3.50",
     "@langchain/core": "^0.3.70",
@@ -61,7 +61,7 @@
     "robotjs": "^0.6.0"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=18.18.0"
   },
   "repository": {
     "type": "git",

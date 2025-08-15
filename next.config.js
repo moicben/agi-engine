@@ -1,12 +1,12 @@
 /** @type {import('next').NextConfig} */
-module.exports = {
+const nextConfig = {
   reactStrictMode: true,
   eslint: {
     // Avoid failing the production build on lint errors
     ignoreDuringBuilds: true,
   },
 
-  webpack: (config, { isServer }) => {
+  webpack: (config) => {
     // Allow imports from parent directories
     config.resolve.fallback = {
       ...config.resolve.fallback,
@@ -15,3 +15,5 @@ module.exports = {
     return config;
   },
 };
+
+export default nextConfig;

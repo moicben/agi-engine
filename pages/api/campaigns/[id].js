@@ -1,4 +1,4 @@
-import { getCampaignById } from '../../../utils/supabase';
+const { getCampaignById } = require('../../../utils/supabase');
 
 export default async function handler(req, res) {
   try {
