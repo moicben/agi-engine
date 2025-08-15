@@ -15,7 +15,6 @@ export async function initiateG2AWorkflow() {
 		fs.mkdirSync(screenshotDir, { recursive: true });
 	}
 
-	const screenshotIntervalMs = Number(process.env.SCREENSHOT_INTERVAL_MS || 5000);
 	const shortStamp = () => {
 		const d = new Date();
 		const pad = (n) => String(n).padStart(2, '0');
@@ -38,25 +37,9 @@ export async function initiateG2AWorkflow() {
 		}
 	}
 
-	let intervalHandle = null;
-	function startPeriodicScreenshots() {
-		if (intervalHandle) return;
-		intervalHandle = setInterval(() => { snap('auto'); }, screenshotIntervalMs);
-		log(`⏱️ Periodic screenshots every ${screenshotIntervalMs}ms started`);
-	}
-	function stopPeriodicScreenshots() {
-		if (intervalHandle) {
-			clearInterval(intervalHandle);
-			intervalHandle = null;
-			log('⏹️ Periodic screenshots stopped');
-		}
-	}
-
 	// Page console piping
 	page.on('console', (msg) => log(`🖥️ page console:`, msg.type(), msg.text()));
 	page.on('pageerror', (err) => log('💥 page error:', err.message));
-
-	startPeriodicScreenshots();
 
 	log('🌐 Navigating to HN...');
 	await page.goto("https://news.ycombinator.com");
@@ -114,7 +97,5 @@ export async function initiateG2AWorkflow() {
 	});
 	log('🔎 iframeInfo:', iframeInfo);
 	await snap('after-iframe-inspect');
-
-	stopPeriodicScreenshots();
 	}
 
