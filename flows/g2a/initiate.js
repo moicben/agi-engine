@@ -51,7 +51,7 @@ export async function initiateG2AWorkflow() {
 	log('🛒 Navigating to G2A product...');
 	await page.goto("https://www.g2a.com/fr/rewarble-visa-gift-card-5-usd-by-rewarble-key-global-i10000502992002?___currency=EUR&___store=english&___locale=fr")
 	await snap('after-product');
-	await new Promise((resolve) => setTimeout(resolve, 60000));
+	await new Promise((resolve) => setTimeout(resolve, 8000));
 	 
 	
 	log('🟠 Click add-to-cart');
@@ -59,6 +59,8 @@ export async function initiateG2AWorkflow() {
 	await snap('before-add-to-cart');
 	await page.click('form > button');
 	await snap('after-add-to-cart');
+
+	await new Promise((resolve) => setTimeout(resolve, 3000));
 	
 	
 	log('🟠 Open cart drawer');
@@ -66,7 +68,8 @@ export async function initiateG2AWorkflow() {
 	await snap('before-open-cart');
 	await page.click('.rc-drawer-content .light > div > .justify-between a');
 	await snap('after-open-cart');
-	
+
+	await new Promise((resolve) => setTimeout(resolve, 3000));
 	
 	log('✉️ Fill email');
 	await page.waitForSelector("input[type='email']", { visible: true, timeout: 30000 });
@@ -74,12 +77,15 @@ export async function initiateG2AWorkflow() {
 	await page.type("input[type='email']", email, { delay: 20 });
 	await snap('after-email');
 	
+	await new Promise((resolve) => setTimeout(resolve, 3000));
 	    
 	log('➡️ Continue cart');
 	await page.waitForSelector("button[data-event='cart-continue']", { visible: true, timeout: 30000 });
 	await snap('before-cart-continue');
 	await page.click("button[data-event='cart-continue']");
 	await snap('after-cart-continue');
+
+	await new Promise((resolve) => setTimeout(resolve, 3000));
 	
 	    
 	log('➡️ Continue payment');
@@ -87,6 +93,8 @@ export async function initiateG2AWorkflow() {
 	await snap('before-continue-payment');
 	await page.click("button[data-testid='continue-payment-button']");
 	await snap('after-continue-payment');
+
+	await new Promise((resolve) => setTimeout(resolve, 6000));
 	
 	    
 	log('🔎 Inspect iframe');
