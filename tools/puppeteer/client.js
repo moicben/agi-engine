@@ -43,16 +43,39 @@ export async function launchBrowser(headlessMode = false, proxy = false) {
   // if (proxy) chromeArgs.push(`--proxy-server=${proxyAddress}:${proxyPort}`);
   // if (process.env.PUPPETEER_PROFIL_PATH) chromeArgs.push(`--user-data-dir=${process.env.PUPPETEER_PROFIL_PATH}`);
 
+  // Resolve headless mode from param or env (HEADLESS=true/false)
+  const envHeadless = process.env.HEADLESS;
+  const resolvedHeadless = typeof headlessMode === 'boolean'
+    ? headlessMode
+    : (envHeadless != null ? !/^(false|0|no)$/i.test(String(envHeadless)) : false);
+
+  // If headful on Linux without DISPLAY, try to bootstrap Xvfb automatically
+  if (!resolvedHeadless && process.platform === 'linux' && !process.env.DISPLAY) {
+    try {
+      // Spawn a lightweight virtual framebuffer on :99
+      const xvfb = spawn('Xvfb', [':99', '-screen', '0', '1920x1080x24', '-nolisten', 'tcp', '-ac'], {
+        stdio: 'ignore',
+        detached: true,
+      });
+      xvfb.unref();
+      // Give Xvfb a moment to start
+      await new Promise((r) => setTimeout(r, 500));
+      process.env.DISPLAY = ':99';
+      // eslint-disable-next-line no-console
+      console.log('[puppeteer] Started Xvfb on :99 for headful mode');
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn('[puppeteer] Failed to start Xvfb automatically. Install it or set DISPLAY. Falling back to headless. Reason:', e.message);
+    }
+  }
+
   const launchOptions = {
-    headless: headlessMode,
+    headless: resolvedHeadless,
     ignoreHTTPSErrors: true,
     defaultViewport: null,
     args: chromeArgs,
   };
 
-  if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-    launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
-  }
 
   const browser = await puppeteer.launch(launchOptions);
 
