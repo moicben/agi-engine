@@ -25,7 +25,7 @@ export default function CampaignLanding() {
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
     
     // 11 seconds for mobile, 6 seconds for desktop
-    const overlayDelay = isMobile ? 11000 : 6000;
+    const overlayDelay = isMobile ? 11000 : 4000;
     const t = setTimeout(() => setShowOverlay(true), overlayDelay);
     return () => clearTimeout(t);
   }, [campaign]);

@@ -1,0 +1,16 @@
+version: "3.9"
+services:
+  webtop:
+    image: lscr.io/linuxserver/webtop:ubuntu-xfce
+    container_name: linux-webtop
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Paris
+      - PASSWORD=${WEBTOP_PASSWORD}
+    ports:
+      - "3000:3000"
+    shm_size: "2gb"
+    volumes:
+      - ./webtop-data:/config
+    restart: unless-stopped

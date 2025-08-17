@@ -3,11 +3,11 @@
  * Gère les interactions avec l'application WhatsApp
  */
 
-const { executeCommand, takeScreenshot } = require('../../utils/adb');
-const { sleep, tap, press, writeContent, randomName } = require('../../utils/helpers');
-const { ocrService } = require('./ocr-service');
-const { logger } = require('../../utils/logger');
-const { deviceService } = require('../device-service');
+import { executeCommand, takeScreenshot } from '../../utils/adb.js';
+import { sleep, tap, press, writeContent, randomName } from '../../utils/helpers.js';
+import { ocrService } from './ocr-service.js';
+import { logger } from '../../utils/logger.js';
+import { deviceService } from '../device-service.js';
 
 // Coordonnées UI par défaut pour WhatsApp
 const UI_ELEMENTS = {

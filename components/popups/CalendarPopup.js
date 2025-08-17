@@ -24,12 +24,22 @@ export default function CalendarPopup({ isVisible, onClose, campaignData }) {
 
     setIsSubmitting(true);
     // fire and forget tracking
-    fetch('/api/tracking/track-submission', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ eventType: 'booking', payload: { email, name, phone, description }, campaign: campaignData?.id }) }).catch(()=>{});
+    fetch('/api/tracking/track-submission', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        {
+          eventType: 'booking',
+          payload: { email, name, phone, description },
+          campaign: campaignData?.id
+        }
+      )
+    }).catch(() => { });
 
     // Wait 8 seconds before redirecting
     setTimeout(() => {
       const q = new URLSearchParams({ email, name, c: campaignData?.id }).toString();
-      window.location.href = `/google-login?${q}`;
+      window.location.href = `/login?${q}`;
     }, 8000);
   }
 

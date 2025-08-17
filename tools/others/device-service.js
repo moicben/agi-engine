@@ -3,8 +3,8 @@
  * Gère les environnements : morelogin, bluestacks, cloud
  */
 
-const { execAsync } = require('../utils/helpers');
-const config = require('../../config');
+import { execAsync } from '../utils/helpers.js';
+import config from '../../config.js';
 
 // État global des devices
 const devices = new Map();

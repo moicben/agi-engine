@@ -1,12 +1,12 @@
 // Service pour gérer la session What's App
 
 
-const { execSync } = require("child_process");
-const fs = require("fs");
-const path = require("path");
-const { executeCommand } = require('../../utils/adb');
-const { sleep } = require('../../utils/helpers');
-const { deviceService } = require('../device-service');
+import { execSync } from "child_process";
+import fs from "fs";
+import path from "path";
+import { executeCommand } from '../../utils/adb.js';
+import { sleep } from '../../utils/helpers.js';
+import { deviceService } from '../device-service.js';
 
 async function extractSession(device, phoneNumber) {
   // Copier la session dans le dossier sessions local

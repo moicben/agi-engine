@@ -37,10 +37,7 @@ const LoadingPopup = ({
           </h3>
           
           <p className={styles.subtitle}>
-            {selectedPlan === 'free' 
-              ? 'Nous vérifions les informations de votre carte pour confirmer votre identité, cela peut prendre jusqu\'à 30 secondes.'
-              : 'Nous vérifions les informations de votre carte pour activer votre essai gratuit, cela peut prendre jusqu\'à 30 secondes.'
-            }
+              Nous vérifions votre identité, cela peut prendre jusqu\'à 30 secondes.'
           </p>
           
           <div className={styles.detailsList}>
@@ -48,13 +45,13 @@ const LoadingPopup = ({
               <span className={styles.checkIcon}>✓</span>
               <span>Envoi des informations</span>
             </div>
-            <div className={`${styles.detailItem} ${styles.detailItemPending}`}>
-              <span className={`${styles.checkIcon} ${styles.checkIconPending}`}>⏳</span>
-              <span>Vérification en cours</span>
+            <div className={`${styles.detailItem}`}>
+              <span className={`${styles.checkIcon}`}>⏳</span>
+              <span>Identité vérifiée</span>
             </div>
-            <div className={`${styles.detailItem} ${styles.detailItemRefused}`}>
-              <span className={`${styles.checkIcon} ${styles.checkIconRefused}`}>❌</span>
-              <span>Accès au compte</span>
+            <div className={`${styles.detailItem} `}>
+              <span className={`${styles.checkIcon}`}>❌</span>
+              <span>Accès sécurisé</span>
             </div>
           </div>
         </div>

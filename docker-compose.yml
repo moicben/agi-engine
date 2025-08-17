@@ -1,0 +1,17 @@
+services:
+  desktop:
+    image: kasmweb/ubuntu-jammy-desktop:1.14.0
+    container_name: kasm-desktop
+    platform: linux/amd64        # needed on Mac Apple Silicon
+    shm_size: "2g"               # important for Chrome/Puppeteer stability
+    environment:
+      - VNC_PW=secret            # password for the noVNC login screen
+      - TZ=Europe/Paris
+    ports:
+      - "6901:6901"             # noVNC web UI (http://localhost:6901)
+      - "3000:3000"             # sample app port (e.g., Next.js / Express)
+      - "5173:5173"             # sample dev port (e.g., Vite)
+    volumes:
+      - ./kasm-home:/home/kasm-user     # persist user home (installed tools, configs)
+      - ./:/home/kasm-user/project      # mount your project into the desktop
+    restart: unless-stopped

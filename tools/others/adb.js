@@ -1,10 +1,11 @@
 // Utilitaires pour les commandes ADB
 
-const { exec } = require('child_process');
-const { promisify } = require('util');
+import { exec } from 'child_process';
+import { promisify } from 'util';
+import path from 'path';
+import fs from 'fs';
+
 const execAsync = promisify(exec);
-const path = require('path');
-const fs = require('fs');
 
 // Exécuter une commande ADB
 async function executeCommand(device, command) {
@@ -201,7 +202,7 @@ async function restartAdbServer() {
     }
 }
 
-module.exports = {
+export {
     executeCommand,
     listDevices,
     takeScreenshot,

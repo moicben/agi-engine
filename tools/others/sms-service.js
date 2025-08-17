@@ -3,8 +3,8 @@
  * Interface avec SMS-Activate API
  */
 
-const axios = require('axios');
-require('dotenv').config();
+import axios from 'axios';
+import 'dotenv/config';
 
 const SMS_API_URL = 'https://api.sms-activate.org/stubs/handler_api.php';
 const activations = new Map();

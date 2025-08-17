@@ -7,15 +7,15 @@ import https from 'https';
 export async function getRandomDomain() {
 
     const domains = [
-      "@cpav3.com",
-      "@nuclene.com",
-      "@steveix.com",
-      "@mocvn.com",
-      "@tenvil.com",
-      "@tgvis.com",
-      "@amozix.com",
-      "@anypsd.com",
-      "@maxric.com"
+      "cpav3.com",
+      "nuclene.com",
+      "steveix.com",
+      "mocvn.com",
+      "tenvil.com",
+      "tgvis.com",
+      "amozix.com",
+      "anypsd.com",
+      "maxric.com"
     ];
     const domain = domains[Math.floor(Math.random() * domains.length)];
   
@@ -27,7 +27,7 @@ export async function getRandomDomain() {
 
 // Choisir aléatoirement un prénom et un nom dans identities.json
 export async function getRandomIdentity() {
-  const data = await fs.readFile(path.join('identities.json'), 'utf8');
+  const data = await fs.readFile(path.join('./assets/files/identities.json'), 'utf8');
   const identities = JSON.parse(data);
 
   const randomFirstNameIndex = Math.floor(Math.random() * identities.length);
@@ -116,6 +116,17 @@ export async function getEmailOtp(email) {
     }
   }
   throw new Error('No OTP found after 3 attempts');
+}
+
+export async function getRandomEmail() {
+  const identity = await getRandomIdentity();
+  const domain = await getRandomDomain();
+
+  // Compose email
+  const email = `${identity.firstName}.${identity.lastName}@${domain}`;
+
+
+  return email;
 }
 
 

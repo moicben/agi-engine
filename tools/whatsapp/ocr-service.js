@@ -1,8 +1,8 @@
 // Service OCR - Configuration métier par étapes
 
-const { extractTextFromImage, extractRawTextFromImage, cleanupTempFile, checkKeywords } = require('../../utils/ocr');
-const { takeScreenshot } = require('../../utils/adb');
-const { sleep } = require('../../utils/helpers');
+import { extractTextFromImage, extractRawTextFromImage, cleanupTempFile, checkKeywords } from '../../utils/ocr.js';
+import { takeScreenshot } from '../../utils/adb.js';
+import { sleep } from '../../utils/helpers.js';
 
 /**
  * Analyser une capture pour vérification SMS

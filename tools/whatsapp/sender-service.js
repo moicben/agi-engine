@@ -3,10 +3,10 @@
 */
 
 // Importer le service de WhatsApp
-const { getWhatsAppService } = require('./app-service');
-const { tap, press, sleep, randomSleep } = require('../../utils/helpers');
-const { executeCommand, takeScreenshot } = require('../../utils/adb');
-const { ocrService } = require('./ocr-service');
+import { getWhatsAppService } from './app-service.js';
+import { tap, press, sleep, randomSleep } from '../../utils/helpers.js';
+import { executeCommand, takeScreenshot } from '../../utils/adb.js';
+import { ocrService } from './ocr-service.js';
 
 const UI_ELEMENTS = {
     searhInput: { x: 540, y: 205 },

