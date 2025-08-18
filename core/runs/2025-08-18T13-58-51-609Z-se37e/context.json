@@ -1,0 +1,236 @@
+{
+  "goal": "",
+  "sessionId": "session-test-1",
+  "context": {
+    "memorySnippet": "(general) {\n  \"etape\": \"Assign\",\n  \"orchestrateur\": \"script-node\",\n  \"assignments\": [\n    {\n      \"ordre\": 1,\n      \"nom\": \"Amélioration de la documentation\",\n      \"executant\": \"équipe documentaire\",\n      \"actions\": [\n        \"Identifier les lacunes dans la documentation actuelle en consultant les équipes de développement.\",\n        \"Rédiger de nouvelles sections sur les configurations et les processus de test.\",\n        \"Mettre en place un système de révisions périodiques de la documentation.\"\n      ],\n      \"artefacts\": [\n        \"Documentation mise à jour et structurée.\",\n        \"Guide d'intégration pour les nouveaux membres.\"\n      ],\n      \"validations\": [\n        \"Collecte de retours positifs des développeurs sur la clarté de la documentation.\",\n        \"Mesurer la réduction du temps d'intégration pour les nouveaux membres.\"\n      ]\n    },\n    {\n      \"ordre\": 2,\n      \"nom\": \"Mise en place de tests automatisés\",\n      \"executant\": \"équipe de développement\",\n      \"actions\": [\n        \"Définir les cas de test pertinents pour la mémoire de contexte.\",\n        \"Développer et intégrer des tests automatisés au pipeline.\",\n        \"Configurer des outils de CI/CD pour exécuter les tests automatiquement.\"\n      ],\n      \"artefacts\": [\n        \"Suite de tests automatisés fonctionnelle.\",\n        \"Rapports de couverture des tests.\"\n      ],\n      \"validations\": [\n        \"Vérification que tous les tests passent avec succès lors des builds.\",\n        \"Évaluer l'augmentation de",
+    "folderSummary": "file:.DS_Store, dir:.cursor, file:.cursorignore, file:.cursorrules, file:.env, file:.env.supabase.example, file:.eslintrc.js, dir:.giga, dir:.git, dir:.github, file:.gitignore, dir:.next, dir:.vscode, file:Dockerfile, file:WARP.md, dir:agents, dir:assets, dir:components, file:config.js, dir:core, file:docker-compose.yml, file:ecosystem.config.cjs, file:eng.traineddata, file:eslint.config.js, file:install-dependencies.sh, dir:kasm-data, dir:kasm-home, file:mutagen.yml, file:next.config.js, dir:node_modules",
+    "environment": [
+      {
+        "name": ".DS_Store",
+        "size": 12292,
+        "lastModified": "2025-08-18T13:58:42.739Z"
+      },
+      {
+        "name": ".cursor",
+        "size": 96,
+        "lastModified": "2025-08-17T22:27:03.490Z"
+      },
+      {
+        "name": ".cursorignore",
+        "size": 82,
+        "lastModified": "2025-08-17T22:27:03.490Z"
+      },
+      {
+        "name": ".cursorrules",
+        "size": 4147,
+        "lastModified": "2025-08-17T22:27:03.490Z"
+      },
+      {
+        "name": ".env",
+        "size": 3103,
+        "lastModified": "2025-08-18T00:32:50.838Z"
+      },
+      {
+        "name": ".env.supabase.example",
+        "size": 1039,
+        "lastModified": "2025-08-17T22:27:03.490Z"
+      },
+      {
+        "name": ".eslintrc.js",
+        "size": 125,
+        "lastModified": "2025-08-17T22:27:03.490Z"
+      },
+      {
+        "name": ".giga",
+        "size": 96,
+        "lastModified": "2025-08-17T22:27:03.490Z"
+      },
+      {
+        "name": ".git",
+        "size": 544,
+        "lastModified": "2025-08-18T13:39:59.027Z"
+      },
+      {
+        "name": ".github",
+        "size": 96,
+        "lastModified": "2025-08-17T22:27:03.490Z"
+      },
+      {
+        "name": ".gitignore",
+        "size": 1479,
+        "lastModified": "2025-08-17T22:27:03.490Z"
+      },
+      {
+        "name": ".next",
+        "size": 288,
+        "lastModified": "2025-08-18T06:04:29.578Z"
+      },
+      {
+        "name": ".vscode",
+        "size": 96,
+        "lastModified": "2025-08-17T22:48:25.567Z"
+      },
+      {
+        "name": "Dockerfile",
+        "size": 1640,
+        "lastModified": "2025-08-18T04:20:06.186Z"
+      },
+      {
+        "name": "WARP.md",
+        "size": 4147,
+        "lastModified": "2025-08-17T22:27:03.490Z"
+      },
+      {
+        "name": "agents",
+        "size": 160,
+        "lastModified": "2025-08-18T12:11:25.758Z"
+      },
+      {
+        "name": "assets",
+        "size": 352,
+        "lastModified": "2025-08-18T06:04:29.561Z"
+      },
+      {
+        "name": "components",
+        "size": 256,
+        "lastModified": "2025-08-17T22:27:04.566Z"
+      },
+      {
+        "name": "config.js",
+        "size": 8766,
+        "lastModified": "2025-08-17T22:27:04.566Z"
+      },
+      {
+        "name": "core",
+        "size": 256,
+        "lastModified": "2025-08-18T13:58:06.585Z"
+      },
+      {
+        "name": "docker-compose.yml",
+        "size": 766,
+        "lastModified": "2025-08-18T04:14:04.684Z"
+      },
+      {
+        "name": "ecosystem.config.cjs",
+        "size": 624,
+        "lastModified": "2025-08-18T01:22:10.598Z"
+      },
+      {
+        "name": "eng.traineddata",
+        "size": 5199098,
+        "lastModified": "2025-08-18T05:47:28.937Z"
+      },
+      {
+        "name": "eslint.config.js",
+        "size": 223,
+        "lastModified": "2025-08-17T22:27:04.567Z"
+      },
+      {
+        "name": "install-dependencies.sh",
+        "size": 1878,
+        "lastModified": "2025-08-18T01:21:57.347Z"
+      },
+      {
+        "name": "kasm-data",
+        "size": 160,
+        "lastModified": "2025-08-18T06:04:29.579Z"
+      },
+      {
+        "name": "kasm-home",
+        "size": 1056,
+        "lastModified": "2025-08-18T06:04:29.581Z"
+      },
+      {
+        "name": "mutagen.yml",
+        "size": 1301,
+        "lastModified": "2025-08-18T01:21:09.603Z"
+      },
+      {
+        "name": "next.config.js",
+        "size": 407,
+        "lastModified": "2025-08-17T22:27:04.567Z"
+      },
+      {
+        "name": "node_modules",
+        "size": 15872,
+        "lastModified": "2025-08-18T11:31:35.567Z"
+      },
+      {
+        "name": "package-lock.json",
+        "size": 304313,
+        "lastModified": "2025-08-18T11:32:33.375Z"
+      },
+      {
+        "name": "package.json",
+        "size": 1991,
+        "lastModified": "2025-08-18T11:26:10.924Z"
+      },
+      {
+        "name": "pages",
+        "size": 320,
+        "lastModified": "2025-08-18T06:04:29.565Z"
+      },
+      {
+        "name": "pod-template.text",
+        "size": 1389054,
+        "lastModified": "2025-08-18T01:21:54.765Z"
+      },
+      {
+        "name": "public",
+        "size": 608,
+        "lastModified": "2025-08-18T10:44:37.879Z"
+      },
+      {
+        "name": "screenshot.png",
+        "size": 1514016,
+        "lastModified": "2025-08-18T04:17:24.940Z"
+      },
+      {
+        "name": "screenshots",
+        "size": 96,
+        "lastModified": "2025-08-18T04:15:32.012Z"
+      },
+      {
+        "name": "scripts",
+        "size": 480,
+        "lastModified": "2025-08-18T00:52:47.350Z"
+      },
+      {
+        "name": "start-sync.sh",
+        "size": 1999,
+        "lastModified": "2025-08-18T03:10:51.950Z"
+      },
+      {
+        "name": "stop-sync.sh",
+        "size": 450,
+        "lastModified": "2025-08-18T01:22:07.944Z"
+      },
+      {
+        "name": "styles",
+        "size": 192,
+        "lastModified": "2025-08-18T06:04:29.577Z"
+      },
+      {
+        "name": "tests",
+        "size": 672,
+        "lastModified": "2025-08-18T12:02:26.418Z"
+      },
+      {
+        "name": "tools",
+        "size": 672,
+        "lastModified": "2025-08-18T12:14:09.653Z"
+      },
+      {
+        "name": "webtop-data",
+        "size": 448,
+        "lastModified": "2025-08-18T06:04:29.560Z"
+      },
+      {
+        "name": "workers",
+        "size": 288,
+        "lastModified": "2025-08-18T13:34:30.916Z"
+      }
+    ],
+    "conscience": "## AGI Conscience Specification\n\nThis document defines the AGI's purpose, thinking style, and strict I/O contracts used by modules. It is designed to be both human-friendly and machine-consumable.\n\n### Purpose (North Star)\n- Build a simple, reliable AGI loop for automation in the French market that is:\n  - Goal-driven: always optimize for the user's stated goal\n  - Memory-leveraged: reuse relevant context from Supabase memories and recent files\n  - ReAct: alternate brief reasoning with actions while keeping outputs structured\n  - Self-conscience: apply guardrails, declare risks, and stay within constraints\n\n### Core Principles\n- Minimize free-form prose. Return strictly valid JSON where specified.\n- Be deterministic and reproducible: IDs should be stable and kebab-case.\n- Keep steps composable; each step consumes previous outputs and emits JSON only.\n- Prefer small, verifiable steps; avoid irreversible operations without confirmation.\n- Respect constraints and laws; avoid handling sensitive data beyond stated scope.\n\n### Memory Policy\n- Read recent memories from Supabase table `agent_memory` by session_id.\n- Save only high-signal outcomes or decisions; default importance_score: 0.5.\n- Keep content short (< 300 chars) and free of secrets; set domain appropriately (e.g., \"general\", \"identity\", \"payments\", \"whatsapp\").\n\n### Error and Robustness Rules\n- If a step detects malformed prior JSON, repair it and continue; always output valid JSON.\n- Include an optional \"errors\" array when the step cannot fulfill all fields.\n- Never include code fences inside JSON values; keep responses machine-parseable.\n\n### ID and Formatting Rules\n- Task IDs: kebab-case, prefix with step order (e.g., \"step-2-validate-input\").\n- Strings use UTF-8 without newlines unless essential.\n- Arrays may be empty but never null; unknowns go to \"uncertainties\".\n\n\n### Safety and Compliance (short list)\n- Follow French innovative and disruptive constraints for identity and payments.\n- Do not expose secrets, card data, or credentials in outputs or memories.\n- Keep logs terse; prefer structured data over verbose traces.\n\n### Output Discipline\n- When a step requires JSON: return only JSON, no extra text.\n- When free text is acceptable (rare), keep to a single sentence.\n\n\n"
+  }
+}

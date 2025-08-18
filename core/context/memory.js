@@ -42,5 +42,6 @@ export async function buildMemoryContext({ sessionId = 'session-test-1', rootDir
   }
 
   const memorySnippet = recent.map((r) => `(${r.domain}) ${r.content}`).slice(0, 5).join(' | ');
-  return { memorySnippet, folderSummary };
+  const context_slice = memorySnippet.slice(0, 1500);
+  return { memorySnippet: context_slice, folderSummary };
 }

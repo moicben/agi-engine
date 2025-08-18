@@ -1,0 +1,32 @@
+{
+  "workers/vision": {
+    "detect": {
+      "params": ["image", "query", "annotate?", "outPath?", "threshold?"],
+      "produces": ["coords", "score", "annotated_path"],
+      "tags": ["vision", "zero-shot", "owlv2"],
+      "timeouts": { "default_ms": 60000 }
+    }
+  },
+  "workers/interact": {
+    "orchestrate": {
+      "params": ["decision", "context?"],
+      "produces": ["success", "action", "data"],
+      "tags": ["gui", "input"],
+      "timeouts": { "default_ms": 30000 }
+    }
+  },
+  "workers/developer": {
+    "generateCode": {
+      "params": ["spec"],
+      "produces": ["diff"],
+      "tags": ["code", "scaffold"],
+      "timeouts": { "default_ms": 30000 }
+    },
+    "modifyFiles": {
+      "params": ["edits"],
+      "produces": ["applied"],
+      "tags": ["code", "refactor"],
+      "timeouts": { "default_ms": 60000 }
+    }
+  }
+}

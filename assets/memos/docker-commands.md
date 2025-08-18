@@ -108,7 +108,7 @@ docker builder prune -a
 
 ### Push de l'image vers Docker Hub
 
-Supposons que l'image locale à pousser est `moicben/agi-engine:staged`
+Supposons que l'image locale à pousser est `moicben/agi-engine:beta`
 
 ```bash
 # Connexion Docker Hub

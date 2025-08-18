@@ -25,3 +25,14 @@ export async function listDirectory(path = '.') {
         return `Error reading directory: ${error.message}`;
     }
 }
+
+// Parse JSON safely from object or string; return null on failure
+export function parseJSONSafe(input) {
+    if (input == null) return null;
+    if (typeof input === 'object') return input;
+    try {
+        return JSON.parse(input);
+    } catch {
+        return null;
+    }
+}

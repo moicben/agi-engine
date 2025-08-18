@@ -1,7 +1,7 @@
 // Runner du workflow link-device.js
 
 const { linkDeviceWorkflow } = require('../workflows/whatsapp/link-device');
-const config = require('../config');
+const config = require('../../config');
 
 let device = '127.0.0.1';
 

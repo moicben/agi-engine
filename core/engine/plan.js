@@ -1,29 +1,57 @@
 import * as llm from '../../tools/llm.js';
 
 export async function plan(context) {
-  const prompt = `Tu es l'étape Plan. À partir de l'analyse suivante, propose un plan d'action réaliste et priorisé, orienté exécution.
-Analyse (JSON): ${context.analysis}
+  const prompt = `You are the Plan step. From the following analysis, produce a micro-iteration task graph (1–3 tasks), machine-actionable and deterministic.
+Analysis (JSON): ${context.analysis}
 
-Exigences: décomposer en étapes claires; pour chaque étape fournir objectif, actions techniques concrètes, livrables, critères de réussite, dépendances et risques avec atténuation; privilégier itérations courtes et testabilité. PRODUIS UNIQUEMENT un JSON strict, en français, sans aucune mise en forme Markdown ni caractères backtick. Commence par { et termine par }. Pas de champs en double. Schéma:
+Respond ONLY with strict JSON. Schema:
 {
-  "etape": "Plan",
-  "plan": [
+  "stage": "Plan",
+  "iteration": string,
+  "tasks": [
     {
-      "ordre": number,
-      "nom": string,
-      "objectif": string,
+      "id": string,
+      "name": string,
+      "objective": string,
+      "inputs": object,
+      "outputs": object,
       "actions": string[],
-      "livrables": string[],
-      "criteres_succes": string[],
-      "dependances": string[],
-      "risques": string[],
+      "dependencies": string[],
+      "acceptance": string[],
+      "risks": string[],
       "mitigations": string[]
     }
   ],
   "notes": string
 }`;
   const out = await llm.llmRequest(prompt);
-  return out;
+  // Guardrail: ensure valid shape
+  try {
+    const obj = JSON.parse(out);
+    if (obj && obj.stage === 'Plan' && Array.isArray(obj.tasks) && obj.tasks.length > 0) {
+      return obj;
+    }
+  } catch {}
+  // Fallback minimal plan
+  return {
+    stage: 'Plan',
+    iteration: 'it-0001',
+    tasks: [
+      {
+        id: 't1',
+        name: 'Demo detection',
+        objective: 'Demonstrate engine loop',
+        inputs: { query: 'SWIFT', annotate: false },
+        outputs: { note: 'noop' },
+        actions: ['noop'],
+        dependencies: [],
+        acceptance: ['true == true'],
+        risks: [],
+        mitigations: []
+      }
+    ],
+    notes: 'fallback-minimal'
+  };
 }
 
 export default { plan };

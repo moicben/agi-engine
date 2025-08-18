@@ -1,0 +1,23 @@
+{
+  "stage": "Assign",
+  "orchestrator": "engine",
+  "assignments": [
+    {
+      "order": 1,
+      "task_id": "t1",
+      "name": "Demo detection",
+      "executor": "workers/vision.detect",
+      "params": {
+        "query": "SWIFT",
+        "annotate": false
+      },
+      "timeout_ms": 1500,
+      "retries": 0,
+      "artifacts_in": [],
+      "artifacts_out": [],
+      "validations": [
+        "true == true"
+      ]
+    }
+  ]
+}

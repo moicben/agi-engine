@@ -1,17 +1,17 @@
-import { runVisionAgent } from '../agents/vision.js';
+// agents/vision has been removed; test updated to call workers/vision directly
+import visionWorker from '../workers/vision.js';
 
 (async () => {
   try {
-    const result = await runVisionAgent({
-      accept: ['login', 'connexion', 'example'],
-      reject: ['error', '404'],
-      summarize: false
-    });
+    const goal = 'Observer l\'écran et proposer une action sûre';
+    const context = { os: 'linux', desktop: true };
+    const analyzeOptions = { accept: ['login','connexion','recherche'], reject: ['erreur','404'], lang: 'eng' };
+
+    const result = await visionWorker.detect({ image: '/Users/ben/Documents/agi-engine/public/vision-img.png', query: 'SWIFT', annotate: false });
+
     console.log('Vision agent result:');
     console.log({
-      screenshotPath: result.screenshotPath,
-      verdict: result.verdict,
-      ocrPreview: (result.ocrText || '').slice(0, 200)
+      detect: { success: result.success, coords: result.coords, annotated: result.annotated }
     });
   } catch (e) {
     console.error('Vision agent failed:', e.message);

@@ -33,12 +33,12 @@ docker
 docker login
 [200~docker commit kasm-desktop moicben/agi-engine:staged
 docker commit kasm-desktop moicben/agi-engine:staged
-docker commit kasm-desktop moicben/agi-engine:staged
+docker commit kasm-desktop moicben/agi-engine:beta
 sudo systemctl start docker
 sudo dockerd &
 sudo dockerd --iptables=false &
 sudo dockerd --iptables=false --bridge=none &
-docker commit kasm-desktop moicben/agi-engine:staged
+docker commit kasm-desktop moicben/agi-engine:beta
 docker ps
 docker commit kasm-desktop moicben/agi-engine:staged
 ls

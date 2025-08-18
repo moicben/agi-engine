@@ -5,7 +5,7 @@ const exec = promisify(execCb);
 
 async function ensureXdotool() {
   if (process.platform !== 'linux') {
-    throw new Error('interacts.js helpers require Linux (xdotool)');
+    throw new Error('interact.js helpers require Linux (xdotool)');
   }
   try {
     await exec('command -v xdotool >/dev/null 2>&1');

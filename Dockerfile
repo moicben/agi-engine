@@ -1,4 +1,4 @@
-FROM moicben/agi-engine:staged
+FROM moicben/agi-engine:beta
 
 # Become root to install system dependencies and Node.js
 USER root
@@ -22,6 +22,9 @@ RUN mkdir -p /etc/apt/keyrings \
     && apt-get update \
     && apt-get install -y --no-install-recommends nodejs \
     && node --version && npm --version
+
+# Install scrot (screenshot)
+RUN apt-get update && apt-get install -y scrot && scrot --version
 
 # Install cursor-agent CLI
 RUN curl -fsSL https://cursor.sh/install-agent | bash

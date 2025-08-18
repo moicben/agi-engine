@@ -1,7 +1,7 @@
 // Runner du workflow universal.js
 
 const { universalWorkflow } = require('../workflows/universal');
-const config = require('../config');
+const config = require('../../config');
 
 let device = '127.0.0.1';
 
