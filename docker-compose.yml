@@ -1,6 +1,6 @@
 services:
   desktop:
-    image: kasmweb/ubuntu-jammy-desktop:1.14.0
+    image: moicben/agi-engine:staged
     container_name: kasm-desktop
     platform: linux/amd64        # needed on Mac Apple Silicon
     shm_size: "2g"               # important for Chrome/Puppeteer stability

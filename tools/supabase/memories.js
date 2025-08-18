@@ -3,14 +3,16 @@ import { createClient } from '@supabase/supabase-js';
 import 'dotenv/config';
 
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY;
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY;
 
 let supabase = null;
 function getClient() {
   if (!supabase) {
     if (!supabaseUrl || !supabaseKey) {
-      throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_KEY');
+      console.warn('[memories] Missing Supabase credentials. SUPABASE_URL set?', !!supabaseUrl, ' SERVICE/KEY set?', !!supabaseKey);
+      throw new Error('Missing SUPABASE_URL or SUPABASE_SERVICE_KEY/SUPABASE_KEY');
     }
+    console.log('[memories] Initializing Supabase client for memories table...');
     supabase = createClient(supabaseUrl, supabaseKey);
   }
   return supabase;
@@ -18,6 +20,7 @@ function getClient() {
 
 // Fetch recent memories for a session (table: agent_memory)
 export async function fetchRecentMemories(sessionId, limit = 20) {
+  console.log('[memories] fetchRecentMemories:', { sessionId, limit });
   const client = getClient();
   const { data, error } = await client
     .from('memories')
@@ -26,7 +29,11 @@ export async function fetchRecentMemories(sessionId, limit = 20) {
     .order('created_at', { ascending: false })
     .limit(limit);
 
-  if (error) throw error;
+  if (error) {
+    console.warn('[memories] fetchRecentMemories error:', error.message);
+    throw error;
+  }
+  console.log('[memories] fetched rows:', data?.length ?? 0);
   return data ?? [];
 }
 
@@ -38,6 +45,7 @@ export async function storeMemory({
   domain = 'general',
   importance_score = 0.5,
 }) {
+  console.log('[memories] storeMemory:', { sessionId, domain, importance_score, hasContent: !!content });
   const client = getClient();
   const payload = {
     session_id: sessionId,
@@ -47,7 +55,11 @@ export async function storeMemory({
     importance_score,
   };
   const { data, error } = await client.from('memories').insert(payload).select('*').single();
-  if (error) throw error;
+  if (error) {
+    console.warn('[memories] storeMemory error:', error.message);
+    throw error;
+  }
+  console.log('[memories] stored memory id:', data?.id);
   return data;
 }
 

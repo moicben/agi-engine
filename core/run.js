@@ -6,9 +6,10 @@
 import { think } from './engine/think.js';
 import { analyze } from './engine/analyze.js';
 import { plan } from './engine/plan.js';
-import { todolize } from './engine/todolize.js';
 import { assign } from './engine/assign.js';
 import { buildContext } from './context/context.js';
+import { saveMemory } from './context/memory.js';
+
 async function run() {
     // get the instructions from the user
     const args = process.argv.slice(2);
@@ -30,11 +31,18 @@ async function run() {
     const sessionId = process.env.AGI_SESSION_ID || 'session-test-1';
     const ctx = await buildContext(sessionId, process.cwd());
 
-    const node = await think(`Free-thinking. Context memory: ${ctx.memorySnippet}. Folder: ${ctx.environment?.map?.(e=>e.name).slice(0,10).join(', ')}. Goal: ${instructions}`);
-    const analysis = await analyze({ goal: instructions, memorySnippet: ctx.memorySnippet, folderSummary: ctx.environment, conscience: ctx.conscience });
+    let selfThought = await think(`Pensée libre. Mémoire de contexte: ${ctx.memorySnippet}. Dossiers: ${ctx.environment?.map?.(e=>e.name).slice(0,10).join(', ')}. Objectif: ${instructions}`);
+    
+    const analysis = await analyze({ goal: instructions, selfThought, memorySnippet: ctx.memorySnippet, folderSummary: ctx.environment, conscience: ctx.conscience });
     const planOut = await plan({ analysis });
-    const tasksOut = await todolize({ plan: planOut });
-    const assignments = await assign({ tasks: tasksOut });
+    const assignments = await assign({ plan: planOut, analysis, goal: instructions, context: ctx });
+
+    // Persist conversation artifacts into Supabase memories
+    try { await saveMemory(sessionId, `Goal: ${instructions}`, { step: 'goal', format: 'text' }); } catch {}
+    try { await saveMemory(sessionId, String(selfThought || ''), { step: 'think', format: 'text' }); } catch {}
+    try { await saveMemory(sessionId, String(analysis || ''), { step: 'analyze', format: 'json' }); } catch {}
+    try { await saveMemory(sessionId, String(planOut || ''), { step: 'plan', format: 'json' }); } catch {}
+    try { await saveMemory(sessionId, String(assignments || ''), { step: 'assign', format: 'json' }); } catch {}
 
     const result = {
         goal: instructions,
@@ -42,10 +50,18 @@ async function run() {
         conscience: ctx.conscience,
         analysis,
         plan: planOut,
-        tasks: tasksOut,
         assignments,
     };
-    console.log(JSON.stringify(result, null, 2));
+    console.log('--------------------------------');
+    console.log('selfThought:', selfThought);
+    console.log('--------------------------------');
+    console.log('analysis:', analysis);
+    console.log('--------------------------------');
+    console.log('plan:', planOut);
+    console.log('--------------------------------');
+    console.log('assignments:', assignments);
+    console.log('--------------------------------');
+    console.log('\n\n');
 }
 
 run();

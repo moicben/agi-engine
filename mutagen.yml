@@ -1,0 +1,67 @@
+# Mutagen configuration for agi-engine project sync
+# This replaces the direct volume mount with optimized file synchronization
+
+# Sync configuration
+sync:
+  # Local path (your current directory)
+  alpha: "."
+  
+  # Remote path in the Docker container
+  beta: "docker://kasm-desktop/home/kasm-user/project"
+  
+  # Sync mode: two-way sync with conflict resolution
+  mode: "two-way-resolved"
+  
+  # Ignore patterns to exclude large directories and files
+  ignore:
+    # Large directories
+    - "node_modules/"
+    - "screenshots/"
+    - "assets/medias/"
+    - "assets/apk/"
+    - "assets/passports/"
+    - "kasm-data/"
+    - "kasm-home/"
+    
+    # Git and system files
+    - ".git/"
+    - ".DS_Store"
+    - "*.log"
+    - "*.tmp"
+    
+    # Build artifacts
+    - "dist/"
+    - "build/"
+    - ".next/"
+    
+    # Docker files
+    - "docker-compose.yml"
+    - "mutagen.yml"
+    
+    # Large files
+    - "*.zip"
+    - "*.tar.gz"
+    - "*.iso"
+    - "*.img"
+  
+  # File watching and polling
+  watch:
+    mode: "portable"
+    pollingInterval: 5
+  
+  # Performance optimizations
+  symlink:
+    mode: "portable"
+  
+  # Permissions
+  permissions:
+    defaultFileMode: 0644
+    defaultDirectoryMode: 0755
+  
+  # Conflict resolution
+  conflict:
+    resolution: "beta-wins"
+  
+  # Logging
+  log:
+    level: "info"

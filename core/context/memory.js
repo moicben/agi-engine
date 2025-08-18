@@ -5,7 +5,9 @@ import { fetchRecentMemories, storeMemory } from '../../tools/supabase/memories.
 
 export async function loadRecentMemory(sessionId = 'session-test-1') {
   try {
-    return await fetchRecentMemories(sessionId, 10);
+    const rows = await fetchRecentMemories(sessionId, 10);
+    console.log('[context] loadRecentMemory rows:', rows.length);
+    return rows;
   } catch {
     return [];
   }
@@ -13,7 +15,9 @@ export async function loadRecentMemory(sessionId = 'session-test-1') {
 
 export async function saveMemory(sessionId, content, metadata = {}) {
   try {
-    return await storeMemory({ sessionId, content, metadata });
+    const saved = await storeMemory({ sessionId, content, metadata });
+    console.log('[context] saveMemory id:', saved?.id);
+    return saved;
   } catch {
     return null;
   }
@@ -24,6 +28,7 @@ export async function buildMemoryContext({ sessionId = 'session-test-1', rootDir
   let recent = [];
   try {
     recent = await fetchRecentMemories(sessionId, 10);
+    console.log('[context] buildMemoryContext fetched:', recent.length);
   } catch {
     recent = [];
   }
