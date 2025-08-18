@@ -119,3 +119,9 @@ package-lock.json
 .ruff_cache/
 .pytest_cache/
 .ropeproject/
+
+# Kasm/Cursor large runtime artifacts (prevent >100MB files)
+kasm-home/.local/share/cursor-agent/**
+kasm-home/.mutagen/**
+kasm-home/.vnc/**
+kasm-home/.cache/**
