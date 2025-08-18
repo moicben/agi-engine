@@ -3,7 +3,7 @@ description: Workflow automation and algorithms specification for complex multi-
 ---
 
 # === USER INSTRUCTIONS ===
-description: For analyzing workflow algorithms and automation patterns in WhatsApp account management and messaging systems
+description: Analyze workflow algorithms and automation patterns; use these as guidelines and adapt to actual code/state.
 Core WhatsApp Account Management Workflows:
 1. Account Creation Pipeline
 - Multi-stage verification with SMS activation
@@ -36,11 +36,7 @@ Core WhatsApp Account Management Workflows:
 - session-service.js - Multi-device coordination
 - sender-service.js - Message distribution system
 Key Business Rules:
-- SMS verification timeouts (180s)
-- Device transfer retry limit (3 attempts)
-- Message rate limits per account
-- Account cooldown periods between actions
-- Profile transfer verification requirements
+- SMS timeouts (≈180s), device transfer retry limit (≈3), message rate limits per account, cooldowns between actions. Adjust per current constraints.
 Importance Score: 90/100
 - Complex multi-device orchestration
 - Critical business automation workflows

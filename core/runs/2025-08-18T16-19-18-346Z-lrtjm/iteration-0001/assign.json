@@ -1,0 +1,57 @@
+{
+  "stage": "Assign",
+  "orchestrator": "engine",
+  "assignments": [
+    {
+      "order": 1,
+      "task_id": "task_1",
+      "name": "detect",
+      "executor": "workers/vision.detect",
+      "params": {
+        "image": "input_image_path",
+        "query": "desired_query",
+        "annotate": true,
+        "outPath": "output_path",
+        "threshold": 0.5
+      },
+      "timeout_ms": 60000,
+      "retries": 1,
+      "artifacts_in": [
+        "input_image_path"
+      ],
+      "artifacts_out": [
+        "coords",
+        "score",
+        "annotated_path"
+      ],
+      "validations": [
+        "coords",
+        "score"
+      ]
+    },
+    {
+      "order": 2,
+      "task_id": "task_2",
+      "name": "orchestrate",
+      "executor": "workers/interact.orchestrate",
+      "params": {
+        "decision": "next_step",
+        "context": "current_context"
+      },
+      "timeout_ms": 30000,
+      "retries": 1,
+      "artifacts_in": [
+        "current_context"
+      ],
+      "artifacts_out": [
+        "success",
+        "action",
+        "data"
+      ],
+      "validations": [
+        "success",
+        "action"
+      ]
+    }
+  ]
+}

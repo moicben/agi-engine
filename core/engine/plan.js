@@ -1,7 +1,9 @@
 import * as llm from '../../tools/llm.js';
 
 export async function plan(context) {
-  const prompt = `You are the Plan step. From the following analysis, produce a micro-iteration task graph (1–3 tasks), machine-actionable and deterministic.
+  const intent = context.intent || 'qa';
+  const prompt = `You are the Plan step. From the following analysis and user intent, produce a micro-iteration task graph (1–3 tasks), machine-actionable and deterministic.
+Intent: ${String(intent)}
 Analysis (JSON): ${context.analysis}
 
 Respond ONLY with strict JSON. Schema:
@@ -32,26 +34,7 @@ Respond ONLY with strict JSON. Schema:
       return obj;
     }
   } catch {}
-  // Fallback minimal plan
-  return {
-    stage: 'Plan',
-    iteration: 'it-0001',
-    tasks: [
-      {
-        id: 't1',
-        name: 'Demo detection',
-        objective: 'Demonstrate engine loop',
-        inputs: { query: 'SWIFT', annotate: false },
-        outputs: { note: 'noop' },
-        actions: ['noop'],
-        dependencies: [],
-        acceptance: ['true == true'],
-        risks: [],
-        mitigations: []
-      }
-    ],
-    notes: 'fallback-minimal'
-  };
+  throw new Error('plan_invalid: no valid tasks returned by LLM');
 }
 
 export default { plan };

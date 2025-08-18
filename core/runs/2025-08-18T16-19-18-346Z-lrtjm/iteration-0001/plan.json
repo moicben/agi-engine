@@ -1,0 +1,28 @@
+{
+  "stage": "Plan",
+  "iteration": "it-0001",
+  "tasks": [
+    {
+      "id": "t1",
+      "name": "Demo detection",
+      "objective": "Demonstrate engine loop",
+      "inputs": {
+        "query": "SWIFT",
+        "annotate": false
+      },
+      "outputs": {
+        "note": "noop"
+      },
+      "actions": [
+        "noop"
+      ],
+      "dependencies": [],
+      "acceptance": [
+        "true == true"
+      ],
+      "risks": [],
+      "mitigations": []
+    }
+  ],
+  "notes": "fallback-minimal"
+}

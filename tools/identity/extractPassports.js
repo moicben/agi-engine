@@ -25,8 +25,9 @@ async function analyzePassport(imagePath, maxRetries = 4) {
       const imageBuffer = fs.readFileSync(imagePath);
       const base64Image = imageBuffer.toString('base64');
       const imageExtension = path.extname(imagePath).slice(1).toLowerCase();
-      const mimeType = `image/${imageExtension === 'jpg' ? 'jpeg' : imageExtension}`;        const response = await openai.chat.completions.create({
-        model: "gpt-4o", // Retour au modèle standard plus puissant
+      const mimeType = `image/${imageExtension === 'jpg' ? 'jpeg' : imageExtension}`;
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
         messages: [
           {
             role: "system",

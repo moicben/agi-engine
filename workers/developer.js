@@ -1,46 +1,53 @@
-// Developer worker (prebuilt scaffold, not integrated in engine yet)
+// Developer worker: generates edits and integrates them with Git commits.
+import { applyEdits } from '../tools/editor.js';
+import { ensureUser, currentBranch, commitAll } from '../tools/github.js';
 
-export const capabilities = {
-  generateCode: {
-    params: ["spec"],
-    produces: ["diff"],
-    tags: ["code", "scaffold"],
-    timeouts: { default_ms: 30000 }
-  },
-  modifyFiles: {
-    params: ["edits"],
-    produces: ["applied"],
-    tags: ["code", "refactor"],
-    timeouts: { default_ms: 60000 }
+export async function integrate({ spec = '', options = {} } = {}) {
+  const started = Date.now();
+  const logs = [];
+  try {
+    // Simple heuristic: expect spec to directly carry edits; otherwise do nothing
+    // Spec format can be either a JSON string or object: { edits: [...] }
+    let edits = [];
+    if (typeof spec === 'string') {
+      try { const parsed = JSON.parse(spec); edits = Array.isArray(parsed?.edits) ? parsed.edits : []; } catch { edits = []; }
+    } else if (spec && typeof spec === 'object') {
+      edits = Array.isArray(spec.edits) ? spec.edits : [];
+    }
+    if (!Array.isArray(edits) || edits.length === 0) {
+      return { success: false, data: { applied: 0, edits: [] }, artifacts: [], logs: ['no_edits_provided'], meta: { duration_ms: Date.now() - started } };
+    }
+
+    // Pre-commit baseline if requested
+    if (options?.git?.baselineCommitMessage) {
+      try { ensureUser(); commitAll(options.git.baselineCommitMessage); logs.push('baseline_commit'); } catch (e) { logs.push('baseline_commit_failed: ' + e.message); }
+    }
+
+    const appliedRes = applyEdits(edits);
+    logs.push(...(appliedRes.logs || []));
+
+    // Commit after edits
+    let commitMsg = options?.git?.commitMessage || 'feat(dev): integrate changes';
+    try { ensureUser(); commitAll(commitMsg); logs.push('commit_done'); } catch (e) { logs.push('commit_failed: ' + e.message); }
+
+    return {
+      success: appliedRes.success,
+      data: { applied: appliedRes?.data?.applied || 0, edits },
+      artifacts: appliedRes.artifacts || [],
+      logs,
+      meta: { duration_ms: Date.now() - started }
+    };
+  } catch (e) {
+    return { success: false, data: { applied: 0, edits: [] }, artifacts: [], logs: [...logs, 'error: ' + e.message], meta: { duration_ms: Date.now() - started } };
   }
-};
-
-export async function generateCode({ spec }) {
-  const started = Date.now();
-  // No-op mock implementation
-  const diff = `// TODO: implement based on spec: ${typeof spec === 'string' ? spec.slice(0, 120) : 'object'}`;
-  return {
-    success: true,
-    data: { diff },
-    artifacts: [],
-    logs: ["developer.generateCode mock"],
-    meta: { duration_ms: Date.now() - started }
-  };
 }
 
-export async function modifyFiles({ edits = [] }) {
+export async function generateCode({ spec = '' } = {}) {
+  // Minimal stub retained for compatibility; prefer integrate
   const started = Date.now();
-  // No-op mock applying count
-  const applied = Array.isArray(edits) ? edits.length : 0;
-  return {
-    success: true,
-    data: { applied },
-    artifacts: [],
-    logs: ["developer.modifyFiles mock"],
-    meta: { duration_ms: Date.now() - started }
-  };
+  return { success: true, data: { edits: [] }, artifacts: [], logs: ['developer.generateCode noop'], meta: { duration_ms: Date.now() - started } };
 }
 
-export default { capabilities, generateCode, modifyFiles };
+export default { integrate, generateCode };
 
 

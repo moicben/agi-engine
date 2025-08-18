@@ -1,0 +1,5 @@
+{
+  "attempt": 1,
+  "stage": "Fallback",
+  "note": "Missing OpenAI response; using fallback"
+}

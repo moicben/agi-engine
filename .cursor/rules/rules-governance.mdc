@@ -1,0 +1,29 @@
+---
+description: Governance for maintaining project rules as the architecture evolves
+---
+# rules-governance
+
+Purpose
+- Keep Cursor rules helpful but lightweight; adapt them as the system evolves.
+
+When to Update Rules
+- After major engine changes (phases, persistence, validation, capabilities registry shape).
+- When adding/removing key workers or domains (identity, payments, WhatsApp, device).
+- When data states or status taxonomies change materially.
+- After introducing new cross-cutting concerns (security, observability, MCP tools).
+
+How to Update
+- Prefer minimal, guiding wording over strict mandates.
+- Update file pointers and examples to match the codebase.
+- Note evolution explicitly ("guidance first", "approximate values").
+- Remove obsolete constraints rather than piling exceptions.
+
+Checklist
+- Do rules reflect current `core/engine/*` contracts and `core/run.js` flow?
+- Are capabilities in `core/engine/capabilities.json` represented at a high level?
+- Do status names match what code emits (payments, messaging, identity)?
+- Are security/redaction notes still valid given new logs/artifacts?
+
+Responsibility
+- Anyone performing a major refactor adds/edits a rule in `.cursor/rules/` in the same PR.
+

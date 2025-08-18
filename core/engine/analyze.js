@@ -1,7 +1,7 @@
 import * as llm from '../../tools/llm.js';
 
 export async function analyze(context) {
-  const prompt = `You are the Analyze step of an AI engineering pipeline.
+  const prompt = `You are the Analyze step of an AI engineering pipeline. Classify the user's intent first, then analyze.
 Goal: ${context.goal}
 Think: ${context.selfThought}
 Conscience: ${context.conscience}
@@ -11,6 +11,7 @@ Folder summary: ${context.folderSummary}
 Produce ONLY strict JSON in English. Schema:
 {
   "stage": "Analyze",
+  "intent": "qa" | "web" | "dev",
   "summary": string,
   "problem": { "description": string, "constraints": { "explicit": string[], "implicit": string[] } },
   "dependencies": string[],

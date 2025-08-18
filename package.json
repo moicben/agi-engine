@@ -1,11 +1,11 @@
 {
-  "name": "AGI Engine",
+  "name": "agi-engine",
   "version": "1.0.0",
   "description": "Anti-General-Intelligence Engine - Version Simplifiée Unifiée",
   "main": "src/workflow.js",
   "type": "module",
   "bin": {
-    "agi": "./run.js"
+    "agi": "./core/run.js"
   },
   "scripts": {
     "dev": "next dev",

@@ -1,0 +1,36 @@
+--- 
+description: Engine orchestration loop, contracts, persistence, and failure policy
+---
+# engine-orchestration
+
+Scope
+- Applies to `core/engine/*` and `core/run.js`.
+
+Phases and Contracts
+- Think: merges goal + context. JSON only { stage, summary, contextualized_goal, assumptions, unknowns }.
+- Analyze: task framing and risks. JSON only with fields used in `plan`.
+- Plan: ≤3 tasks/iteration. JSON schema with id/name/objective/inputs/outputs/actions/dependencies/acceptance/risks/mitigations.
+- Assign: map tasks to `workers/x.fn` using `core/engine/capabilities.json`. Include params, timeout_ms, retries.
+- Execute: resolve { "ref":"context.*" } params; call worker; capture unified envelope { success, data, artifacts, logs, meta }.
+- Critic: evaluate vs acceptance; return { stage:"Critic", task_id, success, progress, critic, recommendations, next.action }.
+- Decide: continue|retry|replan|halt.
+
+Persistence
+- Root: `core/runs/<run-id>/`
+- Files: context.json; iteration-0001/{think.json, analyze.json, plan.json, plan.graph.json, assign.json, decide.json}; tasks/tX/{execute.json, critic.json}; ledger.jsonl; events.jsonl; artifacts/
+
+Policies
+- retries default: 3; backoff: 4s fixed.
+- Fallbacks: only when `ALLOW_LLM_FALLBACK=1`.
+- Logging: `LOG_LLM_STEPS` controls console; redact secrets in persist (see persist.js).
+
+Capabilities Registry
+- `core/engine/capabilities.json` enumerates `workers/*` functions with params/produces/tags/timeouts.
+- Common entries include `workers/qa.answer`, `workers/web/search.search`, `workers/developer.generateCode`, `workers/editor.applyEdits`, `workers/interact.orchestrate`, `workers/vision.detect`.
+
+Validation
+- Use `core/engine/validate.js` guards for Plan/Assign/Critic before persisting.
+
+Evolution
+- Treat these as guiding constraints, not hard limits. If iteration schemas or persistence layout evolve, prefer local consistency and update rules accordingly.
+

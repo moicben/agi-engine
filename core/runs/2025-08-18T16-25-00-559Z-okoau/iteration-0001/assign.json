@@ -1,0 +1,81 @@
+{
+  "stage": "Assign",
+  "orchestrator": "engine",
+  "assignments": [
+    {
+      "order": 1,
+      "task_id": "task_1",
+      "name": "Generate Code",
+      "executor": "workers/developer.generateCode",
+      "params": {
+        "spec": "specification details here"
+      },
+      "timeout_ms": 30000,
+      "retries": 0,
+      "artifacts_in": [],
+      "artifacts_out": [
+        "diff"
+      ],
+      "validations": []
+    },
+    {
+      "order": 2,
+      "task_id": "task_2",
+      "name": "Modify Files",
+      "executor": "workers/developer.modifyFiles",
+      "params": {
+        "edits": "edit details here"
+      },
+      "timeout_ms": 60000,
+      "retries": 0,
+      "artifacts_in": [
+        "diff"
+      ],
+      "artifacts_out": [
+        "applied"
+      ],
+      "validations": []
+    },
+    {
+      "order": 3,
+      "task_id": "task_3",
+      "name": "Orchestrate Decision",
+      "executor": "workers/interact.orchestrate",
+      "params": {
+        "decision": "decision details here",
+        "context": "context details here"
+      },
+      "timeout_ms": 30000,
+      "retries": 0,
+      "artifacts_in": [],
+      "artifacts_out": [
+        "success",
+        "action",
+        "data"
+      ],
+      "validations": []
+    },
+    {
+      "order": 4,
+      "task_id": "task_4",
+      "name": "Detect Image",
+      "executor": "workers/vision.detect",
+      "params": {
+        "image": "image path here",
+        "query": "query details here",
+        "annotate": true,
+        "outPath": "output path here",
+        "threshold": 0.5
+      },
+      "timeout_ms": 60000,
+      "retries": 0,
+      "artifacts_in": [],
+      "artifacts_out": [
+        "coords",
+        "score",
+        "annotated_path"
+      ],
+      "validations": []
+    }
+  ]
+}

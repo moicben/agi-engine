@@ -1,104 +1,59 @@
 ---
-description: Document service layer interactions between WhatsApp, SMS, device management, and database services
+description: Document service layer interactions across WhatsApp, SMS, device management, payments, identity, engine, and database services
 ---
 
 # === USER INSTRUCTIONS ===
-description: Technical specification for service integration patterns across WhatsApp, SMS, device management and data persistence layers
+description: Technical specification for service integration across WhatsApp, SMS, device management, payments, identity, engine, and data persistence layers
 Service Layer Integration Architecture:
-- Bidirectional communication between WhatsApp API and device management layer 
-- Status propagation through event bus for device/account state changes
-- Retry mechanism for failed WhatsApp operations with exponential backoff
-- Cross-service session management for multi-device WhatsApp instances
-File Path: services/whatsapp/app-service.js
-Importance Score: 85
-2. SMS Verification Integration 
-- SMS gateway abstraction supporting multiple providers
-- Country-specific number acquisition with price-based routing
-- Verification code extraction and validation pipeline
-- Service health monitoring with fallback provider switching
-File Path: services/sms-service.js
-Importance Score: 80
-3. Device Management Integration
-- Centralized device pool management for virtual/physical devices
-- Device state synchronization across WhatsApp/SMS services
-- Automated device cleanup and session recycling
-- Resource locking for concurrent service access
-File Path: services/device-service.js 
-Importance Score: 75
-4. Data Persistence Layer
-- Event sourcing pattern for cross-service state management
-- Transaction coordination across WhatsApp/SMS operations
-- Retry queues for failed operations with deadletter handling
-- Service-specific data partitioning and cleanup policies
-File Path: services/database-service.js
-Importance Score: 70
+- Event-style status propagation via DB + engine run ledger/events
+- Retry with exponential backoff where applicable; idempotent operations
+- Cross-service session and device state management
+File Pointers:
+- WhatsApp: tools/whatsapp/app-service.js, workers/whatsapp/*
+- SMS/OTP/OCR: tools/whatsapp/ocr-service.js, tools/others/captcha-service.js
+- Device: tools/others/device-service.js
+- Payments: workers/web/bricks/westernunion/*, tools/western/*
+- Identity: tools/identity/*
+- Engine: core/engine/* (assign uses capabilities.json)
+Importance Score: 85/100
+
 Key Integration Patterns:
-- Event-driven communication between services
-- Circuit breaker pattern for external service calls
-- Idempotent operations with deduplication
-- Distributed locking for shared resources
-- Service-specific retry policies
-- Graceful degradation with fallback services
-- Cross-service transaction rollback
-- Dead letter queues for failed operations
+- Event-driven persistence: append ledger/events for engine; DB for domain states
+- Circuit breaker + fallback providers (SMS, proxies)
+- Distributed locking for shared devices/sessions
+- Graceful degradation with explicit statuses
 # === END USER INSTRUCTIONS ===
 
 # service-integration
 
-Service Layer Architecture:
+Workflows:
+1) Account Creation Pipeline
+WhatsApp Service -> SMS/OTP -> Device Service -> DB (+ Engine runs for GUI/vision if used)
+- Device provisioning; SMS verification; session persistence; status tracking
 
-1. WhatsApp Account Services
-- Account creation and verification flow orchestration
-- Multi-stage registration with SMS verification
-- Profile setup automation with branding logic
-- Session persistence across device transfers
-- Custom retry mechanisms for failed verifications
-Importance Score: 85/100
+2) Message Distribution
+DB -> WhatsApp Service -> Device Service
+- Batching; rate limits; delivery tracking; retries
 
-2. SMS Integration Service 
-- Country-specific phone number acquisition
-- Verification code extraction and validation
-- SMS activation lifecycle management 
-- Multi-provider fallback system
-Importance Score: 75/100
+3) Device Transfer
+Device Service -> WhatsApp Service -> DB
+- Session export; QR scan/link; status sync; re-verification
 
-3. Device Management Service
-- Cross-platform device orchestration (MoreLogin, BlueStacks)
-- Device discovery through port scanning
-- Environment-specific connection handling
-- Automated device linking with QR code management
-Importance Score: 80/100
+4) Payments (Western)
+Init → Proceed → Topup helpers
+- Cookies import; fraud popup accept; card form fill; 3DS wait/verify; status writeback
 
-4. Database Integration Layer
-- Status tracking for device/account associations
-- Campaign progress persistence
-- Contact verification state management
-- Message delivery tracking
-Importance Score: 70/100
+5) Identity Verification
+Mindee/GPT‑4o/MRZ → normalization → confidence → DB
+- Exposed as functions used by payments/whatsapp onboarding
 
-Core Integration Workflows:
-
-1. Account Creation Pipeline:
-WhatsApp Service -> SMS Service -> Device Service -> Database
-- Coordinates device provisioning
-- Handles SMS verification 
-- Manages session persistence
-- Tracks verification status
-
-2. Message Distribution Flow:
-Database -> WhatsApp Service -> Device Service
-- Contact batch processing
-- Status updates
-- Device session management
-- Delivery tracking
-
-3. Device Transfer Workflow:
-Device Service -> WhatsApp Service -> Database
-- Session extraction
-- QR code generation/scanning
-- Status synchronization
-- Account re-verification
+Engine Integration:
+- Capabilities registry in `core/engine/capabilities.json` drives `assign`
+- Workers must emit unified envelopes
+- Persist artifacts/screenshots under `core/runs/<run-id>/artifacts`
 
 $END$
 
  If you're using this file in context, clearly say in italics in one small line that "Context added by Giga service-integration" along with specifying exactly what information was used from this file in a human-friendly way, instead of using kebab-case use normal sentence case.
+
+Evolution Note: Guidance first. If services or boundaries change, update pointers and patterns rather than forcing the old shape.

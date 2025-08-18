@@ -15,6 +15,7 @@ export async function assign(context) {
   };
 
   const prompt = `You are the Assign step. Map each planned task to a single worker function using the capability registry. Enforce simple policies: tasks <= 7; prefer lower cost and no side-effects when possible. Strict, templated JSON.
+User intent: ${String(context.intent || '')}
 Plan (JSON): ${context.plan}
 Goal: ${context.goal}
 Environment: ${JSON.stringify(envConstraints)}
@@ -46,25 +47,7 @@ Respond ONLY with strict JSON:
       return obj;
     }
   } catch {}
-  // Fallback minimal assignment
-  return {
-    stage: 'Assign',
-    orchestrator: 'engine',
-    assignments: [
-      {
-        order: 1,
-        task_id: 't1',
-        name: 'Demo detection',
-        executor: 'workers/vision.detect',
-        params: { query: 'SWIFT', annotate: false },
-        timeout_ms: 1500,
-        retries: 0,
-        artifacts_in: [],
-        artifacts_out: [],
-        validations: ['true == true']
-      }
-    ]
-  };
+  throw new Error('assign_invalid: no valid assignments returned by LLM');
 }
 
 export default { assign };
