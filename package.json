@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "next dev",
     "start": "next start",
-    "test": "node tests/test-workflow.js",
+    "test": "node tests/engine-think.spec.js && node tests/engine-analyze.spec.js && node tests/engine-plan.spec.js && node tests/engine-assign.spec.js && node tests/worker-vision.spec.js && node tests/worker-interact.spec.js",
     "run:g2a": "node tests/test-runpod.js",
     "runpod": "HEADLESS=false node tests/test-runpod.js",
     "runpod:headless": "HEADLESS=true node tests/test-runpod.js",

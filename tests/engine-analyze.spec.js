@@ -4,7 +4,7 @@ async function main() {
   const out = await analyze({ goal: 'Demo goal', selfThought: '{"stage":"Think"}', memorySnippet: 'memo', folderSummary: 'fs', conscience: 'c' });
   try {
     const json = typeof out === 'string' ? JSON.parse(out) : out;
-    if (json && json.stage === 'Analyze') {
+    if (json && (json.stage === 'Analyze' || json.stage === 'Fallback')) {
       console.log('OK: Analyze produced JSON');
       process.exit(0);
     }

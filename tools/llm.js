@@ -72,7 +72,7 @@ function fallbackFor(prompt){
     return JSON.stringify({ stage: 'Assign', orchestrator: 'engine', assignments: [{ order: 1, task_id: 't1', name: 'Demo detection', executor: 'workers/vision.detect', params: { image: { ref: 'context.image' }, query: 'SWIFT', annotate: false }, timeout_ms: 1500, retries: 0, artifacts_in: [], artifacts_out: ['coords'], validations: ['true == true'] }] });
   }
   if (prompt.includes('You are the Think step')) {
-    return JSON.stringify({ stage: 'Think', summary: 'fallback', contextualized_goal: 'fallback', assumptions: [], unknowns: [] });
+    return JSON.stringify({ stage: 'Think', summary: 'fallback', contextualized_goal: 'demo', assumptions: [], unknowns: [] });
   }
   if (prompt.includes('You are the Analyze step')) {
     return JSON.stringify({ stage: 'Analyze', summary: 'fallback', problem: { description: 'n/a', constraints: { explicit: [], implicit: [] } }, dependencies: [], risks: [], ambiguities: [], angles: { architecture: '', data: '', security: '', dx: '', tests: '', deploy: '' }, tracks: [], open_questions: [], hypotheses: [] });
