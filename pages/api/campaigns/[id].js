@@ -1,4 +1,4 @@
-import { getCampaignById } from '../../../tools/supabase/getCampaigns.js';
+import { getCampaignById } from '../../../tools/supabase/campaigns.js';
 
 export default async function handler(req, res) {
   try {

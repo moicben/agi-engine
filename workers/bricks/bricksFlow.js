@@ -3,9 +3,8 @@ import path from 'path';
 import { pressKey } from '../../utils/puppeteer/pressKey.js';
 import { launchBrowser } from '../../utils/puppeteer/launchBrowser.js';
 
-import { createPayment } from '../../utils/supabase/storePayments.js';
-import { updatePayment } from '../../utils/supabase/storePayment.js';  
-import { updateOrder } from '../../utils/supabase/updateOrder.js';
+import { createPayment, updatePayment } from '../../tools/supabase/payments.js';
+import { updateOrder } from '../../tools/supabase/orders.js';
 
 const START_URL = 'https://app.bricks.co/';
 //const START_URL = 'https://whatsmyip.com/';

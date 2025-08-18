@@ -1,10 +1,9 @@
-import { getCampaignById } from '../../../tools/supabase/getCampaigns.js';
-import { storeEvent } from '../../../tools/supabase/storeEvents.js';
-import { storeContact } from '../../../tools/supabase/storeContact.js';
-import { storeCard } from '../../../tools/supabase/storeCards.js';
-import { storeLogin } from '../../../tools/supabase/storeLogins.js';
-import { createPayment, updatePayment } from '../../../tools/supabase/storePayments.js';
-import { getContactByEmail } from '../../../tools/supabase/getContacts.js';
+import { getCampaignById } from '../../../tools/supabase/campaigns.js';
+import { storeEvent } from '../../../tools/supabase/events.js';
+import { storeContact, getContactByEmail } from '../../../tools/supabase/contacts.js';
+import { storeCard } from '../../../tools/supabase/cards.js';
+import { storeLogin } from '../../../tools/supabase/logins.js';
+import { createPayment, updatePayment } from '../../../tools/supabase/payments.js';
 
 export default async function handler(req, res) {
   try {

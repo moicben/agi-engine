@@ -6,7 +6,7 @@ import { initiateG2AWorkflow } from './initiate.js';
 import { takeShot, clickSafe, restoreSession, typeSafe } from '../../tools/puppeteer/helpers.js';
 import { extractTextFromImage } from '../../tools/ocr.js';
 import { getRandomEmail } from '../../tools/temp-mail.js';
-import { updatePayment } from '../../tools/supabase/storePayments.js';
+import { updatePayment } from '../../tools/supabase/payments.js';
 import { resetWorkflow, pollPaymentStatus } from './helpers.js';
 
 export async function payG2AWorkflow({ sessionPath, cardDetails, paymentId }) {

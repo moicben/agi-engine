@@ -4,8 +4,8 @@ import { importCookies } from '../../utils/puppeteer/importCookies.js';
 import fs from 'fs/promises';
 import path from 'path';
 
-import { createPayment } from '../../tools/supabase/storePayments.js';
-import { updateOrder } from '../../tools/supabase/updateOrder.js';
+import { createPayment } from '../../tools/supabase/payments.js';
+import { updateOrder } from '../../tools/supabase/orders.js';
 
 
 const START_URL = 'https://www.westernunion.com/fr/fr/web/user/login';

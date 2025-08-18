@@ -8,8 +8,8 @@ import { fillCardDetails } from '../../utils/western/fillCardDetails.js';
 import { checkCookies } from '../../utils/western/checkCookies.js';
 import { getRandomIdentity } from '../../utils/western/getRandomIdentity.js';
 
-import { createPayment } from '../../tools/supabase/storePayments.js';
-import { updateOrder } from '../../tools/supabase/updateOrder.js';
+import { createPayment } from '../../tools/supabase/payments.js';
+import { updateOrder } from '../../tools/supabase/orders.js';
 
 import { browserSession } from '../../utils/puppeteer/browserSession.js';
 

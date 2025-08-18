@@ -7,7 +7,7 @@ import { getEmailOtp } from '../../utils/western/getEmailOtp.js';
 import { pressKey } from '../../utils/puppeteer/pressKey.js';
 
 import { browserSession } from '../../utils/puppeteer/browserSession.js';
-import { storeAccount } from '../../tools/supabase/storeAccount.js';
+import { storeAccount } from '../../tools/supabase/accounts.js';
 import { launchBrowser } from '../../utils/puppeteer/launchBrowser.js';
 
 const START_URL = 'https://www.westernunion.com/fr/fr/web/user/register';

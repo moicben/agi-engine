@@ -1,4 +1,4 @@
-import { getContactById } from '../../../tools/supabase/getContacts.js';
+import { getContactById } from '../../../tools/supabase/contacts.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'GET') {

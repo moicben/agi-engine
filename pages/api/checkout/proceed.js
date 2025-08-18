@@ -1,6 +1,6 @@
 import { payG2AWorkflow } from '../../../workers/g2a/proceed.js';
-import { createPayment } from '../../../tools/supabase/storePayments.js';
-import { getContactByEmail } from '../../../tools/supabase/getContacts.js';
+import { createPayment } from '../../../tools/supabase/payments.js';
+import { getContactByEmail } from '../../../tools/supabase/contacts.js';
 import { createClient } from '@supabase/supabase-js';
 import 'dotenv/config';
 

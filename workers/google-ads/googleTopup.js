@@ -3,8 +3,8 @@ import 'dotenv/config';
 import { importCookies } from '../../utils/puppeteer/importCookies.js';
 import fs from 'fs/promises';
 
-import { createPayment } from '../../utils/supabase/storePayments.js';
-import { updateOrder } from '../../utils/supabase/updateOrder.js';
+import { createPayment } from '../../tools/supabase/payments.js';
+import { updateOrder } from '../../tools/supabase/orders.js';
 
 
 const GOOGLE_URL = 'https://ads.google.com/aw/billing/summary?ocid=6921193135&euid=1339874804';

@@ -1,0 +1,22 @@
+status: 200
+date: Thu, 14 Sep 2023 15:46:00 GMT
+server: gunicorn
+x-powered-by: Zope (www.zope.org), Python (www.python.org)
+content-security-policy: frame-ancestors 'self';
+content-type: application/json
+strict-transport-security: max-age=15552000
+vary: Accept,Accept-Encoding
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+x-launchpad-revision: 32eed776db4e1fe74faaa77122cde19862d565ac
+x-lazr-notifications: []
+x-xss-protection: 1; mode=block
+x-vcs-revision: 32eed776db4e1fe74faaa77122cde19862d565ac
+x-request-id: 3c6a43d4-50d7-427d-a43f-29e2d732c808
+content-length: 3076
+-content-encoding: gzip
+content-location: https://api.launchpad.net/devel/~nextcloud-devs?name=%22client%22&ws.op=getPPAByName
+-varied-accept: application/json
+-varied-accept-encoding: gzip, deflate
+
+{"self_link": "https://api.launchpad.net/devel/~nextcloud-devs/+archive/ubuntu/client", "web_link": "https://launchpad.net/~nextcloud-devs/+archive/ubuntu/client", "resource_type_link": "https://api.launchpad.net/devel/#archive", "owner_link": "https://api.launchpad.net/devel/~nextcloud-devs", "name": "client", "displayname": "Desktop client", "reference": "~nextcloud-devs/ubuntu/client", "distribution_link": "https://api.launchpad.net/devel/ubuntu", "private": false, "suppress_subscription_notifications": false, "dependencies_collection_link": "https://api.launchpad.net/devel/~nextcloud-devs/+archive/ubuntu/client/dependencies", "description": "The Nextcloud desktop client compiled for Ubuntu.\n\nThis repository contains the stable releases of the client. For the cutting-edge, alpha version, see the alpha PPA at https://launchpad.net/~nextcloud-devs/+archive/ubuntu/client-alpha.\nThere is also a beta PPA for the stable release candidates at https://launchpad.net/~nextcloud-devs/+archive/ubuntu/client-beta.\n\nAfter adding the PPA to your system as described below, the client can be installed by issuing one of the following commands depending on your system:\n\n- Stock Ubuntu with Nautilus: sudo apt install nautilus-nextcloud\n- KDE Ubuntu with Dolphin: sudo apt install dolphin-nextcloud\n- Ubuntu MATE with Caja: sudo apt install caja-nextcloud\n- Ubuntu Mint with Nemo: sudo apt install nemo-nextcloud\n- Other, or if you don't want/need the file manager integration:\n\u00a0\u00a0\u00a0\u00a0\u00a0sudo apt install nextcloud-desktop\n\nFor support issues, please go to the GitHub page at https://github.com/nextcloud/desktop. This PPA is for packaging only, so contact the maintainer only if your issue is clearly with packaging.\n\nNOTE for Bionic users: Bionic includes Qt 5.9 but the Nextcloud client requires Qt 5.12 recently, so there are no more updates for Bionic here.\n\nNOTE for Xenial users: because Xenial contains some outdated libraries, such as Qt5.5 and libssl 1.0, which are no longer fully supported by the Nextcloud client, the Xenial build in this repository is on a strictly best-effort basis only. It means that some functionality may not work properly or at all. It is also possible that Xenial support in this PPA will be discontinued altogether at some point in the future.", "signing_key_fingerprint": "1FCD77DD0DBEF5699AD2610160EE47FBAD3DD469", "require_virtualized": true, "build_debug_symbols": true, "publish_debug_symbols": true, "permit_obsolete_series_uploads": false, "authorized_size": 2048, "status": "Active", "external_dependencies": null, "processors_collection_link": "https://api.launchpad.net/devel/~nextcloud-devs/+archive/ubuntu/client/processors", "enabled_restricted_processors_collection_link": "https://api.launchpad.net/devel/~nextcloud-devs/+archive/ubuntu/client/enabled_restricted_processors", "publishing_method": "Local", "repository_format": "Debian", "publish": true, "relative_build_score": 0, "http_etag": "\"64b4c8e75573b944c9a8535ff7d9a7e4b0863364-5387642f9cff6af21e84aa164ac4126f4eba5114\""}

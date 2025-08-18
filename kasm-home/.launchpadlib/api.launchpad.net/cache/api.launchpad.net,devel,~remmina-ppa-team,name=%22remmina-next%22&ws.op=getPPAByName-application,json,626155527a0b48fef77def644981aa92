@@ -1,0 +1,22 @@
+status: 200
+date: Thu, 14 Sep 2023 15:46:29 GMT
+server: gunicorn
+x-powered-by: Zope (www.zope.org), Python (www.python.org)
+content-security-policy: frame-ancestors 'self';
+content-type: application/json
+strict-transport-security: max-age=15552000
+vary: Accept,Accept-Encoding
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+x-launchpad-revision: 32eed776db4e1fe74faaa77122cde19862d565ac
+x-lazr-notifications: []
+x-xss-protection: 1; mode=block
+x-vcs-revision: 32eed776db4e1fe74faaa77122cde19862d565ac
+x-request-id: 3ef2555e-9cc6-44b7-a4a3-c2f0d973cf2f
+content-length: 1514
+-content-encoding: gzip
+content-location: https://api.launchpad.net/devel/~remmina-ppa-team?name=%22remmina-next%22&ws.op=getPPAByName
+-varied-accept: application/json
+-varied-accept-encoding: gzip, deflate
+
+{"self_link": "https://api.launchpad.net/devel/~remmina-ppa-team/+archive/ubuntu/remmina-next", "web_link": "https://launchpad.net/~remmina-ppa-team/+archive/ubuntu/remmina-next", "resource_type_link": "https://api.launchpad.net/devel/#archive", "owner_link": "https://api.launchpad.net/devel/~remmina-ppa-team", "name": "remmina-next", "displayname": "remmina-next", "reference": "~remmina-ppa-team/ubuntu/remmina-next", "distribution_link": "https://api.launchpad.net/devel/ubuntu", "private": false, "suppress_subscription_notifications": false, "dependencies_collection_link": "https://api.launchpad.net/devel/~remmina-ppa-team/+archive/ubuntu/remmina-next/dependencies", "description": "PPA for development (next branch) Remmina packages", "signing_key_fingerprint": "04E38CE134B239B9F38F82EE8A993C2521C5F0BA", "require_virtualized": true, "build_debug_symbols": false, "publish_debug_symbols": false, "permit_obsolete_series_uploads": false, "authorized_size": 2048, "status": "Active", "external_dependencies": null, "processors_collection_link": "https://api.launchpad.net/devel/~remmina-ppa-team/+archive/ubuntu/remmina-next/processors", "enabled_restricted_processors_collection_link": "https://api.launchpad.net/devel/~remmina-ppa-team/+archive/ubuntu/remmina-next/enabled_restricted_processors", "publishing_method": "Local", "repository_format": "Debian", "publish": true, "relative_build_score": 0, "http_etag": "\"697382a7bb19f73d0944a86a19287e8ee9351254-7e2a2e2aa7883701511ebf2d84270968991d9028\""}

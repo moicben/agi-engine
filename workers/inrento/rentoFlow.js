@@ -1,8 +1,8 @@
 import { readFileSync, existsSync, mkdirSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import fetch from 'node-fetch';
-import { createPayment } from '../../tools/supabase/storePayments.js';
-import { updateOrder } from '../../tools/supabase/updateOrder.js';
+import { createPayment } from '../../tools/supabase/payments.js';
+import { updateOrder } from '../../tools/supabase/orders.js';
 
 // Configuration variables
 const endpoint = "https://production-sfo.browserless.io/chrome/bql";

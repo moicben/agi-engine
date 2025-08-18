@@ -1,0 +1,22 @@
+status: 200
+date: Thu, 14 Sep 2023 15:48:57 GMT
+server: gunicorn
+x-powered-by: Zope (www.zope.org), Python (www.python.org)
+content-security-policy: frame-ancestors 'self';
+content-type: application/json
+strict-transport-security: max-age=15552000
+vary: Accept,Accept-Encoding
+x-content-type-options: nosniff
+x-frame-options: SAMEORIGIN
+x-launchpad-revision: 32eed776db4e1fe74faaa77122cde19862d565ac
+x-lazr-notifications: []
+x-xss-protection: 1; mode=block
+x-vcs-revision: 32eed776db4e1fe74faaa77122cde19862d565ac
+x-request-id: 75267ba9-951f-4e44-8033-c80130f0cfa8
+content-length: 1441
+-content-encoding: gzip
+content-location: https://api.launchpad.net/devel/~obsproject?name=%22obs-studio%22&ws.op=getPPAByName
+-varied-accept: application/json
+-varied-accept-encoding: gzip, deflate
+
+{"self_link": "https://api.launchpad.net/devel/~obsproject/+archive/ubuntu/obs-studio", "web_link": "https://launchpad.net/~obsproject/+archive/ubuntu/obs-studio", "resource_type_link": "https://api.launchpad.net/devel/#archive", "owner_link": "https://api.launchpad.net/devel/~obsproject", "name": "obs-studio", "displayname": "OBS Studio", "reference": "~obsproject/ubuntu/obs-studio", "distribution_link": "https://api.launchpad.net/devel/ubuntu", "private": false, "suppress_subscription_notifications": false, "dependencies_collection_link": "https://api.launchpad.net/devel/~obsproject/+archive/ubuntu/obs-studio/dependencies", "description": "Latest stable release of OBS Studio", "signing_key_fingerprint": "BC7345F522079769F5BBE987EFC71127F425E228", "require_virtualized": true, "build_debug_symbols": false, "publish_debug_symbols": false, "permit_obsolete_series_uploads": false, "authorized_size": 2048, "status": "Active", "external_dependencies": null, "processors_collection_link": "https://api.launchpad.net/devel/~obsproject/+archive/ubuntu/obs-studio/processors", "enabled_restricted_processors_collection_link": "https://api.launchpad.net/devel/~obsproject/+archive/ubuntu/obs-studio/enabled_restricted_processors", "publishing_method": "Local", "repository_format": "Debian", "publish": true, "relative_build_score": 0, "http_etag": "\"afae1a0de7ecb09127b64d97c2e57b24852fe3a2-0c250b239f355c13b7b2ea12f8e951a24f6e5b1a\""}

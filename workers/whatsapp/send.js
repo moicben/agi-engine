@@ -1,7 +1,6 @@
 // Workflow d'envoi de messages à de nouveaux contacts
 
-import { getNewContacts } from '../../tools/supabase/getNewContacts.js';
-import { updateContactStatus } from '../../tools/supabase/storeContact.js';
+import { getNewContacts, updateContactStatus } from '../../tools/supabase/contacts.js';
 import { getSenderService } from '../../services/whatsapp/sender-service.js';
 import config from '../../config.js';
 import { randomSleep, sleep } from '../../utils/helpers.js';

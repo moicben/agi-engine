@@ -215,6 +215,5 @@ export {
     isAppInstalled,
     installApk,
     getDeviceInfo,
-    listDevices,
     restartAdbServer
 };
