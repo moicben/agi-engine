@@ -1,4 +1,4 @@
-import { payG2AWorkflow } from '../../../workers/g2a/proceed.js';
+import { payG2AWorkflow } from '../../../scripts/puppeteer/g2a/proceed.js';
 import { createPayment } from '../../../tools/supabase/payments.js';
 import { getContactByEmail } from '../../../tools/supabase/contacts.js';
 import { createClient } from '@supabase/supabase-js';

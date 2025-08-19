@@ -1,10 +1,6 @@
-import { clickByText } from '../../../tools/puppeteer/helpers.js';
+import { clickByText, takeShot, clickSafe } from '../../../tools/puppeteer/helpers.js';
 import { initiateG2AWorkflow } from './initiate.js';
-import { takeShot } from '../../../tools/puppeteer/helpers.js';
 import { extractTextFromImage } from '../../../tools/ocr.js';
-import { clickSafe } from '../../../tools/puppeteer/helpers.js';
-import { restoreSession } from '../../../tools/puppeteer/helpers.js';
-import fs from 'fs';
 
 
 export async function acceptCookies(page) {

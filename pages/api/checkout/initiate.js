@@ -1,4 +1,4 @@
-import { initiateG2AWorkflow } from '../../../workers/g2a/initiate.js';
+import { initiateG2AWorkflow } from '../../../scripts/puppeteer/g2a/initiate.js';
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {

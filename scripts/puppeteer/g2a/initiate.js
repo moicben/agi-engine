@@ -1,7 +1,7 @@
 import path from 'path';
 
 import { launchBrowser } from '../../../tools/puppeteer/client.js';
-import {  takeShot, clickSafe, saveSession } from '../../../tools/puppeteer/helpers.js';
+import { takeShot, clickSafe, saveSession } from '../../../tools/puppeteer/helpers.js';
 import { acceptCookies, handleCartDrawer } from './helpers.js';
 
 
