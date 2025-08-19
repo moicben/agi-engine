@@ -60,9 +60,15 @@ async function run() {
         // THINK: contextualize goal
         const thinkOut = await think({ goal: instructions, context: { conscience: ctx.conscienceLite }, memorySnippet: ctx.memorySnippet, folderSummary: ctx.folderSummaryShort });
         writeJson(paths.think, thinkOut);
+        if (shouldLogSteps) {
+          console.log('[engine] think:', truncateForLog(thinkOut));
+        }
         // ANALYZE: classify intent and analyze problem
         const analysis = await analyze({ goal: instructions, selfThought: thinkOut, memorySnippet: ctx.memorySnippet, folderSummary: ctx.folderSummaryShort, conscience: ctx.conscienceLite });
         writeJson(paths.analyze, analysis);
+        if (shouldLogSteps) {
+          console.log('[engine] analyze:', truncateForLog(analysis));
+        }
 
         // Extract intent with simple heuristic override for QA
         let intent = 'qa';
@@ -89,12 +95,18 @@ async function run() {
         let planJson = safeParse(planOut);
         let planVal = validatePlan(planJson);
         if (!planVal.ok) { throw new Error(`plan_invalid:${planVal.error}`); }
+        if (shouldLogSteps) {
+          console.log('[engine] plan:', truncateForLog(planOut));
+        }
 
         // ASSIGN: map tasks to concrete workers/capabilities
         const assignOut = await assign({ plan: planOut, analysis, goal: instructions, context: ctx, intent });
         let assignJson = safeParse(assignOut);
         let assignVal = validateAssign(assignJson);
         if (!assignVal.ok) { throw new Error(`assign_invalid:${assignVal.error}`); }
+        if (shouldLogSteps) {
+          console.log('[engine] assign:', truncateForLog(assignOut));
+        }
 
         writeJson(paths.plan, planJson);
         writeJson(paths.assign, assignJson);
@@ -141,6 +153,11 @@ async function run() {
                 const sampleRate = Number(config.engine.criticSampleRate || 1);
                 const doCritic = Math.random() < sampleRate;
                 const crit = doCritic ? await critic({ task, resultEnvelope: result, context: { goal: instructions } }) : { stage:'Critic', task_id: tid, success: result.success, progress: !!result.success, critic: 'skipped', recommendations: [], next: { action: result.success ? 'continue' : 'retry' } };
+                if (shouldLogSteps && doCritic) {
+                  try {
+                    console.log('[engine] critic:', truncateForLog(JSON.stringify(crit)));
+                  } catch {}
+                }
                 if ((config?.engine?.persistLevel || 'full') !== 'minimal' || !crit.success) {
                   writeJson(paths.taskCritic(tid), { attempt, ...crit });
                 }
@@ -154,13 +171,6 @@ async function run() {
         // DECIDE: aggregate critics and choose next action
         const decision = decide({ iterationIndex: iteration, tasks: planJson.tasks || [], critics, retriesState, intent });
         writeJson(paths.decide, decision);
-
-        if (shouldLogSteps) {
-          console.log('[engine] think:', truncateForLog(thinkOut));
-          console.log('[engine] analyze:', truncateForLog(analysis));
-          console.log('[engine] plan:', truncateForLog(JSON.stringify(planJson)));
-          console.log('[engine] assign:', truncateForLog(JSON.stringify(assignJson)));
-        }
         console.log('[engine] iteration', iteration, 'decision:', decision.action);
 
         if (decision.action === 'halt') break;

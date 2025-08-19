@@ -3,11 +3,14 @@
  * Gère les interactions avec l'application WhatsApp
  */
 
-import { executeCommand, takeScreenshot } from '../../utils/adb.js';
-import { sleep, tap, press, writeContent, randomName } from '../../utils/helpers.js';
+import { executeCommand, takeScreenshot } from './adb.js';
+import { sleep, tap, press, writeContent, randomName } from './helpers.js';
 import { ocrService } from './ocr-service.js';
-import { logger } from '../../utils/logger.js';
-import { deviceService } from '../device-service.js';
+import { logger } from './logger.js';
+import { deviceService } from './device-service.js';
+import fs from 'fs';
+import path from 'path';
+import url from 'url';
 
 // Coordonnées UI par défaut pour WhatsApp
 const UI_ELEMENTS = {
@@ -65,8 +68,18 @@ async function setupApp(device) {
   // Si application non installée, l'installer  
   const installedAppsResult = await executeCommand(device, 'shell pm list packages');
   const installedAppsRaw = installedAppsResult.stdout || installedAppsResult;
+  const isInstalled = installedAppsRaw.includes('com.whatsapp');
+
+  // Résoudre le chemin de l'APK (si présent)
+  const thisDir = path.dirname(url.fileURLToPath(import.meta.url));
+  const candidatePaths = [
+    path.resolve(thisDir, '..', '..', 'assets', 'apk', 'whatsapp.apk'),
+    path.resolve(thisDir, '..', '..', 'assets', 'apk', 'WhatsApp.apk'),
+    path.resolve(thisDir, '..', 'apk', 'whatsapp.apk')
+  ];
+  const apkPath = candidatePaths.find(p => fs.existsSync(p));
   
-  if (installedAppsRaw.includes('com.whatsapp')) {
+  if (isInstalled) {
     //console.log('📦 WhatsApp déjà installé. clear des données...');
 
     // Forcer la fermeture de l'application
@@ -77,9 +90,11 @@ async function setupApp(device) {
     await executeCommand(device, 'shell pm clear com.whatsapp');
     await sleep(3000);
 
-    // Désinstaller l'application
-    await executeCommand(device, `uninstall com.whatsapp`);
-    await sleep(3000);
+    if (apkPath) {
+      // Désinstaller l'application si on va réinstaller
+      await executeCommand(device, 'uninstall com.whatsapp');
+      await sleep(2000);
+    }
 
     // Supprimer les données temporaires
     await executeCommand(device, 'shell rm -rf /sdcard/WhatsApp/');
@@ -88,11 +103,14 @@ async function setupApp(device) {
 
 }
 
-  // Installation de WhatsApp dans tous les cas
-  console.log('📦 Installation de WhatsApp...');
-  const apkPath = './apk/whatsapp.apk';
-  await executeCommand(device, `install ${apkPath}`);
-  await sleep(6000);
+  // Installer WhatsApp si APK trouvé, ou si non installé
+  if (apkPath) {
+    console.log('📦 Installation de WhatsApp...');
+    await executeCommand(device, `install "${apkPath}"`);
+    await sleep(6000);
+  } else if (!isInstalled) {
+    throw new Error('APK WhatsApp introuvable. Placez le fichier à assets/apk/whatsapp.apk ou installez manuellement com.whatsapp sur le device.');
+  }
 
   // Étape 5 : Nettoyer les screenshots
   console.log(`📸 Nettoyage des screenshots...`);
@@ -148,9 +166,9 @@ async function launchApp(device) {
   await tap(device, UI_ELEMENTS.ignoreROM.x, UI_ELEMENTS.ignoreROM.y);
   await sleep(3000);
 
-  // Accepter les conditions si nécessaire
-  await tap(device, UI_ELEMENTS.agreeButton.x, UI_ELEMENTS.agreeButton.y);
-  await sleep(3500);
+  // Accepter les conditions si nécessaire -> Momentanément désactivé
+  // await tap(device, UI_ELEMENTS.agreeButton.x, UI_ELEMENTS.agreeButton.y);
+  // await sleep(3500);
 
   // REMOVE MODE LINKED DEVICES (OPTIONAL)
   // await tap(device, UI_ELEMENTS.threeDotButton.x, UI_ELEMENTS.threeDotButton.y);
@@ -645,4 +663,4 @@ const whatsappService = {
   openPhoneNotifs
 }
 
-module.exports = { whatsappService };
+export { whatsappService };

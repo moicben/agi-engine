@@ -2,10 +2,10 @@
     sur l'application WhatsApp        
 */
 
-// Importer le service de WhatsApp
-import { getWhatsAppService } from './app-service.js';
-import { tap, press, sleep, randomSleep } from '../../utils/helpers.js';
-import { executeCommand, takeScreenshot } from '../../utils/adb.js';
+// Importer le service de WhatsApp (si nécessaire)
+// import { whatsappService } from './app-service.js';
+import { tap, press, sleep, randomSleep } from './helpers.js';
+import { executeCommand, takeScreenshot } from './adb.js';
 import { ocrService } from './ocr-service.js';
 
 const UI_ELEMENTS = {
@@ -189,11 +189,5 @@ async function sendImage(device, phone) {
 
 
 // Export du service
-module.exports = {
-    sendMessage,
-    sendImage,
-    getSenderService: () => ({
-        sendMessage,
-        sendImage
-    })
-}
+export { sendMessage, sendImage };
+export const getSenderService = () => ({ sendMessage, sendImage });

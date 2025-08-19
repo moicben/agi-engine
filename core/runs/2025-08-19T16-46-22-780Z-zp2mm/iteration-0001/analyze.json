@@ -1,0 +1,36 @@
+{
+  "stage": "Analyze",
+  "intent": "qa",
+  "summary": "The user is asking for the capital of France, which is a straightforward factual inquiry.",
+  "problem": {
+    "description": "The user seeks to know the capital city of France.",
+    "constraints": {
+      "explicit": [
+        "Provide the name of the capital city"
+      ],
+      "implicit": [
+        "The answer should be in French",
+        "The response should be concise"
+      ]
+    }
+  },
+  "dependencies": [],
+  "risks": [],
+  "ambiguities": [
+    "The user may want additional information about the capital, such as population or historical context."
+  ],
+  "angles": {
+    "architecture": "N/A",
+    "data": "N/A",
+    "security": "N/A",
+    "dx": "N/A",
+    "tests": "N/A",
+    "deploy": "N/A"
+  },
+  "tracks": [],
+  "open_questions": [
+    "Does the user want only the name of the capital or additional details?",
+    "Is there a preferred format for the response?"
+  ],
+  "hypotheses": []
+}

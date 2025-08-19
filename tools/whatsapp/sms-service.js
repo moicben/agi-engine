@@ -85,5 +85,4 @@ async function cancelAllActivations() {
 
 const smsService = { getPhoneNumber, requestSMS, waitForSMS, cancelAllActivations };
 
-// Export du service
-module.exports = { smsService };
+export { smsService };

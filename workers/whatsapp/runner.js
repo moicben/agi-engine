@@ -1,16 +1,16 @@
 // Runner des workflows input, clear, brand, send
 // Exemples d'utilisation:
-// SETUP: node runners/runner.js --workflow=setup --device=emulator-5554
-// INPUT: node runners/runner.js --workflow=input --device=6075 --country=ca
-// BRAND: node runners/runner.js --workflow=brand --device=emulator-5554,127.0.0.1:6075
-// SEND: node runners/runner.js --workflow=send --device=émulateur-5554
-// CLEAR: node runners/runner.js --workflow=clear --device=all
-// TRANSFER: node runners/runner.js --workflow=transfer --device=6085 --target=emulator-5554 --country=ca
-// EXTRACT: node runners/runner.js --workflow=extract --device=emulator-5554
-// IMPORT: node runners/runner.js --workflow=import --device=emulator-5554 --session=+12362062469
+// SETUP: node workers/whatsapp/runner.js --workflow=setup --device=emulator-5554
+// INPUT: node workers/whatsapp/runner.js --workflow=input --device=6075 --country=ca
+// BRAND: node workers/whatsapp/runner.js --workflow=brand --device=emulator-5554,127.0.0.1:6075
+// SEND: node workers/whatsapp/runner.js --workflow=send --device=émulateur-5554
+// CLEAR: node workers/whatsapp/runner.js --workflow=clear --device=all
+// TRANSFER: node workers/whatsapp/runner.js --workflow=transfer --device=6085 --target=emulator-5554 --country=ca
+// EXTRACT: node workers/whatsapp/runner.js --workflow=extract --device=emulator-5554
+// IMPORT: node workers/whatsapp/runner.js --workflow=import --device=emulator-5554 --session=+12362062469
 
-const { parseArgs, sleep } = require('../utils/helpers');
-const { deviceService } = require('../services/device-service');
+import { parseArgs, sleep } from '../../tools/whatsapp/helpers.js';
+import { deviceService } from '../../tools/whatsapp/device-service.js';
 
 
 // Récupérer le device et le pays
@@ -27,32 +27,33 @@ async function runSingleDevice(workflow, device, country, target) {
         console.log(`🚀 Démarrage du workflow ${workflow} pour device ${device}...`);
 
         if (workflow === 'input') {
-            const { inputWorkflow } = require('../workflows/whatsapp/input');
+            const { inputWorkflow } = await import('./input.js');
             await inputWorkflow(device, country);
         } else if (workflow === 'clear') {
-            const { clearWorkflow } = require('../workflows/whatsapp/clear');
+            const { clearWorkflow } = await import('./clear.js');
             await clearWorkflow(device);
         } else if (workflow === 'brand') {
-            const { brandWorkflow } = require('../workflows/whatsapp/brand');
+            const { brandWorkflow } = await import('./brand.js');
             await brandWorkflow(device);
         } else if (workflow === 'send') {
-            const { sendWorkflow } = require('../workflows/whatsapp/send');
+            const { sendWorkflow } = await import('./send.js');
             await sendWorkflow(device);
         } else if (workflow === 'setup') {
-            const { setupWorkflow } = require('../workflows/whatsapp/setup');
+            const { setupWorkflow } = await import('./setup.js');
             await setupWorkflow(device, country);
         }
         else if (workflow === 'transfer') {
-            const { transferWorkflow } = require('../workflows/whatsapp/transfer');
+            const { transferWorkflow } = await import('./transfer.js');
             await transferWorkflow(device, country, target);
         }
         else if (workflow === 'extract') {
-            const { extractWorkflow } = require('../workflows/whatsapp/extract');
+            const { extractWorkflow } = await import('./extract.js');
             await extractWorkflow(device);
         }
         else if (workflow === 'import') {
-            const { importWorkflow } = require('../workflows/whatsapp/import');
-            await importWorkflow(device, `./sessions/${args.session}/`);
+            const { importWorkflow } = await import('./import.js');
+            const sessionDir = new URL('../../assets/wa-sessions/', import.meta.url);
+            await importWorkflow(device, `${sessionDir.pathname}${args.session}`);
         }
 
         console.log(`✅ Device ${device}: Workflow ${workflow} terminé avec succès`);
@@ -122,11 +123,11 @@ async function run(workflow) {
 }
 
 // Exécuter le workflow si le fichier est lancé directement
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
     run(args.workflow).catch(error => {
         console.error('❌ Erreur:', error.message);
-        process.exit(1);
+    process.exit(1);
     });
 }
 
-module.exports = { run };
+export { run };

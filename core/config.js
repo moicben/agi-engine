@@ -60,7 +60,7 @@ export const config = {
             dev: 120000,
         },
         // Activation d'un fast-path QA (court-circuit plan/assign)
-        qaFastpath: false,
+        qaFastpath: true,
     },
     memory: {
         maxRows: 120,

@@ -1,12 +1,9 @@
 // Workflow pour entrer un numéro de téléphone
 
-
-import { whatsappService } from '../../services/whatsapp/app-service.js';
-import { deviceService } from '../../services/device-service.js';
-import { vpnIosService } from '../../services/vpnios-service.js';
-import { smsService } from '../../services/sms-service.js';
-import { ocrService } from '../../services/whatsapp/ocr-service.js';
-import { randomSleep, sleep } from '../../utils/helpers.js';
+import { whatsappService } from '../../tools/whatsapp/app-service.js';
+import { deviceService } from '../../tools/whatsapp/device-service.js';
+import { ocrService } from '../../tools/whatsapp/ocr-service.js';
+import { randomSleep, sleep } from '../../tools/whatsapp/helpers.js';
 
 // Workflow pour transférer un numéro de téléphone
 async function transferWorkflow(device, country, target) {
@@ -65,4 +62,4 @@ async function transferWorkflow(device, country, target) {
     
 }
 
-module.exports = { transferWorkflow };
+export { transferWorkflow };

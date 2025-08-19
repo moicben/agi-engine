@@ -1,8 +1,8 @@
 // Runner du workflow send.js
 
-const { sendWorkflow } = require('../workflows/whatsapp/send');
-const config = require('../../config');
-const { parseArgs } = require('../utils/helpers');
+import { sendWorkflow } from './send.js';
+import { config } from '../../core/config.js';
+import { parseArgs } from '../../tools/whatsapp/helpers.js';
 
 let device = '127.0.0.1'
 let campaign;
@@ -35,11 +35,9 @@ if (!campaign) {
 console.log(`📱 Démarrage du workflow avec le device: ${device}`);
 
 // Lancer le workflow avec gestion d'erreurs
-(async () => {
-    try {
-        await sendWorkflow(campaign, device);
-    } catch (error) {
-        console.error('❌ Erreur fatale:', error.message);
-        process.exit(1);
-    }
-})();
+try {
+  await sendWorkflow(campaign, device);
+} catch (error) {
+  console.error('❌ Erreur fatale:', error.message);
+  process.exit(1);
+}

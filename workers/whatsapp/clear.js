@@ -1,7 +1,7 @@
 // Workflow de nettoyage/reset d'un device WhatsApp
 
-const { whatsappService } = require('../../services/whatsapp/app-service');
-const { deviceService } = require('../../services/device-service');
+import { whatsappService } from '../../tools/whatsapp/app-service.js';
+import { deviceService } from '../../tools/whatsapp/device-service.js';
 
 /**
  * Workflow de nettoyage d'un device
@@ -28,4 +28,4 @@ async function clearWorkflow(device) {
     }
 }
 
-module.exports = { clearWorkflow };
+export { clearWorkflow };

@@ -1,12 +1,12 @@
 // Fonction utilitaire robotjs
-let robot;
+let robot = null;
 try {
-  // eslint-disable-next-line global-require
-  robot = require('robotjs');
+  const mod = await import('robotjs');
+  robot = mod.default || mod;
 } catch (e) {
   robot = null;
 }
-const { sleep } = require('./helpers');
+import { sleep } from './helpers.js';
 
 // Fonction pour cliquer sur l'écran
 async function clickScreen(x, y, delay) {
@@ -40,9 +40,4 @@ async function writeText(text, delay) {
     await sleep(delay);
 }
 
-module.exports = {
-    clickScreen,
-    writeText,
-    pressKey,
-    sleep
-};
+export { clickScreen, writeText, pressKey, sleep };

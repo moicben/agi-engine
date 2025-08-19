@@ -1,14 +1,13 @@
 // Service pour gérer le VPN iOS avec clics automatisé sur l'écran
-let robot;
+let robot = null;
 try {
-  // Optional native dependency; not required on serverless builds
-  // eslint-disable-next-line global-require
-  robot = require('robotjs');
+  const mod = await import('robotjs');
+  robot = mod.default || mod;
 } catch (e) {
   robot = null;
 }
-const { sleep } = require('../utils/helpers');
-const { clickScreen, writeText, pressKey } = require('../utils/robot');
+import { sleep } from './helpers.js';
+import { clickScreen, writeText, pressKey } from './robot.js';
 
 // === VPN UNIQUE ===
 let isChangingVPN = false;
@@ -87,4 +86,4 @@ const vpnIosService = {
     resetVPNCycle
 };
 
-module.exports = { vpnIosService };
+export { vpnIosService };

@@ -1,8 +1,7 @@
 // Workflow de configuration d'un compte WhatsApp
 
-const { whatsappService } = require('../../services/whatsapp/app-service');
-const { deviceService } = require('../../services/device-service');
-const { inputWorkflow } = require('./input');
+import { whatsappService } from '../../tools/whatsapp/app-service.js';
+import { deviceService } from '../../tools/whatsapp/device-service.js';
 
 // Fonction principale du workflow
 async function setupWorkflow(device) {
@@ -32,4 +31,4 @@ async function setupWorkflow(device) {
 }
 
 // Exporter la fonction principale
-module.exports = { setupWorkflow };
+export { setupWorkflow };

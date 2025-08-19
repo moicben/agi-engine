@@ -3,8 +3,8 @@
  * Gère les environnements : morelogin, bluestacks, cloud
  */
 
-import { execAsync } from '../utils/helpers.js';
-import config from '../../config.js';
+import { execAsync } from './helpers.js';
+import { config as coreConfig } from '../../core/config.js';
 
 // État global des devices
 const devices = new Map();
@@ -153,7 +153,7 @@ function getDevice(device) {
   }
   
   // Chercher dans la configuration pour les ports
-  const deviceConfig = config.devicePorts?.find(d => d.id === deviceId);
+  const deviceConfig = coreConfig.devicePorts?.find(d => d.id === deviceId);
   
   if (deviceConfig) {
     // Trouvé dans la config, utiliser le port configuré
@@ -198,4 +198,4 @@ const deviceService = {
   getDevice
 };
 
-module.exports = { deviceService };
+export { deviceService };

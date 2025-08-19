@@ -4,6 +4,7 @@ import { exec } from 'child_process';
 import { promisify } from 'util';
 import path from 'path';
 import fs from 'fs';
+import url from 'url';
 
 const execAsync = promisify(exec);
 
@@ -28,7 +29,8 @@ async function executeCommand(device, command) {
 // Prendre un screenshot
 async function takeScreenshot(device, filename) {
     try {
-        const screenshotPath = path.join(__dirname, '..', 'screenshots');
+        const thisDir = path.dirname(url.fileURLToPath(import.meta.url));
+        const screenshotPath = path.join(thisDir, '..', '..', 'screenshots');
         //const filename = `screenshot_${Date.now()}.png`;
         //const filename = `screenshot.png`;
 

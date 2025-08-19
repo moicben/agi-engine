@@ -1,8 +1,8 @@
 // Service OCR - Configuration métier par étapes
 
-import { extractTextFromImage, extractRawTextFromImage, cleanupTempFile, checkKeywords } from '../../utils/ocr.js';
-import { takeScreenshot } from '../../utils/adb.js';
-import { sleep } from '../../utils/helpers.js';
+import { extractTextFromImage, extractRawTextFromImage, cleanupTempFile, checkKeywords } from '../ocr.js';
+import { takeScreenshot } from './adb.js';
+import { sleep } from './helpers.js';
 
 /**
  * Analyser une capture pour vérification SMS
@@ -161,7 +161,4 @@ const ocrService = {
     extractTransferCode,
     getSettingsPosition
 }
-
-
-
-module.exports = { ocrService };
+export { ocrService };

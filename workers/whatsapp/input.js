@@ -1,11 +1,11 @@
 // Workflow pour entrer un numéro de téléphone
 
-import { whatsappService } from '../../services/whatsapp/app-service.js';
-import { deviceService } from '../../services/device-service.js';
-import { vpnIosService } from '../../services/vpnios-service.js';
-import { smsService } from '../../services/sms-service.js';
-import { ocrService } from '../../services/whatsapp/ocr-service.js';
-import { randomSleep, sleep } from '../../utils/helpers.js';
+import { whatsappService } from '../../tools/whatsapp/app-service.js';
+import { deviceService } from '../../tools/whatsapp/device-service.js';
+import { vpnIosService } from '../../tools/whatsapp/vpnios-service.js';
+import { smsService } from '../../tools/whatsapp/sms-service.js';
+import { ocrService } from '../../tools/whatsapp/ocr-service.js';
+import { randomSleep, sleep } from '../../tools/whatsapp/helpers.js';
 
 /**
  * Orchestrateur léger pour gérer les cas de soumission
@@ -136,4 +136,4 @@ async function inputWorkflow(device, country) {
     await orchestrator(submissionResult, device, country, phoneNumber, inputWorkflow);
 }
 
-module.exports = { inputWorkflow };
+export { inputWorkflow };

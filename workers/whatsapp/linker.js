@@ -1,7 +1,7 @@
 // Runner du workflow link-device.js
 
-const { linkDeviceWorkflow } = require('../workflows/whatsapp/link-device');
-const config = require('../../config');
+import { linkDeviceWorkflow } from './link-device.js';
+import { config } from '../../core/config.js';
 
 let device = '127.0.0.1';
 
@@ -37,11 +37,9 @@ device = `${device}:${deviceConfig.port}`;
 console.log(`📱 Démarrage de la liaison avec le device: ${device}`);
 
 // Lancer le workflow avec gestion d'erreurs
-(async () => {
-    try {
-        await linkDeviceWorkflow(device);
-    } catch (error) {
-        console.error('❌ Erreur fatale:', error.message);
-        process.exit(1);
-    }
-})();
+try {
+  await linkDeviceWorkflow(device);
+} catch (error) {
+  console.error('❌ Erreur fatale:', error.message);
+  process.exit(1);
+}

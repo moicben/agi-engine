@@ -1,8 +1,7 @@
 // Main Workflow Orchestrator, using node runners/runner.js
 
-const { execAsync, parseArgs, sleep } = require('./utils/helpers');
-const { deviceService } = require('./services/device-service');
-const cp = require('child_process');
+import { execAsync, parseArgs, sleep } from '../../tools/whatsapp/helpers.js';
+import { deviceService } from '../../tools/whatsapp/device-service.js';
 
 async function main() {
   const args = parseArgs();
@@ -22,7 +21,7 @@ async function main() {
 // Phase 1. "Setup" Workflow on all opened BlueStacks Instances in parallel (x2-x4 recommended)
 
   if (bluestacks.length > 0) {
-    const setupCmd = `node runners/runner.js --workflow=setup --device=${bluestacks.join(',')} --country=${country}`;
+    const setupCmd = `node workers/whatsapp/runner.js --workflow=setup --device=${bluestacks.join(',')} --country=${country}`;
     console.log(`Executing Phase 1: ${setupCmd}`);
     await execAsync(setupCmd);
   }
@@ -32,7 +31,7 @@ async function main() {
   while (true) {
     // Phase 2: Input in parallel
     if (bluestacks.length > 0) {
-      const inputCmd = `node runners/runner.js --workflow=input --device=${bluestacks.join(',')} --country=${country}`;
+      const inputCmd = `node workers/whatsapp/runner.js --workflow=input --device=${bluestacks.join(',')} --country=${country}`;
       console.log(`Executing Phase 2: ${inputCmd}`);
       await execAsync(inputCmd);
     }
@@ -42,19 +41,19 @@ async function main() {
 
 // Phase 3. "Transfer" Workflow of verified WA account to Studio MASTER device (x1 recommended with queue)
 
-      const transferCmd = `node runners/runner.js --workflow=transfer --device=${bs} --country=${country}`;
+      const transferCmd = `node workers/whatsapp/runner.js --workflow=transfer --device=${bs} --country=${country}`;
       console.log(`Executing Phase 3 for ${bs}: ${transferCmd}`);
       await execAsync(transferCmd);
 
 // Phase 3.1 "Export" Workflow for each WA account received from Studio MASTER device (trigered after Phase 3)
 
-      const exportCmd = `node runners/runner.js --workflow=extract --device=${master}`;
+      const exportCmd = `node workers/whatsapp/runner.js --workflow=extract --device=${master}`;
       console.log(`Executing Phase 3.1: ${exportCmd}`);
       await execAsync(exportCmd);
 
 // Phase 3.2 "Clear" Workflow on Studio MASTER device (trigered after Phase 3.1)
 
-      const clearMasterCmd = `node runners/runner.js --workflow=clear --device=${master}`;
+      const clearMasterCmd = `node workers/whatsapp/runner.js --workflow=clear --device=${master}`;
       console.log(`Executing Phase 3.2: ${clearMasterCmd}`);
       await execAsync(clearMasterCmd);
 

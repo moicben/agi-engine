@@ -9,7 +9,7 @@ import { exec, execSync } from 'child_process';
 /**z
  * Attendre un délai en ms
  */
-async function sleep(ms) {
+export async function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
@@ -17,8 +17,8 @@ async function sleep(ms) {
 export async function execAsync(command) {
   return new Promise((resolve, reject) => {
     exec(command, (error, stdout, stderr) => {
-      if (error) reject(error);
-      resolve({ stdout, stderr });
+      if (error) return reject(error);
+      resolve(typeof stdout === 'string' ? stdout : { stdout, stderr });
     });
   });
 }

@@ -1,16 +1,15 @@
 // Service pour gérer la session What's App
 
-
-import { execSync } from "child_process";
-import fs from "fs";
-import path from "path";
-import { executeCommand } from '../../utils/adb.js';
-import { sleep } from '../../utils/helpers.js';
-import { deviceService } from '../device-service.js';
+import { execSync } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import { executeCommand } from './adb.js';
+import { sleep } from './helpers.js';
+import { deviceService } from './device-service.js';
 
 async function extractSession(device, phoneNumber) {
   // Copier la session dans le dossier sessions local
-  const sessionPath = `./assets/wa-sessions/${phoneNumber}/`;
+  const sessionPath = path.resolve(process.cwd(), 'assets', 'wa-sessions', String(phoneNumber));
   await executeCommand(device, `root`);
   await executeCommand(device, `shell mount -o rw,remount /data`);
   await sleep(2000);
@@ -30,7 +29,7 @@ async function importSession(device, sessionPath) {
   await executeCommand(device, ` root`);
   await executeCommand(device, `shell mount -o rw,remount /data`);
   await executeCommand(device, `shell rm -rf /data/data/com.whatsapp/`);
-  await executeCommand(device, `push "${sessionPath}/com.whatsapp" /data/data/`);
+  await executeCommand(device, `push "${path.join(sessionPath, 'com.whatsapp')}" /data/data/`);
   await sleep(2000);
 
   const uidRaw = await executeCommand(device, `shell dumpsys package com.whatsapp | grep userId=`);
@@ -54,4 +53,4 @@ const sessionService = {
     importSession   
 }
 
-module.exports = { sessionService };
+export { sessionService };

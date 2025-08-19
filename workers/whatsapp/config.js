@@ -3,7 +3,7 @@
  * Modifiez ces valeurs selon vos besoins
  */
 
-module.exports = {
+export const config = {
   // Environnement d'exécution
   // Options: 'morelogin' (cloud), 'bluestacks' (local), 'cloud' (API), 'droplet' (remote)
   env: 'bluestacks',
@@ -263,4 +263,4 @@ module.exports = {
     rejectKeywords: ['can\'t receive SMS', 'invalid number', 'error', 'try again', 'blocked', 'phone', 'call'],
     lang: 'eng' // Langue pour Tesseract
   }
-}; 
+};

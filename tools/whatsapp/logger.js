@@ -51,8 +51,5 @@ const logger = {
   }
 };
 
-// Export du logger
-module.exports = {
-  logger,
-  getLogger: () => logger
-};
+export { logger };
+export const getLogger = () => logger;

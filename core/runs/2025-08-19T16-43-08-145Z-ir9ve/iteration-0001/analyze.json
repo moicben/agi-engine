@@ -1,0 +1,45 @@
+{
+  "stage": "Analyze",
+  "intent": "web",
+  "summary": "The user is seeking the official URL of the Mairie de Paris, specifically the main institutional website.",
+  "problem": {
+    "description": "The user needs the official homepage URL of the Mairie de Paris, ensuring it is a reliable and secure source.",
+    "constraints": {
+      "explicit": [
+        "Must provide the official URL",
+        "Must be in HTTPS format"
+      ],
+      "implicit": [
+        "The URL should be the main page of the Mairie de Paris, not a specific arrondissement or third-party site",
+        "The source must be trustworthy"
+      ]
+    }
+  },
+  "dependencies": [
+    "Access to the official website of the Mairie de Paris"
+  ],
+  "risks": [
+    "Providing an incorrect or outdated URL",
+    "Linking to a non-official or insecure site"
+  ],
+  "ambiguities": [
+    "Is the user looking for the general homepage or a specific section?",
+    "Does the user require additional information or just the URL?"
+  ],
+  "angles": {
+    "architecture": "Ensure the URL is structured correctly for institutional websites.",
+    "data": "Verify the URL against known official sources.",
+    "security": "Confirm the URL uses HTTPS for secure access.",
+    "dx": "Provide a user-friendly and concise response.",
+    "tests": "Check the URL for accessibility and correctness.",
+    "deploy": "No deployment concerns as this is a simple URL retrieval."
+  },
+  "tracks": [],
+  "open_questions": [
+    "Does the user need the URL in a specific language?",
+    "Should I provide any additional context or information about the Mairie de Paris?"
+  ],
+  "hypotheses": [
+    "The user is looking for the main website and not a specific service or department page."
+  ]
+}

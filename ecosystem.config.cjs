@@ -4,16 +4,16 @@ module.exports = {
       name: "web",
       cwd: "/home/kasm-user/project",
       script: "npm",
-      args: "start -- -p 3000 -H 127.0.0.1",
+      args: "start -- -p 3000 -H 0.0.0.0",
       env: {
         NODE_ENV: "production",
         PORT: 3000,
-        HOSTNAME: "127.0.0.1"
+        HOSTNAME: "0.0.0.0"
       },
       env_production: {
         NODE_ENV: "production",
         PORT: 3000,
-        HOSTNAME: "127.0.0.1"
+        HOSTNAME: "0.0.0.0"
       },
       exec_mode: "fork",
       instances: 1,

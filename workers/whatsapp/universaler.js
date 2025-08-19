@@ -1,7 +1,7 @@
 // Runner du workflow universal.js
 
-const { universalWorkflow } = require('../workflows/universal');
-const config = require('../../config');
+import { universalWorkflow } from '../workflows/universal.js';
+import { config } from '../../core/config.js';
 
 let device = '127.0.0.1';
 
@@ -51,11 +51,9 @@ console.log(`👤 Brand ID: ${brandId}`);
 console.log(`📨 Campaign ID: ${campaignId}`);
 
 // Lancer le workflow avec gestion d'erreurs
-(async () => {
-    try {
-        await universalWorkflow(device, brandId, campaignId);
-    } catch (error) {
-        console.error('❌ Erreur fatale:', error.message);
-        process.exit(1);
-    }
-})();
+try {
+  await universalWorkflow(device, brandId, campaignId);
+} catch (error) {
+  console.error('❌ Erreur fatale:', error.message);
+  process.exit(1);
+}
