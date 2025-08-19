@@ -1,6 +1,6 @@
 // Developer worker: generates edits and integrates them with Git commits.
 import { applyEdits } from '../tools/editor.js';
-import { ensureUser, currentBranch, commitAll } from '../tools/github.js';
+import { ensureUser, currentBranch, createBranch, commitAll, push } from '../tools/github.js';
 
 export async function integrate({ spec = '', options = {} } = {}) {
   const started = Date.now();
@@ -18,6 +18,11 @@ export async function integrate({ spec = '', options = {} } = {}) {
       return { success: false, data: { applied: 0, edits: [] }, artifacts: [], logs: ['no_edits_provided'], meta: { duration_ms: Date.now() - started } };
     }
 
+    // Optional branch management
+    if (options?.git?.branch) {
+      try { createBranch(options.git.branch); logs.push(`branch_created:${options.git.branch}`); } catch (e) { logs.push('branch_failed: ' + e.message); }
+    }
+
     // Pre-commit baseline if requested
     if (options?.git?.baselineCommitMessage) {
       try { ensureUser(); commitAll(options.git.baselineCommitMessage); logs.push('baseline_commit'); } catch (e) { logs.push('baseline_commit_failed: ' + e.message); }
@@ -29,6 +34,10 @@ export async function integrate({ spec = '', options = {} } = {}) {
     // Commit after edits
     let commitMsg = options?.git?.commitMessage || 'feat(dev): integrate changes';
     try { ensureUser(); commitAll(commitMsg); logs.push('commit_done'); } catch (e) { logs.push('commit_failed: ' + e.message); }
+
+    if (options?.git?.push === true) {
+      try { const br = options.git.branch || currentBranch(); push(br); logs.push('push_done'); } catch (e) { logs.push('push_failed: ' + e.message); }
+    }
 
     return {
       success: appliedRes.success,

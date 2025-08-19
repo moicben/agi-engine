@@ -1,0 +1,3 @@
+{
+  "content": "{\n  \"stage\": \"Critic\",\n  \"task_id\": \"task-1\",\n  \"success\": true,\n  \"progress\": true,\n  \"critic\": \"The result meets the acceptance criteria as a clear target for the ping operation is documented.\",\n  \"recommendations\": [],\n  \"next\": { \"action\": \"continue\" }\n}"
+}

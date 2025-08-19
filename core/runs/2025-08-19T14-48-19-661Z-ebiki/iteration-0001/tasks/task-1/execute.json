@@ -1,0 +1,16 @@
+{
+  "attempt": 1,
+  "success": true,
+  "data": {
+    "answer": "Je vais bien, merci ! Et toi ?"
+  },
+  "artifacts": [],
+  "logs": [
+    "qa.answer completed"
+  ],
+  "meta": {
+    "duration_ms": 819,
+    "executor": "workers/qa.answer",
+    "fingerprint": "{\"ex\":\"workers/qa.answer\",\"params\":{\"question\":\"comment tu vas ?\"}}"
+  }
+}

@@ -1,6 +1,6 @@
 // Decide stage aggregates task-level critic outcomes and iteration status
 
-export function decide({ iterationIndex, tasks, critics, retriesState }) {
+export function decide({ iterationIndex, tasks, critics, retriesState, intent }) {
   // Determine next action: continue | retry | replan | halt
   // Simple policy MVP: if any critic next.action === 'retry' and retries available -> retry that task
   for (const c of critics) {
@@ -20,6 +20,10 @@ export function decide({ iterationIndex, tasks, critics, retriesState }) {
   const allOk = critics.every(c => c?.success === true);
   if (allOk && critics.length === tasks.length) {
     return { stage: 'Decide', action: 'halt', reason: 'all_tasks_success' };
+  }
+  // Fast-path: for QA intent, if we have at least one successful result, halt
+  if (intent === 'qa' && critics.some(c => c?.success === true)) {
+    return { stage: 'Decide', action: 'halt', reason: 'qa_answer_provided' };
   }
   // Default continue
   return { stage: 'Decide', action: 'continue' };

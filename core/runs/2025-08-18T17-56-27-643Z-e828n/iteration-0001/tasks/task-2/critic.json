@@ -1,0 +1,15 @@
+{
+  "attempt": 1,
+  "stage": "Critic",
+  "task_id": "task-2",
+  "success": false,
+  "progress": false,
+  "critic": "The result does not meet the acceptance criteria as it does not document or approve the report format and details. Instead, it provides a general answer about the purpose of the repository, which is unrelated to the task requirements.",
+  "recommendations": [
+    "Document the specific report format and details as required.",
+    "Obtain approval for the documented report requirements."
+  ],
+  "next": {
+    "action": "retry"
+  }
+}

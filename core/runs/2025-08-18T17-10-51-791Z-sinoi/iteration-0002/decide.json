@@ -1,0 +1,6 @@
+{
+  "stage": "Decide",
+  "action": "retry",
+  "task_id": "task-2",
+  "reason": "critic_requested_retry"
+}

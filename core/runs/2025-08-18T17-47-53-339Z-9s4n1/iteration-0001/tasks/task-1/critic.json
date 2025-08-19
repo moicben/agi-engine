@@ -1,0 +1,15 @@
+{
+  "attempt": 1,
+  "stage": "Critic",
+  "task_id": "task-1",
+  "success": false,
+  "progress": false,
+  "critic": "The result does not meet the acceptance criteria as the target for the ping operation is not clearly defined. The provided answer is unrelated to the task of identifying a ping target.",
+  "recommendations": [
+    "Clarify the definition of the ping target.",
+    "Ensure that the response directly addresses the task requirements."
+  ],
+  "next": {
+    "action": "retry"
+  }
+}

@@ -1,10 +1,7 @@
 // Vision worker: thin wrapper around tools/vision.js
 // Provides a minimal API to run a zero-shot detection and optionally annotate
 
-import {
-  runVisionQuery,
-  annotateImage,
-} from '../tools/vision.js';
+import { runVisionQuery, annotateImage, findText as coreFindText, findAndClick as coreFindAndClick } from '../tools/vision.js';
 
 export async function detect({ image, query, threshold, annotate = true, outPath } = {}) {
   if (!image || !query) {
@@ -47,6 +44,10 @@ export async function detect({ image, query, threshold, annotate = true, outPath
   };
 }
 
-export default { detect };
+export async function findText(args = {}) { return coreFindText(args); }
+
+export async function findAndClick(args = {}) { return coreFindAndClick(args); }
+
+export default { detect, findText, findAndClick };
 
 

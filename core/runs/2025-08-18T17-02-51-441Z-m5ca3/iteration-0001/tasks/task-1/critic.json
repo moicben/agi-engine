@@ -1,0 +1,15 @@
+{
+  "attempt": 1,
+  "stage": "Critic",
+  "task_id": "task-1",
+  "success": false,
+  "progress": false,
+  "critic": "The result does not meet the acceptance criteria as the target is not clearly defined and agreed upon by stakeholders. The provided answer does not address the specific task of defining a ping target.",
+  "recommendations": [
+    "Clarify the definition of the ping target with stakeholders.",
+    "Ensure that the response directly addresses the task requirements."
+  ],
+  "next": {
+    "action": "retry"
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "stage": "Assign",
+  "orchestrator": "engine",
+  "assignments": [
+    {
+      "order": 1,
+      "task_id": "task-1",
+      "name": "Identify Ping Target",
+      "executor": "workers/qa.answer",
+      "params": {
+        "question": "Quel est le but de ce repo?"
+      },
+      "timeout_ms": 30000,
+      "retries": 1,
+      "artifacts_in": [],
+      "artifacts_out": [
+        "target"
+      ],
+      "validations": [
+        "Target for the ping operation is clearly defined."
+      ]
+    },
+    {
+      "order": 2,
+      "task_id": "task-2",
+      "name": "Define Report Requirements",
+      "executor": "workers/qa.answer",
+      "params": {
+        "question": "Quel est le but de ce repo?"
+      },
+      "timeout_ms": 30000,
+      "retries": 1,
+      "artifacts_in": [],
+      "artifacts_out": [
+        "reportRequirements"
+      ],
+      "validations": [
+        "Report requirements are documented and approved by stakeholders."
+      ]
+    },
+    {
+      "order": 3,
+      "task_id": "task-3",
+      "name": "Execute Ping and Generate Report",
+      "executor": "workers/developer.integrate",
+      "params": {
+        "spec": {
+          "target": "string",
+          "reportRequirements": "object"
+        }
+      },
+      "timeout_ms": 30000,
+      "retries": 1,
+      "artifacts_in": [
+        "target",
+        "reportRequirements"
+      ],
+      "artifacts_out": [
+        "pingResults",
+        "report"
+      ],
+      "validations": [
+        "Ping operation is successfully executed.",
+        "Report is generated according to the defined requirements."
+      ]
+    }
+  ]
+}

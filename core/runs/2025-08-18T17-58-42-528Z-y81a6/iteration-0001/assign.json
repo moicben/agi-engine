@@ -1,0 +1,45 @@
+{
+  "stage": "Assign",
+  "orchestrator": "engine",
+  "assignments": [
+    {
+      "order": 1,
+      "task_id": "task-1",
+      "name": "Identify Ping Target",
+      "executor": "workers/qa.answer",
+      "params": {
+        "question": "Quel est le but de ce repo?"
+      },
+      "timeout_ms": 30000,
+      "retries": 1,
+      "artifacts_in": [],
+      "artifacts_out": [
+        "target"
+      ],
+      "validations": [
+        "Target for the ping operation is clearly defined."
+      ]
+    },
+    {
+      "order": 2,
+      "task_id": "task-2",
+      "name": "Define Report Requirements",
+      "executor": "workers/qa.answer",
+      "params": {
+        "question": "Quel est le but de ce repo?"
+      },
+      "timeout_ms": 30000,
+      "retries": 1,
+      "artifacts_in": [
+        "target"
+      ],
+      "artifacts_out": [
+        "reportFormat",
+        "reportDetails"
+      ],
+      "validations": [
+        "Report requirements are documented and approved by stakeholders."
+      ]
+    }
+  ]
+}

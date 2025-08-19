@@ -1,0 +1,51 @@
+{
+  "stage": "Assign",
+  "orchestrator": "engine",
+  "assignments": [
+    {
+      "order": 1,
+      "task_id": "task-1",
+      "name": "Determine Content and Structure for index.html",
+      "executor": "workers/developer.integrate",
+      "params": {
+        "spec": {
+          "user_preferences": "User's input on desired content and structure",
+          "project_requirements": "Any existing project guidelines or templates"
+        }
+      },
+      "timeout_ms": 30000,
+      "retries": 2,
+      "artifacts_in": [],
+      "artifacts_out": [
+        "content_structure"
+      ],
+      "validations": [
+        "User confirms the content and structure outline"
+      ]
+    },
+    {
+      "order": 2,
+      "task_id": "task-2",
+      "name": "Create index.html File",
+      "executor": "workers/developer.integrate",
+      "params": {
+        "spec": {
+          "target_directory": "The directory where the file will be created",
+          "content_structure": "The defined outline of the content and structure for index.html"
+        }
+      },
+      "timeout_ms": 30000,
+      "retries": 2,
+      "artifacts_in": [
+        "content_structure"
+      ],
+      "artifacts_out": [
+        "index.html"
+      ],
+      "validations": [
+        "File is created successfully in the specified directory",
+        "Content matches the agreed structure"
+      ]
+    }
+  ]
+}

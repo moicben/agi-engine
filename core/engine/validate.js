@@ -1,6 +1,18 @@
 export function safeParse(jsonLike) {
   if (typeof jsonLike === 'object' && jsonLike !== null) return jsonLike;
-  try { return JSON.parse(String(jsonLike)); } catch { return null; }
+  const raw = String(jsonLike || '');
+  // Strip code fences if present
+  let s = raw.trim();
+  if (s.startsWith('```')) {
+    s = s.replace(/^```[a-zA-Z]*\n?/, '').replace(/```\s*$/, '');
+  }
+  // Extract JSON object bounds
+  const start = s.indexOf('{');
+  const end = s.lastIndexOf('}');
+  if (start !== -1 && end !== -1 && end > start) {
+    s = s.slice(start, end + 1);
+  }
+  try { return JSON.parse(s); } catch { return null; }
 }
 
 export function validatePlan(obj) {

@@ -1,0 +1,3 @@
+{
+  "content": "{\n  \"stage\": \"Assign\",\n  \"orchestrator\": \"engine\",\n  \"assignments\": [\n    {\n      \"order\": 1,\n      \"task_id\": \"task-1\",\n      \"name\": \"Define Ping Target\",\n      \"executor\": \"workers/qa.answer\",\n      \"params\": {\n        \"question\": \"comment tu vas ?\"\n      },\n      \"timeout_ms\": 30000,\n      \"retries\": 1,\n      \"artifacts_in\": [],\n      \"artifacts_out\": [\"target\"],\n      \"validations\": [\"Target is clearly defined and agreed upon by stakeholders.\"]\n    }\n  ]\n}"
+}

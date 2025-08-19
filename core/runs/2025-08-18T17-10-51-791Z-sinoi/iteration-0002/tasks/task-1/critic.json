@@ -1,0 +1,12 @@
+{
+  "attempt": 1,
+  "stage": "Critic",
+  "task_id": "task-1",
+  "success": true,
+  "progress": true,
+  "critic": "The result meets the acceptance criteria as a clear target for the ping operation is documented.",
+  "recommendations": [],
+  "next": {
+    "action": "continue"
+  }
+}

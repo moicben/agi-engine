@@ -1,0 +1,11 @@
+{
+  "attempt": 2,
+  "success": false,
+  "data": {},
+  "artifacts": [],
+  "logs": [],
+  "meta": {
+    "executor": "workers/qa",
+    "error": "Executor function not found: workers/qa"
+  }
+}

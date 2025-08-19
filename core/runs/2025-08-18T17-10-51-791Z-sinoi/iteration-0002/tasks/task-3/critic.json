@@ -1,0 +1,16 @@
+{
+  "attempt": 2,
+  "stage": "Critic",
+  "task_id": "task-3",
+  "success": false,
+  "progress": false,
+  "critic": "The execution plan is not documented as required by the acceptance criteria. No edits were provided, and the task did not progress towards completion.",
+  "recommendations": [
+    "Document the execution plan with specific details.",
+    "Provide necessary edits to meet the acceptance criteria.",
+    "Ensure that the execution plan is ready for implementation before marking the task as successful."
+  ],
+  "next": {
+    "action": "retry"
+  }
+}

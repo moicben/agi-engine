@@ -1,0 +1,17 @@
+{
+  "attempt": 2,
+  "success": false,
+  "data": {
+    "applied": 0,
+    "edits": []
+  },
+  "artifacts": [],
+  "logs": [
+    "no_edits_provided"
+  ],
+  "meta": {
+    "duration_ms": 1,
+    "executor": "workers/developer.integrate",
+    "fingerprint": "{\"ex\":\"workers/developer.integrate\",\"params\":{\"spec\":{\"target\":\"string\",\"reportRequirements\":\"object\"}}}"
+  }
+}

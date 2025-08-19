@@ -1,0 +1,12 @@
+{
+  "nodes": [
+    "task-1",
+    "task-2"
+  ],
+  "edges": [
+    {
+      "from": "task-1",
+      "to": "task-2"
+    }
+  ]
+}

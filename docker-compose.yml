@@ -1,6 +1,6 @@
 services:
   desktop:
-    image: moicben/agi-engine:staged
+    image: moicben/agi-engine:beta
     container_name: kasm-desktop
     platform: linux/arm64/v8     # Mac Apple Silicon (ARM64)
     shm_size: "2g"               # important for Chrome/Puppeteer stability

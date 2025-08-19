@@ -1,0 +1,17 @@
+{
+  "attempt": 3,
+  "success": false,
+  "data": {
+    "applied": 0,
+    "edits": []
+  },
+  "artifacts": [],
+  "logs": [
+    "no_edits_provided"
+  ],
+  "meta": {
+    "duration_ms": 0,
+    "executor": "workers/developer.integrate",
+    "fingerprint": "{\"ex\":\"workers/developer.integrate\",\"params\":{\"spec\":{\"user_preferences\":\"User's input on desired content and structure\",\"project_requirements\":\"Any existing project guidelines or templates\"}}}"
+  }
+}

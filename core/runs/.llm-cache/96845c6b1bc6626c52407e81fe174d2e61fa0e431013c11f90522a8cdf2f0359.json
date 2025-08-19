@@ -1,0 +1,3 @@
+{
+  "content": "{\n  \"stage\": \"Critic\",\n  \"task_id\": \"task-2\",\n  \"success\": false,\n  \"progress\": false,\n  \"critic\": \"The result does not meet the acceptance criteria as it does not document or approve the report format and details. Instead, it provides a general answer about the purpose of the repository, which is unrelated to the task requirements.\",\n  \"recommendations\": [\n    \"Document the specific report format and details as required.\",\n    \"Obtain approval for the documented report requirements.\"\n  ],\n  \"next\": { \"action\": \"retry\" }\n}"
+}

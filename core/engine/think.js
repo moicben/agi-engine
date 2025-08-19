@@ -1,4 +1,5 @@
 import * as llm from '../../tools/llm.js';
+import { config } from '../../core/config.js';
 
 export async function think({ goal = '', context = {}, memorySnippet = '', folderSummary = '' } = {}) {
   try {
@@ -16,7 +17,7 @@ Respond ONLY with strict JSON and nothing else. Start with { and end with }. Sch
   "assumptions": string[],
   "unknowns": string[]
 }`;
-    const out = await llm.llmRequest(prompt);
+    const out = await llm.llmRequest(prompt, config?.llm?.models?.think || undefined);
     return out;
   } catch (e) {
     return JSON.stringify({ stage: 'Think', summary: '', contextualized_goal: String(goal), assumptions: [], unknowns: [], error: e.message });

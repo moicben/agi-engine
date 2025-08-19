@@ -4,6 +4,7 @@
 import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
+import { clickAt } from './interact.js';
 
 let detectorSingleton = null;
 
@@ -197,6 +198,48 @@ export async function runVisionQuery({ imageInput, queryText, threshold = 0.12 }
     detections: matches,
     imageBuffer,
   };
+}
+
+export async function findText({ image, text, threshold } = {}) {
+  if (!image || !text) {
+    return { success: false, error: 'missing_parameters', details: { image: !!image, text: !!text } };
+  }
+  const result = await runVisionQuery({ imageInput: image, queryText: text, threshold });
+  const box = result?.topMatch?.box || null;
+  const coords = box ? { x: box.x, y: box.y, width: box.width, height: box.height } : null;
+  return {
+    success: !!coords,
+    text,
+    image,
+    coords,
+    meta: {
+      imageWidth: result?.imageWidth ?? null,
+      imageHeight: result?.imageHeight ?? null,
+      numDetections: result?.numDetections ?? 0,
+    },
+    raw: {
+      topMatch: result?.topMatch ?? null,
+      detections: result?.detections ?? [],
+    },
+  };
+}
+
+export async function findAndClick({ image, text, threshold, button = 'left' } = {}) {
+  const found = await findText({ image, text, threshold });
+  if (!found?.success || !found?.coords) {
+    return { success: false, error: 'not_found', details: { text } };
+  }
+  try {
+    if (process.platform !== 'linux') {
+      return { success: true, data: { clicked: false, reason: 'non_linux' }, coords: found.coords };
+    }
+    const cx = Math.floor(found.coords.x + found.coords.width / 2);
+    const cy = Math.floor(found.coords.y + found.coords.height / 2);
+    await clickAt(cx, cy, button);
+    return { success: true, data: { clicked: true }, coords: found.coords };
+  } catch (e) {
+    return { success: false, error: e.message, coords: found.coords };
+  }
 }
 
 

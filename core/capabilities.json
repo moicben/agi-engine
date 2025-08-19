@@ -1,0 +1,9 @@
+{
+  "workers/qa": ["answer"],
+  "workers/web": ["search"],
+  "workers/developer": ["integrate", "generateCode"],
+  "workers/editor": ["applyEdits"],
+  "workers/vision": ["detect", "findText", "findAndClick"],
+  "workers/interact": ["orchestrate"],
+  "workers/terminal": ["run"]
+}

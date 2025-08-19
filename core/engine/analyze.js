@@ -1,7 +1,9 @@
 import * as llm from '../../tools/llm.js';
+import { config } from '../../core/config.js';
 
 export async function analyze(context) {
   const prompt = `You are the Analyze step of an AI engineering pipeline. Classify the user's intent first, then analyze.
+Guidance: Memory is a hint only. Do not parrot prior outputs. Prefer fresh, goal-focused reasoning.
 Goal: ${context.goal}
 Think: ${context.selfThought}
 Conscience: ${context.conscience}
@@ -22,8 +24,8 @@ Produce ONLY strict JSON in English. Schema:
   "open_questions": string[],
   "hypotheses": string[]
 }`;
-  const out = await llm.llmRequest(prompt);
-  return out;
+  const out = await llm.llmRequest(prompt, { model: config?.llm?.models?.analyze || undefined, responseFormat: 'json' });
+  try { return JSON.parse(String(out)); } catch { return out; }
 }
 
 export default { analyze };

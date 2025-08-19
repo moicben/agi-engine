@@ -2,5 +2,10 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/login": "pages/login.js"
+  "/": "pages/index.js",
+  "/booking/[campaign]": "pages/booking/[campaign].js",
+  "/login": "pages/login.js",
+  "/api/tracking/track-visit": "pages/api/tracking/track-visit.js",
+  "/api/campaigns/[id]": "pages/api/campaigns/[id].js",
+  "/api/tracking/track-submission": "pages/api/tracking/track-submission.js"
 }

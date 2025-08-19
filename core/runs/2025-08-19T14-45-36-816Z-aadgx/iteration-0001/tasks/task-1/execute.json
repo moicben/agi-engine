@@ -1,0 +1,16 @@
+{
+  "attempt": 1,
+  "success": true,
+  "data": {
+    "answer": "Je m'appelle Assistant."
+  },
+  "artifacts": [],
+  "logs": [
+    "qa.answer completed"
+  ],
+  "meta": {
+    "duration_ms": 1173,
+    "executor": "workers/qa.answer",
+    "fingerprint": "{\"ex\":\"workers/qa.answer\",\"params\":{\"question\":\"comemnt tu t'appelles\"}}"
+  }
+}

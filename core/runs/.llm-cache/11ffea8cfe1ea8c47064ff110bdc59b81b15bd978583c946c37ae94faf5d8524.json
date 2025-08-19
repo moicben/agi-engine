@@ -1,0 +1,3 @@
+{
+  "content": "{\n  \"stage\": \"Critic\",\n  \"task_id\": \"task-1\",\n  \"success\": false,\n  \"progress\": false,\n  \"critic\": \"The target was not clearly defined and agreed upon by stakeholders, as the result does not address the task of identifying a ping target.\",\n  \"recommendations\": [\n    \"Clarify the definition of the ping target with stakeholders.\",\n    \"Ensure that the response directly relates to the identification of the ping target.\"\n  ],\n  \"next\": { \"action\": \"retry\" }\n}"
+}

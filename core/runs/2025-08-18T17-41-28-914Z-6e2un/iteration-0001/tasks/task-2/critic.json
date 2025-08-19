@@ -1,0 +1,12 @@
+{
+  "attempt": 2,
+  "stage": "Critic",
+  "task_id": "task-2",
+  "success": false,
+  "progress": false,
+  "critic": "skipped",
+  "recommendations": [],
+  "next": {
+    "action": "retry"
+  }
+}

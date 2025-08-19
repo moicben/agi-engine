@@ -1,0 +1,15 @@
+{
+  "attempt": 1,
+  "stage": "Critic",
+  "task_id": "task-3",
+  "success": false,
+  "progress": false,
+  "critic": "The result does not meet the acceptance criteria as it does not document plans for ping execution and report generation. Instead, it provides an unrelated answer about the purpose of a repository.",
+  "recommendations": [
+    "Document the specific plans for ping execution and report generation.",
+    "Ensure that the response aligns with the task requirements."
+  ],
+  "next": {
+    "action": "retry"
+  }
+}

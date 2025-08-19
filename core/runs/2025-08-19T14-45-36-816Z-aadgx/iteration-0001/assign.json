@@ -1,0 +1,24 @@
+{
+  "stage": "Assign",
+  "orchestrator": "engine",
+  "assignments": [
+    {
+      "order": 1,
+      "task_id": "task-1",
+      "name": "Identify Ping Target",
+      "executor": "workers/qa.answer",
+      "params": {
+        "question": "comemnt tu t'appelles"
+      },
+      "timeout_ms": 30000,
+      "retries": 1,
+      "artifacts_in": [],
+      "artifacts_out": [
+        "target"
+      ],
+      "validations": [
+        "Target is clearly defined and agreed upon by stakeholders."
+      ]
+    }
+  ]
+}

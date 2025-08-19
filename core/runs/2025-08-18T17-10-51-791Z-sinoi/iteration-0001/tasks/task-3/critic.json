@@ -1,0 +1,15 @@
+{
+  "attempt": 2,
+  "stage": "Critic",
+  "task_id": "task-3",
+  "success": false,
+  "progress": false,
+  "critic": "The execution plan is not documented as required by the acceptance criteria. No edits were provided, and no artifacts were produced.",
+  "recommendations": [
+    "Document the execution plan with specific details.",
+    "Provide necessary edits and artifacts to meet the acceptance criteria."
+  ],
+  "next": {
+    "action": "retry"
+  }
+}

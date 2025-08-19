@@ -45,14 +45,19 @@ export async function storeMemory({
   domain = 'general',
   importance_score = 0.5,
 }) {
-  console.log('[memories] storeMemory:', { sessionId, domain, importance_score, hasContent: !!content });
+  const normalizedContent = (typeof content === 'string') ? content : JSON.stringify(content ?? '');
+  const metaImportance = (metadata && (metadata.importance ?? metadata.score));
+  const normalizedImportance = Number.isFinite(Number(metaImportance))
+    ? Number(metaImportance)
+    : (Number.isFinite(Number(importance_score)) ? Number(importance_score) : 0.5);
+  console.log('[memories] storeMemory:', { sessionId, domain, importance_score: normalizedImportance, hasContent: !!normalizedContent });
   const client = getClient();
   const payload = {
     session_id: sessionId,
-    content,
+    content: normalizedContent,
     metadata,
     domain,
-    importance_score,
+    importance_score: normalizedImportance,
   };
   const { data, error } = await client.from('memories').insert(payload).select('*').single();
   if (error) {
@@ -63,6 +68,26 @@ export async function storeMemory({
   return data;
 }
 
-export default { fetchRecentMemories, storeMemory };
+export async function fetchMemories({ sessionId, domains = [], since = null, limit = 50, search = null } = {}) {
+  console.log('[memories] fetchMemories:', { sessionId, domains, since, limit, hasSearch: !!search });
+  const client = getClient();
+  let q = client
+    .from('memories')
+    .select('id, session_id, content, metadata, domain, importance_score, created_at')
+    .eq('session_id', sessionId)
+    .order('created_at', { ascending: false })
+    .limit(limit);
+  if (Array.isArray(domains) && domains.length) q = q.in('domain', domains);
+  if (since) q = q.gte('created_at', since);
+  if (search) q = q.ilike('content', `%${search}%`);
+  const { data, error } = await q;
+  if (error) {
+    console.warn('[memories] fetchMemories error:', error.message);
+    throw error;
+  }
+  return data ?? [];
+}
+
+export default { fetchRecentMemories, storeMemory, fetchMemories };
 
 

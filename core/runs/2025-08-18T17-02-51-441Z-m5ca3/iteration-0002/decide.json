@@ -1,0 +1,5 @@
+{
+  "stage": "Decide",
+  "action": "replan",
+  "reason": "critic_requested_replan"
+}

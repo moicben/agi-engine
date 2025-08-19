@@ -3,12 +3,35 @@ import { fileURLToPath } from 'url';
 
 // Resolve executor module and call function
 async function callExecutor(executor, params) {
-  // executor format: 'workers/vision.detect'
-  const [modPath, fnName] = executor.split('.');
+  // executor format: 'workers/vision.detect' or 'workers/qa'
+  const [modPath, fnNameRaw] = executor.split('.');
   const moduleRel = `../../${modPath}.js`;
   const moduleUrl = new URL(moduleRel, import.meta.url);
   const mod = await import(moduleUrl);
-  const fn = mod[fnName];
+
+  // Default function mapping if suffix missing
+  let fnName = fnNameRaw;
+  if (!fnName) {
+    const base = String(modPath || '').split('/').pop();
+    const defaults = {
+      qa: 'answer',
+      web: 'search',
+      developer: 'integrate',
+      editor: 'applyEdits',
+      vision: 'detect',
+      interact: 'orchestrate',
+    };
+    fnName = defaults[base] || fnName;
+  }
+
+  let fn = fnName ? mod[fnName] : undefined;
+
+  // If still not found, try to pick the only exported function (other than default)
+  if (typeof fn !== 'function') {
+    const candidates = Object.entries(mod).filter(([k, v]) => k !== 'default' && typeof v === 'function');
+    if (candidates.length === 1) fn = candidates[0][1];
+  }
+
   if (typeof fn !== 'function') throw new Error(`Executor function not found: ${executor}`);
   const started = Date.now();
   const res = await fn(params);

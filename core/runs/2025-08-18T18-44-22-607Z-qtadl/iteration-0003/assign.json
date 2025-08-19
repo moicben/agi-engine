@@ -1,0 +1,28 @@
+{
+  "stage": "Assign",
+  "orchestrator": "engine",
+  "assignments": [
+    {
+      "order": 2,
+      "task_id": "task-2",
+      "name": "Define Report Structure",
+      "executor": "workers/developer.integrate",
+      "params": {
+        "spec": {
+          "target": "string"
+        }
+      },
+      "timeout_ms": 30000,
+      "retries": 1,
+      "artifacts_in": [
+        "target"
+      ],
+      "artifacts_out": [
+        "report_structure"
+      ],
+      "validations": [
+        "User approves the report structure and content."
+      ]
+    }
+  ]
+}

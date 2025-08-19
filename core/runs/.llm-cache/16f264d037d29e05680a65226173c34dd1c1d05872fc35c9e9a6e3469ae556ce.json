@@ -1,0 +1,3 @@
+{
+  "content": "{\n  \"stage\": \"Critic\",\n  \"task_id\": \"task-1\",\n  \"success\": false,\n  \"progress\": false,\n  \"critic\": \"The task did not meet the acceptance criteria as the user did not confirm the content and structure outline. No edits were provided, indicating a lack of engagement or completion.\",\n  \"recommendations\": [\n    \"Engage with the user to gather their input on the desired content and structure.\",\n    \"Provide a draft outline for the user to review and confirm.\",\n    \"Ensure that any project guidelines or templates are considered in the outline.\"\n  ],\n  \"next\": { \"action\": \"retry\" }\n}"
+}

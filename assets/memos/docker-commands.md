@@ -22,9 +22,9 @@ mutagen sync list
 
 ```bash
 # classic
-docker exec -it kasm-desktop bash
+docker exec -it ... bash
 # mode root
-docker exec -it -u 0 kasm-desktop bash
+docker exec -it -u 0  ... bash
 # ou
 docker exec -it <ID> sh
 
@@ -115,16 +115,16 @@ Supposons que l'image locale à pousser est `moicben/agi-engine:beta`
 docker login
 
 # (Optionnel) Créer une image à partir d'un conteneur modifié
-docker commit kasm-desktop moicben/agi-engine:...
+docker commit kasm-desktop moicben/agi-engine:beta
 
-# Tag le containre à manipuler
-docker tag moicben/agi-egine:...
+# Tag le containre à manipuler ou push
+docker tag moicben/agi-egine:
 
 # Push vers votre namespace
-docker push moicben/agi-egine:...
+docker push moicben/agi-egine:beta
 
 # (Optionnel) Pinner par digest pour un déploiement immuable
-docker pull moicben/kasm-jammy@sha256:9a4b0e5832303a7b5f371a3566a0720e422224de0391ba7f3165cdf2b90e5c2a
+docker pull moicben/agi-engine:..
 ```
 
 ---
@@ -141,16 +141,15 @@ docker build -t moicben/agi-engine:.. .
 docker push moicben/agi-engine:..
 
 # 2) Re-tager sans réécrire la version immuable
-docker tag moicben/agi-engine:.. moicben/kasm-jammy:stable
-docker tag moicben/agi-engine:.. moicben/kasm-jammy:latest
+docker .. moicben/agi-engine:beta
 
 # 3) Push l'image sur le Docker Hub
-docker push moicben/kasm-jammy:stable
-docker push moicben/kasm-jammy:latest
+docker push moicben/agi-engine:beta
+docker push moicben/agi-engine:beta
 
 # 3) Récupérer le digest (pour pinner dans l'infra/RunPod)
 docker inspect --format='{{index .RepoDigests 0}}' moicben/agi-engine:..
-# => moicben/kasm-jammy@sha256:...
+# => moicben/kasm-jammy@sha256:beta
 ```
 
 Règles:

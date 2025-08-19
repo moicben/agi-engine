@@ -1,4 +1,5 @@
 import { llmRequest } from '../tools/llm.js';
+import { config } from '../core/config.js';
 
 export async function answer({ question = '', context = '' } = {}) {
   const started = Date.now();
@@ -6,7 +7,7 @@ export async function answer({ question = '', context = '' } = {}) {
 Question: ${String(question)}
 Context: ${typeof context === 'string' ? context : JSON.stringify(context)}
 Return ONLY the plain text answer without JSON.`;
-  const content = await llmRequest(prompt, process.env.QA_MODEL || 'gpt-4o-mini');
+  const content = await llmRequest(prompt, config?.llm?.models?.qa || config?.llm?.model || 'gpt-4o-mini');
   return {
     success: true,
     data: { answer: content },

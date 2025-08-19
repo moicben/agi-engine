@@ -1,0 +1,69 @@
+{
+  "stage": "Assign",
+  "orchestrator": "engine",
+  "assignments": [
+    {
+      "order": 1,
+      "task_id": "task-1",
+      "name": "Identify Ping Target",
+      "executor": "workers/qa.answer",
+      "params": {
+        "question": "Determine the specific target for the ping operation relevant to the repository."
+      },
+      "timeout_ms": 30000,
+      "retries": 1,
+      "artifacts_in": [],
+      "artifacts_out": [
+        "pingTarget"
+      ],
+      "validations": [
+        "A clear target for the ping operation is documented."
+      ]
+    },
+    {
+      "order": 2,
+      "task_id": "task-2",
+      "name": "Define Report Requirements",
+      "executor": "workers/qa.answer",
+      "params": {
+        "question": "Establish the format and details required for the repository report."
+      },
+      "timeout_ms": 30000,
+      "retries": 1,
+      "artifacts_in": [],
+      "artifacts_out": [
+        "reportFormat",
+        "reportDetails"
+      ],
+      "validations": [
+        "Report requirements are documented and approved by stakeholders."
+      ]
+    },
+    {
+      "order": 3,
+      "task_id": "task-3",
+      "name": "Plan Ping and Report Execution",
+      "executor": "workers/developer.integrate",
+      "params": {
+        "spec": {
+          "pingTarget": "string",
+          "reportFormat": "string",
+          "reportDetails": "string"
+        }
+      },
+      "timeout_ms": 120000,
+      "retries": 1,
+      "artifacts_in": [
+        "pingTarget",
+        "reportFormat",
+        "reportDetails"
+      ],
+      "artifacts_out": [
+        "executionPlan"
+      ],
+      "validations": [
+        "Execution plan is documented and ready for implementation."
+      ]
+    }
+  ]
+}

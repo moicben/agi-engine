@@ -1,5 +1,6 @@
 import * as llm from '../../tools/llm.js';
 import { parseJSONSafe } from '../../tools/terminal.js';
+import { config } from '../../core/config.js';
 
 export async function critic({ task = {}, resultEnvelope = {}, context = {} } = {}) {
   try {
@@ -19,8 +20,8 @@ Respond ONLY with strict JSON:
   "recommendations": string[],
   "next": { "action": "continue" | "retry" | "replan" | "skip" }
 }`;
-    const out = await llm.llmRequest(prompt);
-    const json = parseJSONSafe(out) || {};
+    const out = await llm.llmRequest(prompt, { model: config?.llm?.models?.critic || undefined, responseFormat: 'json' });
+    const json = parseJSONSafe(out) || (typeof out === 'object' ? out : {});
     return json;
   } catch (e) {
     return { stage: 'Critic', task_id: task?.id || null, success: !!resultEnvelope?.success, progress: false, critic: e.message, recommendations: [], next: { action: 'retry' } };

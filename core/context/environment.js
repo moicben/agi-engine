@@ -16,3 +16,13 @@ export async function scanFolder(folderPath) {
   }
   return summary;
 }
+
+// Optional compact summary for prompts
+export function summarizeFolderShort(folderPath, limit = 20) {
+  try {
+    const entries = fs.readdirSync(folderPath, { withFileTypes: true }).slice(0, limit);
+    const dirs = entries.filter(e => e.isDirectory()).map(e => `dir:${e.name}`).slice(0, 8);
+    const files = entries.filter(e => !e.isDirectory()).map(e => `file:${e.name}`).slice(0, 8);
+    return [...dirs, ...files].join(', ');
+  } catch { return ''; }
+}

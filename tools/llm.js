@@ -26,19 +26,24 @@ if (!envLoaded) {
 
 function sha(str){ return crypto.createHash('sha256').update(str).digest('hex'); }
 
-function cachePathFor(model, prompt){
-  const key = sha(`${model}:${prompt}`);
+function cachePathFor(model, prompt, temperature, maxTokens){
+  const key = sha(`${model}:${temperature ?? 'd'}:${maxTokens ?? 'd'}:${prompt}`);
   const dir = path.join(process.cwd(), 'core', 'runs', '.llm-cache');
   if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   return path.join(dir, `${key}.json`);
 }
 
-export async function llmRequest(input, model = config.llm.model) {
+// Supports either llmRequest(prompt, 'model-name') or llmRequest(prompt, { model, temperature, maxTokens })
+export async function llmRequest(input, modelOrOptions = config.llm.model) {
   const allowFallback = false; // disable demo fallbacks entirely
 
   const prompt = String(input);
-  const selectedModel = String(model || 'gpt-4o-mini');
-  const cachePath = cachePathFor(selectedModel, prompt);
+  const isString = typeof modelOrOptions === 'string' || modelOrOptions == null;
+  const selectedModel = isString ? String(modelOrOptions || config.llm.model || 'gpt-4o-mini') : String(modelOrOptions.model || config.llm.model || 'gpt-4o-mini');
+  const temperature = isString ? Number(config?.llm?.temperature ?? 0) : Number(modelOrOptions.temperature ?? (config?.llm?.temperature ?? 0));
+  const maxTokens = isString ? Number(config?.llm?.maxTokens ?? 1200) : Number(modelOrOptions.maxTokens ?? (config?.llm?.maxTokens ?? 1200));
+  const responseFormat = isString ? undefined : modelOrOptions.responseFormat;
+  const cachePath = cachePathFor(selectedModel, prompt, temperature, maxTokens);
 
   if (fs.existsSync(cachePath)) {
     try {
@@ -47,8 +52,8 @@ export async function llmRequest(input, model = config.llm.model) {
     } catch {}
   }
 
-  const apiKey = process.env.OPENAI_API_KEY;
-  const baseURL = process.env.OPENAI_BASE_URL; // optional
+  const apiKey = config?.llm?.apiKey || process.env.OPENAI_API_KEY;
+  const baseURL = config?.llm?.baseURL; // optional, preferences must come from config
 
   // Strict production behavior: require API key unless explicitly allowing fallback
   if (!apiKey) { throw new Error('OPENAI_API_KEY is not set. Set it in your environment or .env'); }
@@ -57,12 +62,29 @@ export async function llmRequest(input, model = config.llm.model) {
 
   let response;
   try {
-    response = await client.chat.completions.create({
-      model: selectedModel,
-      messages: [{ role: 'user', content: prompt }],
-      temperature: 0,
-      max_tokens: Number(process.env.OPENAI_MAX_TOKENS || 1200)
-    });
+    if (shouldUseResponsesAPI(selectedModel)) {
+      // Responses API path (supports gpt-5 family, o-series, gpt-4.1, etc.)
+      const payload = {
+        model: selectedModel,
+        input: prompt,
+        max_output_tokens: maxTokens
+      };
+      // Do not specify text.format/response_format here to avoid incompatibilities across 5-mini/nano variants.
+      // Some responses models reject 'temperature'; omit for compatibility
+      response = await client.responses.create(payload);
+    } else {
+      // Chat Completions API path
+      const ccPayload = {
+        model: selectedModel,
+        messages: [{ role: 'user', content: prompt }],
+        temperature,
+        max_tokens: maxTokens
+      };
+      if (responseFormat === 'json' && shouldSendJSONFormat(selectedModel)) {
+        ccPayload.response_format = { type: 'json_object' };
+      }
+      response = await client.chat.completions.create(ccPayload);
+    }
   } catch (err) {
     // Helpful diagnostics
     const code = err?.code || err?.status || 'unknown_error';
@@ -71,8 +93,8 @@ export async function llmRequest(input, model = config.llm.model) {
     throw err;
   }
 
-  const content = response?.choices?.[0]?.message?.content ?? '';
-  if (process.env.LOG_LLM !== '0') {
+  const content = extractResponseText(response);
+  if (!!config?.logging?.llm) {
     console.log(`[llm] model=${selectedModel} content=${truncateForLog(content)}`);
   }
   try { fs.writeFileSync(cachePath, JSON.stringify({ content }, null, 2), 'utf8'); } catch {}
@@ -86,5 +108,54 @@ function truncateForLog(text, max = 400) {
     const s = String(text ?? '');
     return s.length > max ? s.slice(0, max) + '…' : s;
   } catch { return ''; }
+}
+
+function shouldUseResponsesAPI(model) {
+  try {
+    const m = String(model || '').toLowerCase();
+    return (
+      m.startsWith('gpt-5') ||
+      m.startsWith('o1') || m.startsWith('o3') ||
+      m.startsWith('gpt-4.1') || m.includes('realtime')
+    );
+  } catch { return false; }
+}
+
+function extractResponseText(resp) {
+  try {
+    // Responses API common fields
+    if (resp && typeof resp === 'object') {
+      if (typeof resp.output_text === 'string' && resp.output_text) return resp.output_text;
+      // SDK may return a content array
+      const data = resp.output || resp.data || resp.response || [];
+      const tryExtractFromContentItem = (ci) => {
+        if (!ci) return '';
+        if (typeof ci.text === 'string') return ci.text;
+        if (ci.text && typeof ci.text.value === 'string') return ci.text.value;
+        if (typeof ci?.content === 'string') return ci.content;
+        return '';
+      };
+      if (Array.isArray(data)) {
+        for (const item of data) {
+          const contentArr = item?.content || resp?.content || [];
+          if (Array.isArray(contentArr)) {
+            const parts = contentArr.map(tryExtractFromContentItem).filter(Boolean);
+            if (parts.length) return parts.join('');
+          }
+        }
+      }
+    }
+  } catch {}
+  // Fallback to Chat Completions shape
+  return resp?.choices?.[0]?.message?.content ?? '';
+}
+
+function shouldSendJSONFormat(model) {
+  try {
+    const m = String(model || '').toLowerCase();
+    // Some smallest models may not support JSON response_format cleanly
+    if (m.includes('nano')) return false;
+    return true;
+  } catch { return true; }
 }
 

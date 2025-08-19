@@ -1,0 +1,16 @@
+{
+  "attempt": 2,
+  "stage": "Critic",
+  "task_id": "task-3",
+  "success": false,
+  "progress": false,
+  "critic": "The plans for both the ping operation and report generation are not clear and actionable, as indicated by the failure to provide any edits or artifacts.",
+  "recommendations": [
+    "Provide a detailed plan for the ping operation.",
+    "Outline the steps for report generation clearly.",
+    "Include examples or templates for better clarity."
+  ],
+  "next": {
+    "action": "replan"
+  }
+}

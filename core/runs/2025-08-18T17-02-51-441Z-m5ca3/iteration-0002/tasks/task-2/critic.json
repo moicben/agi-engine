@@ -1,0 +1,15 @@
+{
+  "attempt": 1,
+  "stage": "Critic",
+  "task_id": "task-2",
+  "success": false,
+  "progress": false,
+  "critic": "The result does not meet the acceptance criteria as the report requirements are not documented and approved by users. Instead, the response provided is unrelated to the task of determining report requirements.",
+  "recommendations": [
+    "Document the specific report requirements as outlined by the users.",
+    "Obtain user approval for the documented requirements."
+  ],
+  "next": {
+    "action": "retry"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "attempt": 1,
+  "success": true,
+  "data": {
+    "answer": "Le but de ce repo est de fournir des ressources et des outils pour le développement de projets spécifiques."
+  },
+  "artifacts": [],
+  "logs": [
+    "qa.answer completed"
+  ],
+  "meta": {
+    "duration_ms": 1,
+    "executor": "workers/qa",
+    "fingerprint": "{\"ex\":\"workers/qa\",\"params\":{\"question\":\"Quel est le but de ce repo?\"}}"
+  }
+}
