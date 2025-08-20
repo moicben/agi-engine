@@ -17,8 +17,8 @@
 import { launchBrowser } from '../tools/puppeteer/client.js';
 
 const { browser, page } = await launchBrowser(false, false, true);
-//await page.goto('https://www.g2a.com/fr/page/cart?___locale=fr');
-await page.goto('https://www.google.com');
+await page.goto('https://www.g2a.com/fr/page/cart?___locale=fr');
+//await page.goto('https://www.google.com');
 //await page.goto('https://www.g2a.com/fr/page/cart?___locale=fr');
 
 await new Promise(resolve => setTimeout(resolve, 120000));

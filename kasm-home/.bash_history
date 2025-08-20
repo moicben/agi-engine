@@ -179,3 +179,52 @@ cd google-chrome
 ls
 exec google-chrome
 exec google-chrome
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+npm run dev
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+catimg tools/puppeteer/client.js 
+cat tools/puppeteer/client.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+HEADLESS=false SPOOF_MAC=1 TZ_SPOOF=Europe/Paris node tools/puppeteer/client.js
+npm i puppeteer-extra puppeteer-extra-plugin-stealth
+HEADLESS=false SPOOF_MAC=1 TZ_SPOOF=Europe/Paris node tools/puppeteer/client.js
+HEADLESS=false SPOOF_MAC=1 TZ_SPOOF=Europe/Paris node tests/puppeteer-profile.js 
+HEADLESS=false SPOOF_MAC=1 TZ_SPOOF=Europe/Paris node tests/puppeteer-profile.js 
+cat tools/puppeteer/client.js 
+node tests/puppeteer-profile.js 
+apt-get install -y libvulkan1 mesa-vulkan-drivers
+# et ne PAS passer --disable-gpu (déjà retiré)
+apt-get update && apt-get install -y   fonts-liberation fonts-noto fonts-dejavu tzdata locales   && locale-gen fr_FR.UTF-8
+ENV LANG=fr_FR.UTF-8 LANGUAGE=fr_FR.UTF-8 LC_ALL=fr_FR.UTF-8 TZ=Europe/Paris
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+ssh w51s9ehigch58l-644113f3@ssh.runpod.io -i ~/.ssh/id_ed25519
+git pull
+git pull 
+git pull 
+git clean -fd
+git pull 
+exit
