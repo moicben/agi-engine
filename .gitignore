@@ -96,7 +96,7 @@ out/
 *.pdf
 !morelogin-encrypt-key.pdf
 
-# Local files
+
 
 
 # Claude Caude Config
@@ -127,6 +127,9 @@ kasm-home/.vnc/**
 kasm-home/.cache/**
 
 
+# Local files (for local testing)
 *.apk
 .mutagen/
 ./assets/
+/assets/web-profile-linux/
+/assets/web-profile-mac/

@@ -21,7 +21,7 @@ await page.goto('https://www.g2a.com/fr/page/cart?___locale=fr');
 //await page.goto('https://www.google.com');
 //await page.goto('https://www.g2a.com/fr/page/cart?___locale=fr');
 
-await new Promise(resolve => setTimeout(resolve, 120000));
+await new Promise(resolve => setTimeout(resolve, 1200000));
 await page.screenshot({ path: 'screenshot.png' });
 
 await browser.close();
