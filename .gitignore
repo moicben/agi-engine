@@ -55,9 +55,9 @@ jspm_packages/
 # Screenshots et captures
 screenshots/
 monitoring/
-*.png
-*.jpg
-*.jpeg
+public/screenshots/
+assets/screenshots/
+
 
 # Fichiers de configuration sensibles
 config.json
@@ -125,6 +125,7 @@ kasm-home/.local/share/cursor-agent/**
 kasm-home/.mutagen/**
 kasm-home/.vnc/**
 kasm-home/.cache/**
+
 
 *.apk
 .mutagen/
