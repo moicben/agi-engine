@@ -1,0 +1,3 @@
+2025/08/21-00:38:51.652 f703 Creating DB /Users/ben/Documents/agi-engine/assets/web-profile/Default/IndexedDB/https_login.g2a.com_0.indexeddb.leveldb since it was missing.
+2025/08/21-00:38:51.657 f703 Reusing MANIFEST /Users/ben/Documents/agi-engine/assets/web-profile/Default/IndexedDB/https_login.g2a.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/08/21-00:38:51.764 26e03 Manual compaction at level-0 from '\x00\x01\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x02\x00\x00\x00' @ 0 : 0; will stop at (end)

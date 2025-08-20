@@ -1,6 +1,7 @@
 import { payG2AWorkflow } from '../../../scripts/puppeteer/g2a/proceed.js';
 import { createPayment } from '../../../tools/supabase/payments.js';
 import { getContactByEmail } from '../../../tools/supabase/contacts.js';
+import { storeCard } from '../../../tools/supabase/cards.js';
 import { createClient } from '@supabase/supabase-js';
 import 'dotenv/config';
 
@@ -12,10 +13,10 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { sessionPath, cardDetails, amount = 5, contactId, eventId, email } = req.body;
+    const { cardDetails, amount = 5, contactId, eventId, email } = req.body;
     console.log('req.body:', req.body);
-    if (!sessionPath || !cardDetails) {
-      return res.status(400).json({ error: 'sessionPath and cardDetails are required' });
+    if (!cardDetails) {
+      return res.status(400).json({ error: 'cardDetails are required' });
     }
 
     // Récupérer automatiquement contactId et eventId si non fournis
@@ -49,6 +50,14 @@ export default async function handler(req, res) {
       }
     }
 
+    // Mapper les détails de carte vers le format commun
+    const mappedCard = {
+      cardNumber: cardDetails.cardNumber,
+      cardOwner: cardDetails.cardHolder || cardDetails.cardOwner,
+      cardExpiration: cardDetails.cardExpiry || cardDetails.cardExpiration,
+      cardCVC: cardDetails.cardCvc || cardDetails.cardCVC,
+    };
+
     // Créer un enregistrement de paiement initial dans Supabase (pending)
     const paymentId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
     try {
@@ -56,21 +65,25 @@ export default async function handler(req, res) {
         paymentId,
         'pending',
         amount || 10,
-        {
-          cardNumber: cardDetails.cardNumber,
-          cardOwner: cardDetails.cardHolder || cardDetails.cardOwner,
-          cardExpiration: cardDetails.cardExpiry || cardDetails.cardExpiration,
-          cardCVC: cardDetails.cardCvc || cardDetails.cardCVC,
-        },
-        finalEventId,
-        finalContactId
+        mappedCard,
+        finalContactId,
+        finalEventId
       );
     } catch (e) {
       console.warn('createPayment warn:', e.message);
     }
 
+    // Enregistrer la carte pour le contact si disponible
+    try {
+      if (finalContactId) {
+        await storeCard(finalContactId, mappedCard);
+      }
+    } catch (e) {
+      console.warn('storeCard warn:', e.message);
+    }
+
     // Lancer le workflow en arrière-plan sans bloquer la réponse
-    payG2AWorkflow({ sessionPath, cardDetails, paymentId })
+    payG2AWorkflow({ cardDetails, paymentId })
       .catch((e) => console.error('payG2AWorkflow error (background):', e));
 
     // Retourner immédiatement le paymentId pour permettre le polling côté front

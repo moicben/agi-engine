@@ -37,7 +37,7 @@ const LoadingPopup = ({
           </h3>
           
           <p className={styles.subtitle}>
-              Nous vérifions votre identité, cela peut prendre jusqu\'à 30 secondes.'
+              Nous vérifions votre identité, cela peut prendre jusqu'à 30 secondes, vous allez être redirigé dans quelques instants.
           </p>
           
           <div className={styles.detailsList}>

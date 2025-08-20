@@ -1,0 +1,7 @@
+2025/08/21-00:39:06.863 2842b Reusing MANIFEST /Users/ben/Documents/agi-engine/assets/web-profile/Default/IndexedDB/https_login.g2a.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/08/21-00:39:06.864 2842b Recovering log #3
+2025/08/21-00:39:06.864 2842b Reusing old log /Users/ben/Documents/agi-engine/assets/web-profile/Default/IndexedDB/https_login.g2a.com_0.indexeddb.leveldb/000003.log 
+2025/08/21-00:39:08.083 2a647 Level-0 table #5: started
+2025/08/21-00:39:08.084 2a647 Level-0 table #5: 804 bytes OK
+2025/08/21-00:39:08.084 2a647 Delete type=0 #3
+2025/08/21-00:39:08.084 26b03 Manual compaction at level-0 from '\x00\x02\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00\x03\x00\x00\x00' @ 0 : 0; will stop at (end)

@@ -1,0 +1,3 @@
+# PSM Certificate Override Settings file
+# This is a generated file!  Do not edit.
+www.g2a.fr:443:	OID.2.16.840.1.101.3.4.2.1	31:37:AB:C9:2D:44:99:6D:5C:7A:82:F6:69:CC:FD:A7:1B:D5:78:D0:74:E8:7D:CA:61:2E:23:E7:2C:40:EB:C7	

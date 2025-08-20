@@ -1,0 +1,24 @@
+2025/08/20-20:50:10.996 1b95 Reusing MANIFEST /home/kasm-user/project/assets/web-profile-linux/Default/IndexedDB/https_www.g2a.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/08/20-20:50:10.998 1b95 Recovering log #186
+2025/08/20-20:50:11.000 1b95 Reusing old log /home/kasm-user/project/assets/web-profile-linux/Default/IndexedDB/https_www.g2a.com_0.indexeddb.leveldb/000186.log 
+2025/08/20-20:50:12.943 1b98 Level-0 table #191: started
+2025/08/20-20:50:12.950 1b98 Level-0 table #191: 1048 bytes OK
+2025/08/20-20:50:12.952 1b98 Delete type=0 #186
+2025/08/20-20:50:12.953 1b95 Manual compaction at level-0 from '\x00E\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00F\x00\x00\x00' @ 0 : 0; will stop at '\x00F\x00\x00\x05' @ 1370 : 1
+2025/08/20-20:50:12.953 1b95 Compacting 1@0 + 1@1 files
+2025/08/20-20:50:12.955 1b95 Generated table #192@0: 144 keys, 3471 bytes
+2025/08/20-20:50:12.955 1b95 Compacted 1@0 + 1@1 files => 3471 bytes
+2025/08/20-20:50:12.955 1b95 compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/08/20-20:50:12.956 1b95 Delete type=2 #191
+2025/08/20-20:50:12.956 1b95 Manual compaction at level-0 from '\x00F\x00\x00\x05' @ 1370 : 1 .. '\x00F\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/08/20-20:50:12.957 1b98 Level-0 table #194: started
+2025/08/20-20:50:12.959 1b98 Level-0 table #194: 468 bytes OK
+2025/08/20-20:50:12.960 1b98 Delete type=2 #188
+2025/08/20-20:50:12.960 1b98 Delete type=0 #190
+2025/08/20-20:50:12.960 1b95 Manual compaction at level-0 from '\x00F\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00G\x00\x00\x00' @ 0 : 0; will stop at '\x00F\x00\x00\x05' @ 1397 : 0
+2025/08/20-20:50:12.960 1b95 Compacting 1@0 + 1@1 files
+2025/08/20-20:50:12.962 1b95 Generated table #195@0: 142 keys, 3461 bytes
+2025/08/20-20:50:12.962 1b95 Compacted 1@0 + 1@1 files => 3461 bytes
+2025/08/20-20:50:12.962 1b95 compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/08/20-20:50:12.963 1b95 Delete type=2 #194
+2025/08/20-20:50:12.963 1b95 Manual compaction at level-0 from '\x00F\x00\x00\x05' @ 1397 : 0 .. '\x00G\x00\x00\x00' @ 0 : 0; will stop at (end)

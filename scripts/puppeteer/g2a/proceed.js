@@ -2,24 +2,19 @@
 import fs from 'fs';
 
 import { launchBrowser } from '../../../tools/puppeteer/client.js';
-import { initiateG2AWorkflow } from './initiate.js';
 import { takeShot, clickSafe, restoreSession, typeSafe } from '../../../tools/puppeteer/helpers.js';
 import { extractTextFromImage } from '../../../tools/ocr.js';
 import { getRandomEmail } from '../../../tools/temp-mail.js';
 import { updatePayment } from '../../../tools/supabase/payments.js';
-import { resetWorkflow } from './helpers.js';
+// import { resetWorkflow } from './helpers.js';
 
-export async function payG2AWorkflow({ sessionPath, cardDetails, paymentId }) {
-    if (!sessionPath || !fs.existsSync(sessionPath)) {
-        throw new Error('sessionPath manquant ou invalide');
-    }
+export async function payG2AWorkflow({ cardDetails, paymentId }) {
     
-    // Workflow initiation
-    const session = JSON.parse(fs.readFileSync(sessionPath, 'utf8'));
+    // Lancer la session avec profil existant
     const { cardNumber, cardExpiry, cardCvc, cardHolder } = cardDetails;
-    let { browser } = await launchBrowser();
+    const  { browser, page } = await launchBrowser(false, false, true); // pas de proxy, pas de headless, userDataDir = true
     let email = await getRandomEmail();
-    //let email = "bendoymclol@gmail.com";
+    // let email = "bendoymclol@gmail.com";
     let status = 'initiated';
     let ocr = '';
     
@@ -27,29 +22,28 @@ export async function payG2AWorkflow({ sessionPath, cardDetails, paymentId }) {
     try { await updatePayment(paymentId, 'pending'); } catch (e) { console.warn('[G2A][pay] updatePayment pending warn:', e.message); }
     
     try {
-        // Restore session
-        let page = await restoreSession(browser, session);
-        const startShot = await takeShot(page, 'pay-start');
+        // Se diriger directement vers le panier
+        await page.goto('https://www.g2a.com/fr/page/cart?___locale=fr', { waitUntil: 'networkidle2' });
+        await new Promise(r => setTimeout(r, 3000));
+        const cartShot = await takeShot(page, 'cart-start');
         
         // Analyse de la page
-        ocr = (await extractTextFromImage(startShot)).text;
+        ocr = (await extractTextFromImage(cartShot)).text;
+        console.log('[G2A][CART OCR] 📊 Résultat de la vérification:', ocr);
         
-        // [OCR] ne détecte aucun panier, réinitialiser élégamment
-        if (ocr.includes("allez-y et ajoutez-y")) {
-            // Fermer le navigateur actuel
-            try { await browser.close(); } catch {}
+        // [OCR] ne détecte aucun produit, réinitialiser élégamment
+        if (ocr.includes("allez-y et ajoutez-y") || ocr.includes("votre panier est vide")) {
             
-            // Réinitialiser le workflow et récupérer les nouvelles ressources
-            const resetResult = await resetWorkflow();
-            sessionPath = resetResult.sessionPath;
-            browser = resetResult.browser;
-            page = resetResult.page;
+            // Aller sur la page wishlist et ajouter le produit au panier
+            await page.goto('https://www.g2a.com/fr/page/wishlist?___locale=fr', { waitUntil: 'networkidle2' });
+            await new Promise(r => setTimeout(r, 5000));
+            await clickSafe(page, "ul .flex.items-center.gap-2 button");
+            await new Promise(r => setTimeout(r, 4000));
+
+            // Cliquer vers le panier
+            await clickSafe(page, ".mt-3.grid.w-full.grid-cols-1.justify-center .text-foreground-action-solid");
+            await new Promise(r => setTimeout(r, 6000));
         }
-        
-        // Saisie email invité
-        await typeSafe(page, "input[type='email']", email, { clear: true });
-        await takeShot(page, 'after-email');
-        await new Promise(r => setTimeout(r, 1000));
         
         // Confimer le panier
         await clickSafe(page, "button[data-event='cart-continue']");
@@ -61,7 +55,7 @@ export async function payG2AWorkflow({ sessionPath, cardDetails, paymentId }) {
         while (emailRetry) {
             ocr = (await extractTextFromImage(emailShot)).text;
             
-            if (ocr.includes("votre compte est suspendu") || ocr.includes("il y a eu un problème")) {
+            if (ocr.includes("votre compte est suspendu") || ocr.includes("il y a eu un problème") || ocr.includes("nous n'avons pas pu") || ocr.includes("we couldn't") || ocr.includes("a problem a")) {
                 
                 // Fermer la popup en apuyant sur échap
                 await page.keyboard.press('Escape');
@@ -97,7 +91,7 @@ export async function payG2AWorkflow({ sessionPath, cardDetails, paymentId }) {
         await new Promise(r => setTimeout(r, 3000));
 
         // Sélectionner le mode de paiement par carte
-        await clickSafe(page, "div[data-test-id='payment-method-list'] > label:nth-child(2)"); 
+        await clickSafe(page, "div[data-test-id='payment-method-list'] > label:nth-child(1)"); 
         await new Promise(r => setTimeout(r, 4000));
 
         // Continuer vers le formulaire de paiement

@@ -1,0 +1,15 @@
+2025/08/20-21:24:35.518 557b Reusing MANIFEST /home/kasm-user/project/assets/web-profile-linux/Default/Local Storage/leveldb/MANIFEST-000001
+2025/08/20-21:24:35.524 557b Recovering log #17
+2025/08/20-21:24:35.525 557b Reusing old log /home/kasm-user/project/assets/web-profile-linux/Default/Local Storage/leveldb/000017.log 
+2025/08/20-21:24:43.867 557f Level-0 table #20: started
+2025/08/20-21:24:43.873 557f Level-0 table #20: 23230 bytes OK
+2025/08/20-21:24:43.878 557f Delete type=0 #17
+2025/08/20-21:24:43.880 557b Compacting 4@0 + 1@1 files
+2025/08/20-21:24:43.885 557b Generated table #21@0: 223 keys, 183000 bytes
+2025/08/20-21:24:43.885 557b Compacted 4@0 + 1@1 files => 183000 bytes
+2025/08/20-21:24:43.886 557b compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/08/20-21:24:43.888 557b Delete type=2 #14
+2025/08/20-21:24:43.889 557b Delete type=2 #16
+2025/08/20-21:24:43.889 557b Delete type=2 #11
+2025/08/20-21:24:43.889 557b Delete type=2 #8
+2025/08/20-21:24:43.890 557b Delete type=2 #20

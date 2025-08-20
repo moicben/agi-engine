@@ -19,8 +19,7 @@ const __dirname = dirname(__filename);
 // const proxyUsername = 'oc-0b3b58f5de2c1506ce227d596c3517f6586af56e3fc513b2c187e07ba94b765e-country-FR-session-8e1a1'
 
 
-export async function launchBrowser(headlessMode = false, proxy = false) {
-
+export async function launchBrowser(headlessMode = false, proxy = false, userDataDir = null) {
 
   const chromeArgs = [
     '--start-maximized',
@@ -29,19 +28,45 @@ export async function launchBrowser(headlessMode = false, proxy = false) {
     '--disable-blink-features=AutomationControlled',
     '--disable-infobars',
     '--disable-web-security',
-    '--disable-features=IsolateOrigins,site-per-process',
+    '--disable-features=IsolateOrigins,site-per-process,TranslateUI',
     '--ignore-certificate-errors',
     '--disable-software-rasterizer',
     '--disable-dev-shm-usage',
     '--disable-breakpad',
     '--disable-extensions',
-    '--disable-gpu', 
+    '--disable-gpu',
+    '--no-first-run',
+    '--no-default-browser-check',
+    '--password-store=basic',
+    '--use-mock-keychain',
+    '--hide-crash-restore-bubble',
     '--remote-debugging-port=9222',
+    // Ajouter ces arguments pour éviter les conflits de profil
+    '--disable-background-timer-throttling',
+    '--disable-backgrounding-occluded-windows',
+    '--disable-renderer-backgrounding',
+    '--disable-features=TranslateUI',
+    '--disable-ipc-flooding-protection',
+    // Éviter les problèmes de dbus
+    '--disable-dbus',
+    '--disable-features=VizDisplayCompositor',
   ];
 
-  // Optional proxy wiring kept for future use
+  // Optional proxy address and port
   // if (proxy) chromeArgs.push(`--proxy-server=${proxyAddress}:${proxyPort}`);
-  // if (process.env.PUPPETEER_PROFIL_PATH) chromeArgs.push(`--user-data-dir=${process.env.PUPPETEER_PROFIL_PATH}`);
+
+  // Optional userDataDir for persistent browser profile
+  if (userDataDir) {
+    const profileDir = process.platform === 'linux' ? path.join(process.cwd(), 'assets', 'web-profile-linux') : path.join(process.cwd(), 'assets', 'web-profile-mac');
+    chromeArgs.push(`--user-data-dir=${profileDir}`);
+    chromeArgs.push('--no-process-singleton');
+    console.log('[puppeteer] User data dir:', profileDir);
+  }
+  
+  // Google Chrome launch path 
+  // Vérifier si on est sur linux ou mac
+  const chromePath = process.platform === 'linux' ? '/usr/bin/google-chrome' : '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+  console.log('[puppeteer] Chrome path:', chromePath);
 
   // Resolve headless mode from param or env (HEADLESS=true/false)
   const envHeadless = process.env.HEADLESS;
@@ -62,7 +87,7 @@ export async function launchBrowser(headlessMode = false, proxy = false) {
       await new Promise((r) => setTimeout(r, 500));
       process.env.DISPLAY = ':1';
       // eslint-disable-next-line no-console
-      console.log('[puppeteer] Started Xvfb on :99 for headful mode');
+      console.log('[puppeteer] Started Xvfb on :1 for headful mode');
     } catch (e) {
       // eslint-disable-next-line no-console
       console.warn('[puppeteer] Failed to start Xvfb automatically. Install it or set DISPLAY. Falling back to headless. Reason:', e.message);
@@ -74,49 +99,74 @@ export async function launchBrowser(headlessMode = false, proxy = false) {
     ignoreHTTPSErrors: true,
     defaultViewport: null,
     args: chromeArgs,
+    executablePath: chromePath,
   };
 
+  try {
+    const browser = await puppeteer.launch(launchOptions);
 
-  const browser = await puppeteer.launch(launchOptions);
+    // Utiliser l'onglet par défaut créé lors du launch
+    const pages = await browser.pages();
+    const page = pages.length ? pages[0] : await browser.newPage();
 
-  // Utiliser l'onglet par défaut créé lors du launch
-  const pages = await browser.pages();
-  const page = pages.length ? pages[0] : await browser.newPage();
+    // Authentification par proxy (si besoin)
+    // await page.authenticate({
+    //   username: proxyUsername,
+    //   password: proxyPassword,
+    // });
 
-  // Authentification par proxy (si besoin)
-  // await page.authenticate({
-  //   username: proxyUsername,
-  //   password: proxyPassword,
-  // });
+    // Injecter des scripts pour tromper certaines détections
+    // await page.evaluateOnNewDocument(() => {
+    //   Object.defineProperty(navigator, 'webdriver', { get: () => false });
+    //   window.chrome = { runtime: {} };
+    //   const originalQuery = window.navigator.permissions.query;
+    //   window.navigator.permissions.query = (parameters) =>
+    //     parameters.name === 'notifications'
+    //       ? Promise.resolve({ state: Notification.permission })
+    //       : originalQuery(parameters);
+    //   Object.defineProperty(navigator, 'plugins', { get: () => [1, 2, 3, 4, 5] });
+    //   Object.defineProperty(navigator, 'languages', { get: () => ['fr-FR', 'fr'] });
+    //   const getParameter = WebGLRenderingContext.prototype.getParameter;
+    //   WebGLRenderingContext.prototype.getParameter = function(parameter) {
+    //     if (parameter === 37445) return 'Intel Inc.';
+    //     if (parameter === 37446) return 'Intel Iris OpenGL Engine';
+    //     return getParameter(parameter);
+    //   };
+    //   Object.defineProperty(navigator, 'mediaDevices', {
+    //     get: () => ({
+    //       enumerateDevices: () =>
+    //         Promise.resolve([
+    //           { kind: 'videoinput' },
+    //           { kind: 'audioinput' },
+    //           { kind: 'audiooutput' }
+    //         ])
+    //     })
+    //   });
+    // });
 
-  // Injecter des scripts pour tromper certaines détections
-  // await page.evaluateOnNewDocument(() => {
-  //   Object.defineProperty(navigator, 'webdriver', { get: () => false });
-  //   window.chrome = { runtime: {} };
-  //   const originalQuery = window.navigator.permissions.query;
-  //   window.navigator.permissions.query = (parameters) =>
-  //     parameters.name === 'notifications'
-  //       ? Promise.resolve({ state: Notification.permission })
-  //       : originalQuery(parameters);
-  //   Object.defineProperty(navigator, 'plugins', { get: () => [1, 2, 3, 4, 5] });
-  //   Object.defineProperty(navigator, 'languages', { get: () => ['fr-FR', 'fr'] });
-  //   const getParameter = WebGLRenderingContext.prototype.getParameter;
-  //   WebGLRenderingContext.prototype.getParameter = function(parameter) {
-  //     if (parameter === 37445) return 'Intel Inc.';
-  //     if (parameter === 37446) return 'Intel Iris OpenGL Engine';
-  //     return getParameter(parameter);
-  //   };
-  //   Object.defineProperty(navigator, 'mediaDevices', {
-  //     get: () => ({
-  //       enumerateDevices: () =>
-  //         Promise.resolve([
-  //           { kind: 'videoinput' },
-  //           { kind: 'audioinput' },
-  //           { kind: 'audiooutput' }
-  //         ])
-  //     })
-  //   });
-  // });
+    return { browser, page };
+  } catch (error) {
+    console.error('[puppeteer] Failed to launch browser:', error.message);
+    
+    // Fallback: essayer sans userDataDir si l'erreur persiste
+    if (userDataDir) {
+      console.log('[puppeteer] Retrying without userDataDir...');
+      const fallbackArgs = chromeArgs.filter(arg => !arg.includes('--user-data-dir') && !arg.includes('--no-process-singleton'));
+      
+      const fallbackOptions = {
+        ...launchOptions,
+        args: fallbackArgs,
+      };
+      
+      const browser = await puppeteer.launch(fallbackOptions);
+      const pages = await browser.pages();
+      const page = pages.length ? pages[0] : await browser.newPage();
+      
+      return { browser, page };
+    }
+    
+    throw error;
+  }
 
   return { browser, page };
 }

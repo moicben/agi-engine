@@ -1,0 +1,12 @@
+2025/08/20-20:45:21.765 1761 Reusing MANIFEST /home/kasm-user/project/assets/web-profile-linux/Default/IndexedDB/https_mail.google.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/08/20-20:45:21.766 1761 Recovering log #7
+2025/08/20-20:45:21.769 1761 Reusing old log /home/kasm-user/project/assets/web-profile-linux/Default/IndexedDB/https_mail.google.com_0.indexeddb.leveldb/000007.log 
+2025/08/20-20:45:24.567 1761 Compacting 1@1 + 1@2 files
+2025/08/20-20:45:24.626 1761 Generated table #10@1: 133 keys, 427602 bytes
+2025/08/20-20:45:24.626 1761 Compacted 1@1 + 1@2 files => 427602 bytes
+2025/08/20-20:45:24.628 1761 compacted to: files[ 0 0 1 0 0 0 0 ]
+2025/08/20-20:45:24.630 1761 Delete type=2 #5
+2025/08/20-20:45:24.631 1761 Delete type=2 #8
+2025/08/20-20:45:55.707 1762 Level-0 table #12: started
+2025/08/20-20:45:55.941 1762 Level-0 table #12: 3145637 bytes OK
+2025/08/20-20:45:55.944 1762 Delete type=0 #7

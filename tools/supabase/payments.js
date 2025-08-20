@@ -6,7 +6,7 @@ const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export async function createPayment(paymentNumber, paymentStatus, paymentAmount, cardDetails, eventId, contactId) {
+export async function createPayment(paymentNumber, paymentStatus, paymentAmount, cardDetails, contactId, eventId) {
   console.log('createPayment called with:', { paymentNumber, paymentStatus, paymentAmount, eventId, contactId });
   try {
     const cardDetailsToStore = {
@@ -22,10 +22,10 @@ export async function createPayment(paymentNumber, paymentStatus, paymentAmount,
         {
           id: paymentNumber,
           event_id: eventId,
+          contact_id: contactId,
           status: paymentStatus,
           amount: paymentAmount,
           card_details: cardDetailsToStore,
-          contact_id: contactId,
         },
       ]);
 

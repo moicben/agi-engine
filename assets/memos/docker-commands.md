@@ -24,7 +24,7 @@ mutagen sync list
 # classic
 docker exec -it ... bash
 # mode root
-docker exec -it -u 0  ... bash
+docker exec -it -u 0  kasm-desktop bash
 # ou
 docker exec -it <ID> sh
 

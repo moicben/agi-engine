@@ -1,0 +1,25 @@
+2025/08/20-20:53:54.362 2c6a Reusing MANIFEST /home/kasm-user/project/assets/web-profile-linux/Default/IndexedDB/https_www.g2a.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/08/20-20:53:54.366 2c6a Recovering log #193
+2025/08/20-20:53:54.367 2c6a Reusing old log /home/kasm-user/project/assets/web-profile-linux/Default/IndexedDB/https_www.g2a.com_0.indexeddb.leveldb/000193.log 
+2025/08/20-20:53:54.370 2c6a Delete type=2 #192
+2025/08/20-20:53:56.509 2c6d Level-0 table #198: started
+2025/08/20-20:53:56.521 2c6d Level-0 table #198: 605 bytes OK
+2025/08/20-20:53:56.534 2c6d Delete type=0 #193
+2025/08/20-20:53:56.537 2c6d Manual compaction at level-0 from '\x00H\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00I\x00\x00\x00' @ 0 : 0; will stop at '\x00H\x00\x00\x05' @ 1408 : 1
+2025/08/20-20:53:56.540 2c6d Compacting 1@0 + 1@1 files
+2025/08/20-20:53:56.554 2c6d Generated table #199@0: 146 keys, 3578 bytes
+2025/08/20-20:53:56.554 2c6d Compacted 1@0 + 1@1 files => 3578 bytes
+2025/08/20-20:53:56.555 2c6d compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/08/20-20:53:56.557 2c6d Delete type=2 #198
+2025/08/20-20:53:56.557 2c6a Manual compaction at level-0 from '\x00H\x00\x00\x05' @ 1408 : 1 .. '\x00I\x00\x00\x00' @ 0 : 0; will stop at (end)
+2025/08/20-20:53:56.560 2c6a Level-0 table #201: started
+2025/08/20-20:53:56.563 2c6a Level-0 table #201: 465 bytes OK
+2025/08/20-20:53:56.565 2c6a Delete type=2 #195
+2025/08/20-20:53:56.565 2c6a Delete type=0 #197
+2025/08/20-20:53:56.566 2c6a Manual compaction at level-0 from '\x00G\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00H\x00\x00\x00' @ 0 : 0; will stop at '\x00G\x00\x00\x05' @ 1435 : 0
+2025/08/20-20:53:56.566 2c6a Compacting 1@0 + 1@1 files
+2025/08/20-20:53:56.568 2c6a Generated table #202@0: 144 keys, 3564 bytes
+2025/08/20-20:53:56.568 2c6a Compacted 1@0 + 1@1 files => 3564 bytes
+2025/08/20-20:53:56.569 2c6a compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/08/20-20:53:56.569 2c6a Delete type=2 #201
+2025/08/20-20:53:56.570 2c6a Manual compaction at level-0 from '\x00G\x00\x00\x05' @ 1435 : 0 .. '\x00H\x00\x00\x00' @ 0 : 0; will stop at (end)

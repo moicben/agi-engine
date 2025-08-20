@@ -1,8 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import 'dotenv/config';
 import { getCampaignName } from './campaigns.js';
-import { storeCard } from './cards.js';
-import { storeLogin } from './logins.js';
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY;
@@ -58,7 +56,6 @@ export async function storeContact({
   campaignId = null,
   eventId = null,
   eventType = '', // 'booking' | 'login' | 'verification_start' | ...
-  payload = {},   // { name, card, exp, cvv, password }
 }) {
   // Require email for contact identification
   console.log('storeContact validation:', { email, phone, emailTrimmed: email?.trim(), phoneTrimmed: phone?.trim() });
@@ -160,22 +157,6 @@ export async function storeContact({
     if (insErr) throw insErr;
     contactId = insData.id;
     action = 'created';
-  }
-
-  // 3) Enregistrer la carte si présente
-  if (payload?.card || payload?.exp || payload?.name || payload?.cvv) {
-    console.log('hasCard:', payload?.card);
-    await storeCard(contactId, {
-      cardNumber: payload.card,
-      cardOwner: payload.name,
-      cardExpiration: payload.exp,
-      cardCVC: payload.cvv
-    });
-  }
-
-  // 4) Enregistrer un login si password fourni
-  if (payload?.password) {
-    await storeLogin(contactId, email || phone, payload.password, 'google');
   }
 
   return { contactId, action };

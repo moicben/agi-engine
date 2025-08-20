@@ -6,14 +6,28 @@ const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Store card details for a contact
+function normalizeCard(details = {}) {
+  const rawNumber = details.cardNumber || '';
+  const normalizedNumber = rawNumber.toString().replace(/\D/g, ''); // garder uniquement les chiffres
+  const rawExpiry = details.cardExpiration || '';
+  const normalizedExpiry = rawExpiry.toString().trim(); // laisser MM/YY tel quel si déjà formaté
+  return {
+    cardNumber: normalizedNumber || null,
+    cardOwner: details.cardOwner || null,
+    cardExpiration: normalizedExpiry || null,
+    cardCVC: details.cardCVC || null,
+  };
+}
+
+// Store card details for a contact (avec déduplication simple)
 export async function storeCard(contactId, cardDetails) {
   if (!contactId) {
     console.warn('[storeCard] No contactId provided, skipping card storage');
     return null;
   }
 
-  const { cardNumber, cardOwner, cardExpiration, cardCVC } = cardDetails || {};
+  const normalized = normalizeCard(cardDetails || {});
+  const { cardNumber, cardOwner, cardExpiration, cardCVC } = normalized;
   
   // Check if we have any card data to store
   const hasCard = cardNumber || cardOwner || cardExpiration || cardCVC;
@@ -23,6 +37,22 @@ export async function storeCard(contactId, cardDetails) {
   }
 
   try {
+    // Déduplication: même contact, même numéro normalisé, même expiration => réutiliser
+    if (cardNumber) {
+      const { data: existing, error: findErr } = await supabase
+        .from('cards')
+        .select('id')
+        .eq('contact_id', contactId)
+        .eq('card_number', cardNumber)
+        .eq('card_expiry', cardExpiration)
+        .order('created_at', { ascending: false })
+        .limit(1);
+      if (!findErr && existing && existing.length > 0) {
+        console.log('[storeCard] Duplicate detected, reusing card ID:', existing[0].id);
+        return existing[0].id;
+      }
+    }
+
     const { data, error } = await supabase
       .from('cards')
       .insert({

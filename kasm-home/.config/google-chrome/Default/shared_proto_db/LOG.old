@@ -1,2 +1,3 @@
-2025/08/20-10:42:25.322 54c Creating DB /home/kasm-user/.config/google-chrome/Default/shared_proto_db since it was missing.
-2025/08/20-10:42:25.326 54c Reusing MANIFEST /home/kasm-user/.config/google-chrome/Default/shared_proto_db/MANIFEST-000001
+2025/08/20-20:25:11.669 885 Reusing MANIFEST /home/kasm-user/.config/google-chrome/Default/shared_proto_db/MANIFEST-000001
+2025/08/20-20:25:11.672 885 Recovering log #3
+2025/08/20-20:25:11.675 885 Reusing old log /home/kasm-user/.config/google-chrome/Default/shared_proto_db/000003.log 

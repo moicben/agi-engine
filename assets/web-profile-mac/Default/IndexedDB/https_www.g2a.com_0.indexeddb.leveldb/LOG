@@ -1,0 +1,14 @@
+2025/08/21-03:06:41.081 84764 Reusing MANIFEST /Users/ben/Documents/agi-engine/assets/web-profile-mac/Default/IndexedDB/https_www.g2a.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/08/21-03:06:41.081 84764 Recovering log #169
+2025/08/21-03:06:41.082 84764 Reusing old log /Users/ben/Documents/agi-engine/assets/web-profile-mac/Default/IndexedDB/https_www.g2a.com_0.indexeddb.leveldb/000169.log 
+2025/08/21-03:06:41.082 84764 Delete type=2 #167
+2025/08/21-03:06:48.419 84762 Level-0 table #174: started
+2025/08/21-03:06:48.421 84762 Level-0 table #174: 530 bytes OK
+2025/08/21-03:06:48.425 84762 Delete type=0 #169
+2025/08/21-03:06:48.425 84762 Manual compaction at level-0 from '\x00>\x00\x00\x00' @ 72057594037927935 : 1 .. '\x00?\x00\x00\x00' @ 0 : 0; will stop at '\x00>\x00\x00\x05' @ 1232 : 1
+2025/08/21-03:06:48.425 84762 Compacting 1@0 + 1@1 files
+2025/08/21-03:06:48.426 84762 Generated table #175@0: 130 keys, 3239 bytes
+2025/08/21-03:06:48.426 84762 Compacted 1@0 + 1@1 files => 3239 bytes
+2025/08/21-03:06:48.427 84762 compacted to: files[ 0 1 1 0 0 0 0 ]
+2025/08/21-03:06:48.427 84762 Delete type=2 #174
+2025/08/21-03:06:48.427 84762 Manual compaction at level-0 from '\x00>\x00\x00\x05' @ 1232 : 1 .. '\x00?\x00\x00\x00' @ 0 : 0; will stop at (end)

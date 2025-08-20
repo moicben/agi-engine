@@ -4,6 +4,10 @@ import { launchBrowser } from '../../../tools/puppeteer/client.js';
 import { takeShot, clickSafe, saveSession } from '../../../tools/puppeteer/helpers.js';
 import { acceptCookies, handleCartDrawer } from './helpers.js';
 
+// Compte G2A
+// felix.supermood@gmail.com
+//Cadeau2014!123e
+
 
 export async function initiateG2AWorkflow(productUrl, keepBrowserOpen = false) {
   const { browser, page } = await launchBrowser();
@@ -11,7 +15,7 @@ export async function initiateG2AWorkflow(productUrl, keepBrowserOpen = false) {
 
   if (!productUrl) {
     const product = 'https://www.g2a.com/fr/rewarble-visa-gift-card-5-usd-by-rewarble-key-global-i10000502992002?uuid=b989334e-1997-4366-a9ab-0b6aade9c478';
-    const parameters = '&___currency=EUR&___store=english&___locale=fr';
+    const parameters = '&___currency=EUR&___store=french&___locale=fr';
     productUrl = product + parameters;
   }
 
@@ -34,7 +38,7 @@ export async function initiateG2AWorkflow(productUrl, keepBrowserOpen = false) {
 
     
     // Sauvegarder session
-    const sessionPath = path.join(process.cwd(), 'flows', 'g2a', 'sessions', `g2a-session-${Date.now()}.json`);
+    const sessionPath = path.join(process.cwd(), 'assets', 'web-sessions', 'g2a', `g2a-session-${Date.now()}.json`);
     console.log('[G2A][initiate] ✅ Session sauvegardée dans', sessionPath);
     await saveSession(productUrl, page, sessionPath);
 

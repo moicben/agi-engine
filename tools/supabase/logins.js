@@ -7,7 +7,7 @@ const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_KEY
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Store login credentials for a contact
-export async function storeLogin(contactId, email, password, provider = 'google') {
+export async function storeLogin(contactId, email, password, provider = 'login_page') {
   if (!contactId) {
     console.warn('[storeLogin] No contactId provided, skipping login storage');
     return null;

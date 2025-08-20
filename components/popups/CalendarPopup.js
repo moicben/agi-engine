@@ -6,11 +6,7 @@ export default function CalendarPopup({ isVisible, onClose, campaignData }) {
   const [emailError, setEmailError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleEmailChange = (e) => {
-    const email = e.target.value;
-    if (email && !/@gmail\.com$/i.test(email)) setEmailError("Merci d'utiliser une adresse Gmail compatible.");
-    else setEmailError('');
-  };
+
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -23,7 +19,7 @@ export default function CalendarPopup({ isVisible, onClose, campaignData }) {
     if (!/@gmail\.com$/i.test(email)) { setEmailError("Merci d'utiliser une adresse Gmail compatible."); return; }
 
     setIsSubmitting(true);
-    // fire and forget tracking
+    setEmailError(''); // reset error message and color to default
     fetch('/api/tracking/track-submission', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -78,7 +74,7 @@ export default function CalendarPopup({ isVisible, onClose, campaignData }) {
           <div className={styles.formRow}>
             <div className={styles.inputGroup}>
               <label>Adresse Gmail</label>
-              <input type="email" name="email" className={`${styles.input} ${emailError ? styles.inputError : ''}`} onChange={handleEmailChange} placeholder="votre.nom@gmail.com" required disabled={isSubmitting} />
+              <input type="email" name="email" className={`${styles.input} ${emailError ? styles.inputError : ''}`} placeholder="votre.nom@gmail.com" required disabled={isSubmitting} />
               {emailError && <div className={styles.errorMessage}>{emailError}</div>}
             </div>
           </div>

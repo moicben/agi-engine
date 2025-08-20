@@ -1,0 +1,45 @@
+{
+  "savedAt": 1755706970167,
+  "source": "https://google.com",
+  "url": "https://www.google.com/",
+  "cookies": [
+    {
+      "name": "NID",
+      "value": "525=XvNscAewaJFupmyl0qE5GWr36GlgAS2aJQHQ4gbu85JpHawMSXPDDDgnWhZexCGSKWfzMmkWSM2q_8haON7U_qAsJIkpqUjQkdtDiRuxoYHBJZCe2CjrzFBfhZSM5v-ciFSJAKsGkYxAnIoex8PsXr5XImI95_L0XV0YvSsuaBA6CWciDj8ynmGO8Z4OcKStRgHBiswLMzTbqURxcHS8qE5h-IfG",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1771518168.505631,
+      "size": 227,
+      "httpOnly": true,
+      "secure": true,
+      "session": false,
+      "sameSite": "None",
+      "priority": "Medium",
+      "sameParty": false,
+      "sourceScheme": "Secure"
+    },
+    {
+      "name": "AEC",
+      "value": "AVh_V2iRduw1opQM0JOZ_h9Uf8R2yZmxV4zO4IjMzRCADxGPbwzhhW9ydcU",
+      "domain": ".google.com",
+      "path": "/",
+      "expires": 1771258968.920152,
+      "size": 62,
+      "httpOnly": true,
+      "secure": true,
+      "session": false,
+      "sameSite": "Lax",
+      "priority": "Medium",
+      "sameParty": false,
+      "sourceScheme": "Secure"
+    }
+  ],
+  "lstore": {
+    "sb_wiz.zpc.gws-wiz.": "{\"0\":[[\"dotonbori osaka fire\",0,[3,362,143],{\"zf\":33,\"zl\":8,\"zp\":{\"gs_ss\":\"1\"}}],[\"zhong kui black myth wukong\",0,[3,362,143],{\"zf\":33,\"zl\":8,\"zp\":{\"gs_ss\":\"1\"}}],[\"today wordle answers\",0,[3,362,143],{\"zf\":33,\"zl\":8,\"zp\":{\"gs_ss\":\"1\"}}],[\"where winds meet\",46,[3,362,143],{\"lm\":[],\"zf\":33,\"zh\":\"Where Winds Meet\",\"zi\":\"Video game\",\"zl\":8,\"zp\":{\"gs_ssp\":\"eJzj4tVP1zc0LItPyjKtrEo2YPQSKM9ILUpVKM_MSylWyE1NLQEAs9QLIQ\"},\"zs\":\"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAC0AUAMBIgACEQEDEQH/xAAbAAEAAwADAQAAAAAAAAAAAAAAAwQFAQIGB//EAC4QAAEDAwIEBAUFAAAAAAAAAAECAxEABBIFIRMxQVEUIoGhBkJhcbEjMsHh8P/EABgBAAMBAQAAAAAAAAAAAAAAAAABAgME/8QAHxEAAgICAgMBAAAAAAAAAAAAAAECEQMSMUFRYXEh/9oADAMBAAIRAxEAPwD7jSqmqOusWDzzCglbachkJG3OmlXLl5YNPvISlawdk8udTuttStXrsW6VlnU3Rrw0/hoLZROXUbTWg6820UhxUZGBt9JojNSuugcWuSSlV03turApXIXEeU9TArg31uFBOSiTOwQTyMHp3p2iSzSqvj7YZysjCZ8p6GD03qdp1LyMkZRMbpI/NOwO9KUoA8/rFrqfhbt5d8kMYk8II+XtNUWbrUbO1tUsquFtKaSuU24KUg9J6n1r0OtgnR72OfAWfasjUmDcfDFgUJnFLaoI3jH+648mOpNxb48nTCdxSa7IW7p0643dqs7sr4XDKC1BVtz51tXOV9a8Nba7dRIKeKR68j2ms1lEfHL6o2NnPukVr6kwu4t8WtnAoFJ9j7E1piTp/SMjX4Vk2TaUqQHW8VvJWBnHk5gD3qPwgbU2oPM4AGMnSNiqRuOdSs2LjUbTi+CN/kAIH5qFrT7hpKZSHAAg4kjoZI/3eta9GZIqzBKxxms3krxBX3VII9O1XLUBhpSHFoBSfNCyYn71TYsn23WjgkQQVmQREkxETInpXN3YOvPPupURkUwmdlQBz+29AF/xDG/6ze3PzDaoXNRt23MCVE9ClJIPXaqZsrgoUnDfiZDzJ5ZT2/M1OWlJubDIRgFzy7fSnbFSLrzYdaW2r9q0lJ+xoG0BsN4jEAACO1d6VVCKCbEjW3L/AKKtkteuRJ/ir9KUkkuBt2KUpTEKUpQAp9aUoA//2Q==\"}],[\"sats\",0,[3,362,143],{\"zf\":33,\"zl\":8,\"zp\":{\"gs_ss\":\"1\"}}],[\"hyflux olivia lum\",0,[3,362,143],{\"zf\":33,\"zl\":8,\"zp\":{\"gs_ss\":\"1\"}}],[\"is roblox shutting down\",0,[3,362,143],{\"zf\":33,\"zl\":8,\"zp\":{\"gs_ss\":\"1\"}}],[\"yusof ishak secondary school principal\",0,[3,362,143],{\"zf\":33,\"zl\":8,\"zp\":{\"gs_ss\":\"1\"}}],[\"anniversary film\",46,[3,362,143],{\"lm\":[],\"zf\":33,\"zh\":\"Anniversary\",\"zi\":\"Upcoming film\",\"zl\":8,\"zp\":{\"gs_ssp\":\"eJzj4tVP1zc0LLTMMC7OzrE0YPQSSMzLyyxLLSpOLKpUSMvMyQUArW4LDA\"},\"zs\":\"data:image/jpeg;base64,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\"}],[\"chatgpt subscription plan india\",0,[3,362,143],{\"zf\":33,\"zl\":8,\"zp\":{\"gs_ss\":\"1\"}}]],\"1\":{\"ag\":{\"a\":{\"8\":[\"Trending searches\"]}},\"av\":\"7906348049843701326\",\"q\":\"4HReBmXHkB6L4yn4Qjq39BYfLp4\"}}"
+  },
+  "sstore": {
+    "_c;;i": "p:*|l:9007199254740991_4",
+    "hsb;;1755706968545": "p:*|l:3_{\"state\":null,\"url\":\"/\",\"metadata\":{\"entryId\":1755706968544,\"pushId\":1755706968545,\"stackId\":1755706968546,\"stackIndex\":0}}",
+    "hsb;;1755706968546": "p:*|l:2_[1755706968545]"
+  }
+}

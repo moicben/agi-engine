@@ -163,3 +163,19 @@ npm i
 cd project/
 npm i
 exit
+pm2
+npm run dev
+cat tools/puppeteer/client.js 
+npm run dev
+ls
+ls assets/
+node tests/puppeteer-profile.js 
+node tests/puppeteer-profile.js 
+cd ls
+ls
+cd /usr/bin/
+ls
+cd google-chrome
+ls
+exec google-chrome
+exec google-chrome

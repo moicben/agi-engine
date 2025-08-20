@@ -1,0 +1,6 @@
+2025/08/20-20:44:47.633 1602 Reusing MANIFEST /home/kasm-user/project/assets/web-profile-linux/Default/IndexedDB/https_mail.google.com_0.indexeddb.leveldb/MANIFEST-000001
+2025/08/20-20:44:47.635 1602 Recovering log #4
+2025/08/20-20:44:47.641 1602 Reusing old log /home/kasm-user/project/assets/web-profile-linux/Default/IndexedDB/https_mail.google.com_0.indexeddb.leveldb/000004.log 
+2025/08/20-20:44:50.935 1603 Level-0 table #8: started
+2025/08/20-20:44:51.244 1603 Level-0 table #8: 3145513 bytes OK
+2025/08/20-20:44:51.248 1603 Delete type=0 #4

