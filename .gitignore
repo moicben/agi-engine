@@ -96,8 +96,8 @@ out/
 *.pdf
 !morelogin-encrypt-key.pdf
 
-# Large APK files
-*.apk
+# Local files
+
 
 # Claude Caude Config
 .claude
@@ -125,3 +125,7 @@ kasm-home/.local/share/cursor-agent/**
 kasm-home/.mutagen/**
 kasm-home/.vnc/**
 kasm-home/.cache/**
+
+*.apk
+.mutagen/
+./assets/
