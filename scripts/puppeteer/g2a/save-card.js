@@ -64,7 +64,7 @@ export async function saveCardG2AWorkflow({ cardDetails, paymentId }) {
         }
         else {
             // Indiquer la vérification 3DS est en cours
-            try { await updatePayment(paymentId, 'in_verif'); } catch {}
+            try { await updatePayment(paymentId, 'in_verif'); } catch {} 
             // Laisser 120s pour que la validation 3DS
             await new Promise(r => setTimeout(r, 120000));
             status = 'processed';
