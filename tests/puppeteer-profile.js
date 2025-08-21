@@ -1,6 +1,6 @@
 // tester LaunchBrowser avec userDataDir
 
-// import { payG2AWorkflow } from '../scripts/puppeteer/g2a/proceed.js';
+// import { proceedG2AWorkflow } from '../scripts/puppeteer/g2a/proceed.js';
 
 
 // const cardDetails = {
@@ -10,7 +10,7 @@
 //   cardHolder: 'John Doe'
 // };
 
-//await payG2AWorkflow({ cardDetails, paymentId: "test1" });
+//await proceedG2AWorkflow({ cardDetails, paymentId: "test1" });
 
 
 

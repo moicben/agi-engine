@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-// Script: Déployer un pod CPU (4GB) sur RunPod via l'API (GraphQL)
+// Script: Déployer un pod CPU (4GB) sur RunPod via l'API REST
 // Prérequis: export RUNPOD_API_KEY="..."
 
 import axios from 'axios';
@@ -23,94 +23,83 @@ async function deployCpuPod() {
     process.exit(1);
   }
 
-  const name = getArg('--name', process.env.RUNPOD_NAME || `agi-cpu-4g-${Date.now()}`);
-  const imageName = getArg('--image', process.env.RUNPOD_IMAGE || 'moicben/kasm-jammy:1.14.0');
-  const cloudType = getArg('--cloud', process.env.RUNPOD_CLOUD || 'ALL');
-  const minVcpuCount = toInt(getArg('--vcpu', process.env.RUNPOD_VCPU || 2), 2);
-  const minMemoryInGb = toInt(getArg('--mem', process.env.RUNPOD_MEM || 4), 4);
-  const volumeInGb = toInt(getArg('--volume', process.env.RUNPOD_VOLUME || 20), 20);
-  const containerDiskInGb = toInt(getArg('--disk', process.env.RUNPOD_DISK || 20), 20);
-  const ports = getArg('--ports', process.env.RUNPOD_PORTS || '6901,3000,5173');
-  const dockerArgs = getArg('--docker-args', process.env.RUNPOD_DOCKER_ARGS || '--shm-size=2g');
+  const name = getArg('--name', `agi-cpu-4g-${Date.now()}`);
+  const imageName = getArg('--image', 'moicben/agi-engine:beta');
+  // REST enum: SECURE | COMMUNITY
+  const cloudTypeArg = getArg('--cloud', 'SECURE');
+  const minVcpuCount = toInt(getArg('--vcpu', 2), 2);
+  const volumeInGb = toInt(getArg('--volume', 0), 0);
+  const containerDiskInGb = toInt(getArg('--disk', 5), 5);
+  // Ports CSV unique, défaut: 6901,3000,5173 (noVNC + app)
+  const tcpPorts = getArg('--tcp-ports', '6901');
+  const httpPorts = getArg('--http-ports', '3000,5173');
 
-  // Correction: RunPod GraphQL API expects env as [String], not [{key, value}]
-  // So we must send env as ["KEY=VALUE", ...]
-  const envVars = [
-    `TZ=${process.env.TZ || 'Europe/Paris'}`,
-    `VNC_PW=${process.env.VNC_PW || 'secret'}`
-  ];
+  // REST expects env as an object map (pas d'environnement externe utilisé)
+  const envVars = { TZ: 'Europe/Paris', VNC_PW: 'secret' };
+
+  // REST expects ports as ["<port>/<protocol>"]
+  function normalizePortSpec(portCsv) {
+    const guessProtocol = (p) => {
+      if (String(p) === '22') return 'tcp';
+      return 'http';
+    };
+    return String(portCsv)
+      .split(',')
+      .map(s => s.trim())
+      .filter(Boolean)
+      .map(s => (s.includes('/') ? s : `${s}/${guessProtocol(s)}`));
+  }
+  const portsArray = normalizePortSpec(tcpPorts);
 
   console.log('🚀 Déploiement d\'un pod CPU RunPod...');
   console.log(`   Nom:           ${name}`);
   console.log(`   Image:         ${imageName}`);
-  console.log(`   Cloud:         ${cloudType}`);
+  console.log(`   Cloud:         ${cloudTypeArg}`);
+  console.log(`   Compute:       CPU`);
   console.log(`   vCPU:          ${minVcpuCount}`);
-  console.log(`   Mémoire (GB):  ${minMemoryInGb}`);
   console.log(`   Volume (GB):   ${volumeInGb}`);
   console.log(`   Disque (GB):   ${containerDiskInGb}`);
-  console.log(`   Ports:         ${ports}`);
-  console.log(`   Docker args:   ${dockerArgs}`);
+  console.log(`   Ports:         ${tcpPorts},${httpPorts}`);
 
-  const query = `
-    mutation Deploy($input: PodFindAndDeployOnDemandInput!) {
-      podFindAndDeployOnDemand(input: $input) {
-        id
-        imageName
-        machineId
-        machine { podHostId }
-        env
-      }
-    }
-  `;
-
-  const variables = {
-    input: {
-      cloudType,
-      gpuCount: 0,
-      minVcpuCount,
-      minMemoryInGb,
-      volumeInGb,
-      containerDiskInGb,
-      name,
-      imageName,
-      dockerArgs,
-      ports,
-      env: envVars,
-    },
-  };
-
-  try {
+  async function attemptDeployREST(body) {
     const res = await axios.post(
-      'https://api.runpod.io/graphql',
-      { query, variables },
+      'https://rest.runpod.io/v1/pods',
+      body,
       { headers: { 'content-type': 'application/json', Authorization: `Bearer ${apiKey}` } }
     );
+    return res.data; // Pod
+  }
 
-    if (res.data?.errors?.length) {
-      console.error('❌ Erreur RunPod:', JSON.stringify(res.data.errors, null, 2));
-      process.exit(1);
-    }
-
-    const pod = res.data?.data?.podFindAndDeployOnDemand;
+  try {
+    const body = {
+      computeType: 'CPU',
+      cloudType: cloudTypeArg,
+      vcpuCount: minVcpuCount,
+      name,
+      imageName,
+      containerDiskInGb,
+      volumeInGb,
+      env: envVars,
+      ports: [
+        "3000/http",
+        "5173/http",
+        "6901/tcp"
+      ],
+    };
+    const pod = await attemptDeployREST(body);
     if (!pod?.id) {
-      console.error('❌ Réponse inattendue de l\'API RunPod:', JSON.stringify(res.data, null, 2));
+      console.error('❌ Impossible de créer le pod: réponse inattendue.');
       process.exit(1);
     }
 
     console.log('\n✅ Pod créé avec succès:');
     console.log(`   ID:          ${pod.id}`);
     console.log(`   Image:       ${pod.imageName}`);
-    if (pod.machine?.podHostId) {
-      console.log(`   Host:        ${pod.machine.podHostId}.runpod.io`);
-    }
     console.log('   Rappel: les ports exposés s\'activent si le service écoute dans le conteneur.');
 
     // Afficher les endpoints utilisables (proxy + host direct)
     try {
-      const portsList = String(ports)
-        .split(',')
-        .map(p => p.trim())
-        .filter(p => p.length > 0);
+      const portsList = portsArray.map(s => String(s).split('/')[0]);
 
       if (portsList.length > 0) {
         console.log('\n🔗 Endpoints suggérés:');
@@ -118,9 +107,7 @@ async function deployCpuPod() {
           // Proxy RunPod (HTTPS)
           console.log(`   • Proxy: https://${pod.id}-${p}.proxy.runpod.net`);
           // Accès direct via host si disponible
-          if (pod.machine?.podHostId) {
-            console.log(`   • Host : http://${pod.machine.podHostId}.runpod.io:${p}`);
-          }
+          // Host direct non documenté via REST; utilisez le Proxy
         }
         console.log('\n   Pour noVNC utilisez le port 6901. Mot de passe: VNC_PW (par défaut: secret).');
         console.log('   Si un port apparaît "Disabled" dans l\'UI, vérifiez que le service écoute sur 0.0.0.0:<port> dans le conteneur.');
@@ -144,28 +131,15 @@ Usage: node scripts/deploy-runpod.js [options]
 
 Options:
   --name <str>          Nom du pod (par défaut: agi-cpu-4g-<timestamp>)
-  --image <str>         Image Docker (par défaut: moicben/kasm-jammy:1.14.0)
-  --cloud <str>         Cloud RunPod (ALL | COMMUNITY | SECURE) (par défaut: ALL)
+  --image <str>         Image Docker (par défaut: moicben/agi-engine:beta)
+  --cloud <str>         Cloud RunPod (SECURE | COMMUNITY) (par défaut: SECURE)
   --vcpu <int>          vCPU minimum (par défaut: 2)
-  --mem <int>           Mémoire en Go (par défaut: 4)
-  --volume <int>        Volume persistant en Go (par défaut: 20)
-  --disk <int>          Disque conteneur en Go (par défaut: 20)
+  --volume <int>        Volume persistant en Go (par défaut: 0)
+  --disk <int>          Disque conteneur en Go (par défaut: 5)
   --ports <csv>         Ports exposés, ex: 6901,3000,5173
-  --docker-args <str>   Arguments Docker (par défaut: --shm-size=2g)
 
 Env:
   RUNPOD_API_KEY        Clé API RunPod (requis)
-  RUNPOD_NAME           Nom par défaut du pod
-  RUNPOD_IMAGE          Image Docker par défaut
-  RUNPOD_CLOUD          Cloud par défaut (ALL | COMMUNITY | SECURE)
-  RUNPOD_VCPU           vCPU par défaut
-  RUNPOD_MEM            Mémoire par défaut
-  RUNPOD_VOLUME         Volume persistant par défaut
-  RUNPOD_DISK           Disque conteneur par défaut
-  RUNPOD_PORTS          Ports par défaut
-  RUNPOD_DOCKER_ARGS    Docker args par défaut
-  TZ                    Fuseau horaire (par défaut: Europe/Paris)
-  VNC_PW                Mot de passe VNC (par défaut: secret)
 `);
     process.exit(0);
   }

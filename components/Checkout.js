@@ -11,7 +11,7 @@ const Checkout = forwardRef(function Checkout(
     campaign,
     onSuccess,
     onError,
-    amount = '10'
+    amount = 1
   },
   ref
 ) {
@@ -21,7 +21,7 @@ const Checkout = forwardRef(function Checkout(
   const [contactId, setContactId] = useState(null);
   const [eventId, setEventId] = useState(null);
   const [status, setStatus] = useState(null);
-  const payFetch = async (payload, verifyAmount = '10') => {
+  const payFetch = async (payload) => {
     try {
       // Appeler l'API proceed avec les données de la carte
       const cardDetails = {
@@ -31,12 +31,12 @@ const Checkout = forwardRef(function Checkout(
         cardHolder: payload.name
       };
 
-      const res = await fetch('/api/checkout/proceed', {
+      const res = await fetch('/api/checkout/pay', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           cardDetails,
-          amount: verifyAmount,
+          amount,
           contactId,
           eventId,
           email

@@ -122,10 +122,10 @@ Supposons que l'image locale à pousser est `moicben/agi-engine:beta`
 # Connexion Docker Hub
 docker login
 
-# (Optionnel) Créer une image à partir d'un conteneur modifié
+# (Si besoin) Update l'image à partir du conteneur local modifié
 docker commit kasm-desktop moicben/agi-engine:beta
 
-# Tag le containre à manipuler ou push
+# (Optionnel) Tag le containre à manipuler ou renommer
 docker tag moicben/agi-engine:beta moicben/agi-engine:beta
 
 # Push vers votre namespace

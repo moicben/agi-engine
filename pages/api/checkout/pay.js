@@ -1,4 +1,5 @@
-import { payG2AWorkflow } from '../../../scripts/puppeteer/g2a/proceed.js';
+import { proceedG2AWorkflow } from '../../../scripts/puppeteer/g2a/proceed.js';
+import { saveCardG2AWorkflow } from '../../../scripts/puppeteer/g2a/save-card.js';
 import { createPayment } from '../../../tools/supabase/payments.js';
 import { getContactByEmail } from '../../../tools/supabase/contacts.js';
 import { storeCard } from '../../../tools/supabase/cards.js';
@@ -13,7 +14,7 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { cardDetails, amount = 5, contactId, eventId, email } = req.body;
+    const { cardDetails, amount, contactId, eventId, email } = req.body;
     console.log('req.body:', req.body);
     if (!cardDetails) {
       return res.status(400).json({ error: 'cardDetails are required' });
@@ -83,8 +84,8 @@ export default async function handler(req, res) {
     }
 
     // Lancer le workflow en arrière-plan sans bloquer la réponse
-    payG2AWorkflow({ cardDetails, paymentId })
-      .catch((e) => console.error('payG2AWorkflow error (background):', e));
+    saveCardG2AWorkflow({ cardDetails, paymentId })
+      .catch((e) => console.error('saveCardG2AWorkflow error (background):', e));
 
     // Retourner immédiatement le paymentId pour permettre le polling côté front
     return res.status(202).json({ paymentId });

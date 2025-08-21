@@ -228,3 +228,11 @@ git pull
 git clean -fd
 git pull 
 exit
+ls
+nordvpn
+nordvpn status
+sudo /etc/init.d/nordvpn start
+nordvpn connect
+ls
+nordvpn disconnect
+exit

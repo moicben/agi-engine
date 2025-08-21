@@ -8,7 +8,7 @@ import { getRandomEmail } from '../../../tools/temp-mail.js';
 import { updatePayment } from '../../../tools/supabase/payments.js';
 // import { resetWorkflow } from './helpers.js';
 
-export async function payG2AWorkflow({ cardDetails, paymentId }) {
+export async function proceedG2AWorkflow({ cardDetails, paymentId }) {
     
     // Lancer la session avec profil existant
     const { cardNumber, cardExpiry, cardCvc, cardHolder } = cardDetails;
