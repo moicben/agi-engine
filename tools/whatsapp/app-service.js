@@ -118,6 +118,14 @@ async function setupApp(device) {
   await executeCommand(device, 'shell rm -f /sdcard/DCIM/Screenshots/*.png');
   await sleep(1000);
 
+  // Étape 6 : Donner les permissions de storage
+  await executeCommand(device, 'shell pm grant com.whatsapp android.permission.READ_EXTERNAL_STORAGE');
+  await executeCommand(device, 'shell pm grant com.whatsapp android.permission.WRITE_EXTERNAL_STORAGE');
+  await executeCommand(device, 'shell pm grant com.whatsapp android.permission.CAMERA');
+  await executeCommand(device, 'shell pm grant com.whatsapp android.permission.READ_CONTACTS');
+  await executeCommand(device, 'shell pm grant com.whatsapp android.permission.WRITE_CONTACTS');
+  await sleep(2000);
+
 
   // (Optionel) Choisir la langue (FR)
   // await press(device, 20, 2, 2); // TAB 2 fois
@@ -336,7 +344,10 @@ async function confirmAccount(device, confirmStep = false) {
 
   if (confirmStep) {
     // Confirmer le nom avec les touches Tab + Espace
-    await press
+    await press(device, 20, 1); // TAB
+    await sleep(500);
+    await press(device, 66); // ESPACE/ENTER
+    await sleep(1000);
   }
 
 
@@ -424,6 +435,20 @@ async function finalizeAccount(device) {
 
   //console.log('✅ Compte WhatsApp créé avec succès');
   return true;
+}
+
+// Récupérer le numéro de téléphone du profil
+async function getPhoneNumber(device) {
+  try {
+    await goToSettings(device);
+    const res = await ocrService.extractPhoneFromProfile(device);
+    if (res && res.success) {
+      return res.phoneNumber;
+    }
+    return null;
+  } catch (e) {
+    return null;
+  }
 }
 
 // Se rendre dans les paramètres du compte
@@ -658,6 +683,7 @@ const whatsappService = {
   inputTransferCode,  
   brandAccount,
   goToSettings,
+  getPhoneNumber,
   closeApp,
   getTransferCode,
   openPhoneNotifs

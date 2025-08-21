@@ -154,11 +154,36 @@ async function getSettingsPosition(device) {
     }
 }
 
+// Vérifier si le numéro affiché appartient à WhatsApp (heuristique simple)
+async function isPhoneWhatsApp(imagePath) {
+    try {
+        const result = await extractRawTextFromImage(imagePath);
+        if (!result.success) return true; // par défaut, on considère valide pour ne pas bloquer l'envoi
+        const text = (result.text || '').toLowerCase();
+        const negatives = [
+            "not on whatsapp",
+            "isn't on whatsapp",
+            "isn\'t on whatsapp",
+            "not registered",
+            "not a whatsapp user",
+            "n'est pas sur whatsapp",
+            "pas sur whatsapp",
+            "doesn't have whatsapp",
+            "doesn\'t have whatsapp"
+        ];
+        if (negatives.some(k => text.includes(k))) return false;
+        return true;
+    } catch (e) {
+        return true;
+    }
+}
+
 const ocrService = {
     checkSubmission,
     checkWhatsAppStatus,
     extractPhoneFromProfile,
     extractTransferCode,
-    getSettingsPosition
+    getSettingsPosition,
+    isPhoneWhatsApp
 }
 export { ocrService };

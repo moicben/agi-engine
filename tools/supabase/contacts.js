@@ -46,6 +46,172 @@ export async function getContactByEmail(email) {
     return data;
 }
 
+// === Helpers génériques réutilisables pour tout le projet ===
+// Normaliser un numéro FR: enlève espaces/ponctuation, convertit +33/33 en 0, valide forme 0XXXXXXXXX
+export function normalizePhone(phone) {
+  if (!phone) return phone;
+  let normalized = String(phone).replace(/[\s.\-()]/g, '');
+  if (normalized.startsWith('+33')) normalized = '0' + normalized.substring(3);
+  if (normalized.startsWith('33') && normalized.length === 11) normalized = '0' + normalized.substring(2);
+  return normalized;
+}
+
+// Chercher un contact par téléphone
+export async function getContactByPhone(phone) {
+  const normalized = normalizePhone(phone);
+  const { data } = await supabase
+    .from('contacts')
+    .select('*')
+    .eq('phone', normalized)
+    .limit(1)
+    .maybeSingle();
+  return data;
+}
+
+// Calcul de score qualité inspiré des besoins du scraping
+function calculateQualityScoreForLead(lead) {
+  let score = 0;
+  if (lead?.phone) score += 20;
+  if (lead?.first_name) score += 15;
+  if (lead?.last_name) score += 15;
+  if (lead?.company) score += 20;
+  if (lead?.title) score += 15;
+  if (lead?.email) score += 15;
+  return Math.min(score, 100);
+}
+
+// Merge des données contact existantes avec de nouvelles infos lead (champ non vide > vide)
+function mergeContactData(existing, incoming) {
+  const merged = { ...existing };
+
+  const overwriteIfBetter = (field) => {
+    if (incoming[field] && (!existing[field] || String(incoming[field]).length > String(existing[field] || '').length)) {
+      merged[field] = incoming[field];
+    }
+  };
+
+  // Champs classiques potentiels dans la table contacts
+  ['name', 'first_name', 'last_name', 'company', 'title', 'email', 'city', 'source_type', 'source_platform', 'source_title', 'source_description', 'source_url', 'source_query', 'status']
+    .forEach(overwriteIfBetter);
+
+  // Merge des métadonnées additionnelles (JSON)
+  const existingAdditional = existing?.additional_data || {};
+  const incomingAdditional = incoming?.additional_data || {};
+  merged.additional_data = { ...existingAdditional, ...incomingAdditional };
+
+  // Qualité
+  const newScore = calculateQualityScoreForLead({ ...existing, ...incoming });
+  if (newScore > (existing?.quality_score || 0)) {
+    merged.quality_score = newScore;
+  }
+
+  return merged;
+}
+
+function shallowEqual(objA, objB) {
+  const a = objA || {};
+  const b = objB || {};
+  const aKeys = Object.keys(a);
+  const bKeys = Object.keys(b);
+  if (aKeys.length !== bKeys.length) return false;
+  for (const k of aKeys) {
+    const av = a[k];
+    const bv = b[k];
+    if (typeof av === 'object' && typeof bv === 'object') {
+      if (JSON.stringify(av) !== JSON.stringify(bv)) return false;
+    } else if (av !== bv) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// Upsert d'un lead (scraper, autres sources): identifie par téléphone puis email, ne requiert pas l'email
+// Retourne { success, action: 'created'|'updated'|'duplicate', lead, message }
+export async function upsertLeadContact(leadData, verbose = false) {
+  const now = new Date().toISOString();
+
+  // Construire un payload de base à partir du lead
+  const normalizedPhone = leadData?.phone ? normalizePhone(leadData.phone) : null;
+  const fullName = leadData?.name || [leadData?.first_name, leadData?.last_name].filter(Boolean).join(' ') || null;
+
+  const basePayload = {
+    name: fullName,
+    email: leadData?.email || null,
+    phone: normalizedPhone,
+    company: leadData?.company || null,
+    title: leadData?.title || null,
+    city: leadData?.city || null,
+    source_type: leadData?.source_type || null,
+    source_platform: leadData?.source_platform || null,
+    source_title: leadData?.source_title || null,
+    source_description: leadData?.source_description || null,
+    source_url: leadData?.source_url || null,
+    source_query: leadData?.source_query || leadData?.source_term || null,
+    status: leadData?.status || 'new',
+    quality_score: calculateQualityScoreForLead({ ...leadData, phone: normalizedPhone }),
+    additional_data: {
+      ...(leadData?.additional_data || {}),
+    }
+  };
+
+  // 1) Rechercher existant par téléphone puis email
+  let existing = null;
+  if (normalizedPhone) {
+    existing = await getContactByPhone(normalizedPhone);
+  }
+  if (!existing && basePayload.email) {
+    existing = await getContactByEmail(basePayload.email);
+  }
+
+  if (existing) {
+    const merged = mergeContactData(existing, basePayload);
+    // Enlever id et created_at de l'objet à mettre à jour
+    const { id } = existing;
+    const updateData = { ...merged, updated_at: now };
+    delete updateData.id;
+    delete updateData.created_at;
+
+    // Déterminer s'il y a un changement
+    const compareA = { ...existing };
+    const compareB = { ...existing, ...updateData };
+    if (shallowEqual(compareA, compareB)) {
+      return { success: true, action: 'duplicate', lead: existing, message: 'Lead déjà existant' };
+    }
+
+    const { data: updData, error: updErr } = await supabase
+      .from('contacts')
+      .update(updateData)
+      .eq('id', id)
+      .select('*')
+      .single();
+    if (updErr) {
+      return { success: false, action: 'error', error: updErr.message };
+    }
+    if (verbose) console.log(`♻️  Contact mis à jour: ${normalizedPhone || basePayload.email}`);
+    return { success: true, action: 'updated', lead: updData };
+  }
+
+  // 2) Créer le contact
+  const insertData = {
+    ...basePayload,
+    phone: normalizedPhone,
+    created_at: now,
+    updated_at: now,
+  };
+
+  const { data: insData, error: insErr } = await supabase
+    .from('contacts')
+    .insert(insertData)
+    .select('*')
+    .single();
+  if (insErr) {
+    return { success: false, action: 'error', error: insErr.message };
+  }
+  if (verbose) console.log(`🆕 Contact créé: ${normalizedPhone || basePayload.email}`);
+  return { success: true, action: 'created', lead: insData };
+}
+
 // Upsert Contact par téléphone, avec incrément de compteurs et création facultative
 // de cartes (cards) et logins (logins). Retourne { contactId, action }.
 export async function storeContact({
@@ -57,15 +223,9 @@ export async function storeContact({
   eventId = null,
   eventType = '', // 'booking' | 'login' | 'verification_start' | ...
 }) {
-  // Require email for contact identification
-  console.log('storeContact validation:', { email, phone, emailTrimmed: email?.trim(), phoneTrimmed: phone?.trim() });
+  // storeContact reste orienté évènements (booking/login) et conserve la contrainte d'email requis
   const hasEmail = email && email.trim() !== '';
-  const hasPhone = phone && phone.trim() !== '';
-  console.log('hasEmail:', hasEmail, 'hasPhone:', hasPhone);
-  if (!hasEmail) {
-    console.log('Email is empty, throwing error');
-    throw new Error('email is required for contact upsert');
-  }
+  if (!hasEmail) throw new Error('email is required for contact upsert');
 
   const now = new Date().toISOString();
 

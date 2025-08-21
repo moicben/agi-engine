@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<map>
-    <boolean name="pref_use_phone_number_token_key" value="true" />
-    <string name="token_used_for_migration">rO0ABXNyABpjb20ud2hhdHNhcHAudXRpbC5MUlVDYWNoZQAAAAS2bEDpAgABSQAKY2FjaGVMaW1pdHhyABdqYXZhLnV0aWwuTGlua2VkSGFzaE1hcDTATlwQbMD7AgABWgALYWNjZXNzT3JkZXJ4cgARamF2YS51dGlsLkhhc2hNYXAFB9rBwxZg0QMAAkYACmxvYWRGYWN0b3JJAAl0aHJlc2hvbGR4cD9AAAAAAAAMdwgAAAAQAAAAAXQADDE6MjM2MjA2MjQ2OXVyAAJbQqzzF/gGCFTgAgAAeHAAAAAqAAKNJHsSBTtOIR5rF8fIEoylZaJYcV8uIkP+xbCp8IokeRWDUCGTHBIWeAEAAAAF</string>
-    <string name="new_user_temp_push_name"></string>
-    <int name="pref_wa_old_eligible" value="1" />
-    <string name="token_used_during_reg">2FY4zmetslJyHEq4QPL8sGHZlGY</string>
-    <string name="passkey_create_challenge">{&quot;attestation&quot;:&quot;none&quot;,&quot;authenticatorSelection&quot;:{&quot;authenticatorAttachment&quot;:&quot;platform&quot;,&quot;requireResidentKey&quot;:true,&quot;residentKey&quot;:&quot;required&quot;,&quot;userVerification&quot;:&quot;required&quot;},&quot;challenge&quot;:&quot;ynqy5xkfKipikOJLJ-281YyvMFTGDY5brajq8sIzWTE&quot;,&quot;excludeCredentials&quot;:[],&quot;extensions&quot;:{&quot;credProps&quot;:true,&quot;prf&quot;:{},&quot;uvm&quot;:true},&quot;pubKeyCredParams&quot;:[{&quot;alg&quot;:-7,&quot;type&quot;:&quot;public-key&quot;},{&quot;alg&quot;:-257,&quot;type&quot;:&quot;public-key&quot;}],&quot;rp&quot;:{&quot;id&quot;:&quot;whatsapp.com&quot;,&quot;name&quot;:&quot;WhatsApp&quot;},&quot;timeout&quot;:600000,&quot;user&quot;:{&quot;displayName&quot;:&quot;*******2469&quot;,&quot;id&quot;:&quot;imWNjtsWLvm51WnBWEQhug&quot;,&quot;name&quot;:&quot;*******2469&quot;}}</string>
-</map>

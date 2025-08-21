@@ -190,4 +190,4 @@ async function sendImage(device, phone) {
 
 // Export du service
 export { sendMessage, sendImage };
-export const getSenderService = () => ({ sendMessage, sendImage });
+export const senderService = { sendMessage, sendImage };

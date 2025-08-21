@@ -167,7 +167,16 @@ function getDevice(device) {
 // Se connecter à un device
 async function connectDevice(device) {
   try {
-      // console.log(`🔌 Connexion au device ${device}...`);
+      //  console.log(`🔌 Connexion au device ${device}...`);
+
+       // Désactiver le clavier et la barre de navigation du device
+       await execAsync(`adb -s ${device} shell settings put system show_ime_with_hard_keyboard 0`);
+       await execAsync(`adb -s ${device} shell settings put system show_ime_with_full_screen_intent 0`);
+       await execAsync(`adb -s ${device} shell settings put system show_navigation_bar 0`);
+       await execAsync(`adb -s ${device} shell settings put system show_navigation_bar_with_hotkeys 0`);
+       await execAsync(`adb -s ${device} shell "settings put global policy_control immersive.navigation=*"`);
+
+
       
       // Les émulateurs sont généralement déjà connectés, pas besoin de adb connect
       if (device.match(/^(emulator|émulateur)-\d+$/i)) {

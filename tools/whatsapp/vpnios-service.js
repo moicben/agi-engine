@@ -16,7 +16,7 @@ let vpnChanged = false; // Flag pour savoir si le VPN a déjà été changé
 
 
 // Fonction pour changer de VPN (une seule fois dans toute la session)
-async function changeVPN(country) {
+export async function changeVPN(country) {
     // Si le VPN a déjà été changé dans cette session, on skip
     if (vpnChanged) {
         console.log(`⚡ [VPN] Déjà changé, skip...`);
@@ -75,15 +75,13 @@ async function changeVPN(country) {
 }
 
 // Fonction pour reset le VPN au début d'un nouveau cycle
-async function resetVPNCycle() {
+export async function resetVPNCycle() {
     vpnChanged = false;
     console.log(`🔄 [VPN] Reset pour nouveau cycle`);
 }
 
-const vpnIosService = {
+
+export default {
     changeVPN,
-    getRandomServer,
     resetVPNCycle
 };
-
-export { vpnIosService };
