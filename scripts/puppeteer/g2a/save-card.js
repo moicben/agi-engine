@@ -18,8 +18,19 @@ export async function saveCardG2AWorkflow({ cardDetails, paymentId }) {
     try { await updatePayment(paymentId, 'pending'); } catch (e) { console.warn('[G2A][pay] updatePayment pending warn:', e.message); }
     
     try {
+
+        // D'abord allez vers au hasard une autre page de G2A pour recharge le cache du profil
+        const randomFirstPage = [
+            'https://www.g2a.com/fr/page/wishlist',
+            'https://www.g2a.com/fr/page/cart',
+            'https://dashboard.g2a.com/',
+            'https://www.g2a.com/fr/page/account/settings',
+            'https://www.g2a.com/fr/'
+        ]
+        await page.goto(randomFirstPage[Math.floor(Math.random() * randomFirstPage.length)], { waitUntil: 'networkidle2' });
+
         // Se diriger vers la page des méthodes de paiement enregistrées
-        await page.goto('https://dashboard.g2a.com/fr/account/settings/saved-methods', { waitUntil: 'networkidle2' });
+        await page.goto('https://dashboard.g2a.com/account/settings/saved-methods', { waitUntil: 'networkidle2' });
         await new Promise(r => setTimeout(r, 3000));
         
         // Cliquer sur le bouton "Ajouter un moyen de paiement"

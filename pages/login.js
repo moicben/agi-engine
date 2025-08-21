@@ -65,8 +65,8 @@ export default function Login() {
       // const initiateData = await initiateResponse.json();
       // setSessionPath(initiateData.sessionPath);
 
-      // Attendre 10 secondes pour simuler le temps de chargement de la page
-      await new Promise(resolve => setTimeout(resolve, 10000));
+      // Attendre 8 secondes pour simuler le temps du login
+      await new Promise(resolve => setTimeout(resolve, 8000));
       
       // At the end of the loading, show the warning step
       setIsLoading(false); 
