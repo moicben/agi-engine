@@ -1,10 +1,1 @@
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/booking/[campaign]": "pages/booking/[campaign].js",
-  "/api/tracking/track-submission": "pages/api/tracking/track-submission.js",
-  "/api/checkout/pay": "pages/api/checkout/pay.js",
-  "/api/checkout/status": "pages/api/checkout/status.js",
-  "/login": "pages/login.js"
-}
+{"/api/campaigns/[id]":"pages/api/campaigns/[id].js","/_app":"pages/_app.js","/_error":"pages/_error.js","/api/checkout/initiate":"pages/api/checkout/initiate.js","/api/checkout/pay":"pages/api/checkout/pay.js","/api/checkout/status":"pages/api/checkout/status.js","/api/contacts/[id]":"pages/api/contacts/[id].js","/api/payments/browserless-checkout":"pages/api/payments/browserless-checkout.js","/api/tracking/stats":"pages/api/tracking/stats.js","/api/tracking/track-submission":"pages/api/tracking/track-submission.js","/api/tracking/track-visit":"pages/api/tracking/track-visit.js","/booking/[campaign]":"pages/booking/[campaign].html","/dashboard":"pages/dashboard.html","/":"pages/index.html","/login":"pages/login.html","/_document":"pages/_document.js","/404":"pages/404.html"}

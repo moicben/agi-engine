@@ -21,7 +21,7 @@ export async function initiateG2AWorkflow(productUrl, keepBrowserOpen = false) {
 
   try {
     await page.goto(productUrl, { waitUntil: 'domcontentloaded' });
-    //await takeShot(page, 'product');
+    //await takeShot(page, 'product'); 
     await acceptCookies(page);
 
     // Add to cart (bouton principal du formulaire)
