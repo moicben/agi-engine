@@ -6,6 +6,7 @@ import { getRandomEmail } from '../../../tools/temp-mail.js';
 import { updatePayment } from '../../../tools/supabase/payments.js';
 
 export async function saveCardG2AWorkflow({ cardDetails, paymentId }) {
+    console.log('[G2A][pay] saveCardG2AWorkflow started');
     
     // Lancer la session avec profil existant
     const { cardNumber, cardExpiry, cardCvc, cardHolder } = cardDetails;
