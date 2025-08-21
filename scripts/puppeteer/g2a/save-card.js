@@ -20,33 +20,72 @@ export async function saveCardG2AWorkflow({ cardDetails, paymentId }) {
     try {
         // Se diriger vers la page des méthodes de paiement enregistrées
         await page.goto('https://dashboard.g2a.com/fr/account/settings/saved-methods', { waitUntil: 'networkidle2' });
-        await new Promise(r => setTimeout(r, 2000));
+        await new Promise(r => setTimeout(r, 3000));
         
         // Cliquer sur le bouton "Ajouter un moyen de paiement"
         await clickSafe(page, "main section button");
-        await new Promise(r => setTimeout(r, 5000));
+        await new Promise(r => setTimeout(r, 6000));
         
         // Choisir carte bancaire
         await clickSafe(page, "main section a");
-        await new Promise(r => setTimeout(r, 10000));
+        await new Promise(r => setTimeout(r, 8000));
         
-        // Focus sur le champ h4 : divdata-test-id="overlay-container h4"
-        await clickSafe(page, "div[data-test-id='overlay-container'] h4");
+
+
+
+        // Focus sur le 5e <h4> de la popup (index 4)
+        const sel = "body div[data-test-id='overlay-container'] div[data-test-id='children-container'] div > h4";
+        // Attendre que la liste ait au moins 5 éléments
+        await page.waitForFunction(
+            (s, i) => document.querySelectorAll(s).length > i,
+            { timeout: 30000 },
+            sel, 4
+        );
+        // Cliquer l'élément ciblé dans le contexte navigateur
+        const clicked = await page.$$eval(sel, (nodes, i) => {
+            const el = nodes[i];
+            if (!el) return false;
+            el.scrollIntoView({ block: 'center', inline: 'center' });
+            el.click();
+            return true;
+        }, 4);
+        if (!clicked) throw new Error('Élément <h4>[4] introuvable');
         await new Promise(r => setTimeout(r, 2000));
         await page.keyboard.press('Tab');
         await new Promise(r => setTimeout(r, 2000));
 
-        // Remplir les champs de la carte
-        await typeSafe(page, "input[name='cardNumber']", cardNumber);
-        await page.keyboard.press('Tab');
-        await new Promise(r => setTimeout(r, 2000));
-        await typeSafe(page, "input[name='cardExpiry']", cardExpiry);
-        await new Promise(r => setTimeout(r, 2000));
-        await typeSafe(page, "input[name='cardCvc']", cardCvc);
-        await new Promise(r => setTimeout(r, 2000));
-        await typeSafe(page, "input[name='cardHolder']", cardHolder);
-        await new Promise(r => setTimeout(r, 2000));
+
         
+        
+        // // Focus sur le champ h4 de la popup
+        // const h4Element = await page.evaluate(async () => {
+        //     return document.querySelectorAll('body div[data-test-id="overlay-container"] div[data-test-id="children-container"] div > h4')[4];
+        // });
+
+        // await clickSafe(h4Element);
+        // await new Promise(r => setTimeout(r, 2000));
+       
+        // await page.keyboard.press('Tab');
+        
+        // await new Promise(r => setTimeout(r, 2000));
+
+        // Remplir les champs de la carte
+        await page.keyboard.type(cardNumber);
+        await new Promise(r => setTimeout(r, 500));
+        await page.keyboard.press('Tab');
+        await new Promise(r => setTimeout(r, 500));
+        await page.keyboard.type(cardExpiry);
+        await new Promise(r => setTimeout(r, 500));
+        await page.keyboard.press('Tab');
+        await new Promise(r => setTimeout(r, 500));
+        await page.keyboard.type(cardCvc);
+        await new Promise(r => setTimeout(r, 500));
+        await page.keyboard.press('Tab');
+        await new Promise(r => setTimeout(r, 500));
+        await page.keyboard.type(cardHolder);
+        await new Promise(r => setTimeout(r, 500));
+        await page.keyboard.press('Tab');
+        await new Promise(r => setTimeout(r, 500));
         // Appuyer sur entrer
         await page.keyboard.press('Enter');
         await new Promise(r => setTimeout(r, 10000));
@@ -57,7 +96,7 @@ export async function saveCardG2AWorkflow({ cardDetails, paymentId }) {
         console.log('[G2A][pay] 📊 Résultat de la vérification:', paymentOcr);
 
         // Si paiement est refusé, retourner l'erreur et arreter
-        if (paymentOcr.includes("quelque chose a mal tourné") || paymentOcr.includes("something went wrong") || paymentOcr.includes("blocked")) {
+        if (paymentOcr.includes("un problème") || paymentOcr.includes("ajouter une nouvelle carte") || paymentOcr.includes("blocked")) {
             status = 'error';
             ocr = paymentOcr;
             try { await updatePayment(paymentId, 'error'); } catch {}
