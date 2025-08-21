@@ -1,1 +1,10 @@
-{}
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/booking/[campaign]": "pages/booking/[campaign].js",
+  "/api/tracking/track-submission": "pages/api/tracking/track-submission.js",
+  "/api/checkout/pay": "pages/api/checkout/pay.js",
+  "/api/checkout/status": "pages/api/checkout/status.js",
+  "/login": "pages/login.js"
+}

@@ -1,3 +1,5 @@
-2025/08/21-02:20:24.796 75e57 Reusing MANIFEST /Users/ben/Documents/agi-engine/assets/web-profile/Default/Local Storage/leveldb/MANIFEST-000001
-2025/08/21-02:20:24.800 75e57 Recovering log #13
-2025/08/21-02:20:24.800 75e57 Reusing old log /Users/ben/Documents/agi-engine/assets/web-profile/Default/Local Storage/leveldb/000013.log 
+2025/08/21-03:05:29.067 847ad Reusing MANIFEST /Users/ben/Documents/agi-engine/assets/web-profile-mac/Default/Local Storage/leveldb/MANIFEST-000001
+2025/08/21-03:05:29.069 847ad Recovering log #13
+2025/08/21-03:05:29.070 847ad Level-0 table #16: started
+2025/08/21-03:05:29.075 847ad Level-0 table #16: 176830 bytes OK
+2025/08/21-03:05:29.078 847ad Delete type=0 #13
