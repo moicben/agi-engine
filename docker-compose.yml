@@ -14,4 +14,9 @@ services:
     volumes:
       - ./kasm-home:/home/kasm-user     # persist user home (installed tools, configs)
       - ./:/home/kasm-user/project      # mount your project into the desktop
+    cap_add:
+      - SYS_ADMIN
+      - NET_ADMIN
+    security_opt:
+      - apparmor:unconfined
     restart: unless-stopped

@@ -1,6 +1,14 @@
 ### Mémo Docker/Mutagen pour agi-engine
-
 ---
+
+### NordVPN
+```bash
+# Démarrer après installation :
+sudo /etc/init.d/nordvpn start
+
+
+```
+
 
 ### Conteneurs et synchronisation
 
@@ -118,7 +126,7 @@ docker login
 docker commit kasm-desktop moicben/agi-engine:beta
 
 # Tag le containre à manipuler ou push
-docker tag moicben/agi-egine:
+docker tag moicben/agi-engine:beta moicben/agi-engine:beta
 
 # Push vers votre namespace
 docker push moicben/agi-egine:beta
