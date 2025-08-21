@@ -130,6 +130,4 @@ kasm-home/.cache/**
 # Local files (for local testing)
 *.apk
 .mutagen/
-./assets/
-/assets/web-profile-linux/
-/assets/web-profile-mac/
+/assets/
