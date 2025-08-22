@@ -5,6 +5,7 @@ module.exports = {
       cwd: "/home/kasm-user/project",
       script: "npm",
       args: "start -- -p 3000 -H 0.0.0.0",
+      pre_start: "npm run build:prod",
       env: {
         NODE_ENV: "production",
         PORT: 3000,

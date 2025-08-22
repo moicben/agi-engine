@@ -92,10 +92,5 @@ export  const config = {
         sessionIdDefault: 'session-test-1',
     },
     // Paramètres SMS (routing local/serveur)
-    sms: {
-        remote: {
-            enabled: process.env.SMS_REMOTE_ENABLED === 'true',
-            baseURL: process.env.SMS_REMOTE_BASE_URL,
-        },
-    },
+    
 }

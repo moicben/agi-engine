@@ -8,7 +8,6 @@ import 'dotenv/config';
 import https from "https";
 import { execSync } from "node:child_process";
 import dns from "node:dns";
-import { config } from '../../core/config.js';
 
 const SMS_API_URL = 'https://api.sms-activate.org/stubs/handler_api.php';
 const activations = new Map();
@@ -23,12 +22,20 @@ const apiCall = async (params) => {
 const findActivation = (phoneNumber) => [...activations.values()].find(a => a.phone === phoneNumber.replace('+', ''));
 
 export async function getPhoneNumber(countryCode, retries = 5, byPassVpn = true) {
-  const useRemote = !!(config?.sms?.remote?.enabled && config?.sms?.remote?.baseURL);
+  const remoteEnabled = process.env.SMS_REMOTE_ENABLED === 'true';
+  const remoteBaseURL = process.env.SMS_REMOTE_BASE_URL;
+  const useRemote = !!(remoteEnabled && remoteBaseURL);
 
   if (useRemote) {
     try {
-      const baseURL = String(config.sms.remote.baseURL).replace(/\/$/, '');
-      const { data } = await axios.get(`${baseURL}/api/sms/get-number`, { params: { country: countryCode, bypass: byPassVpn ? 'true' : 'false' }, timeout: 10000 });
+      const baseURL = String(remoteBaseURL).replace(/\/$/, '');
+      const insecure = process.env.SMS_REMOTE_INSECURE === 'true';
+      const httpsAgent = insecure ? new https.Agent({ rejectUnauthorized: false }) : undefined;
+      const { data } = await axios.get(`${baseURL}/api/sms/get-number`, {
+        params: { country: countryCode, bypass: byPassVpn ? 'true' : 'false' },
+        timeout: 10000,
+        httpsAgent,
+      });
       if (data && data.id && data.phone) {
         activations.set(data.id, { id: data.id, phone: data.phone.replace('+', ''), country: countryCode });
         console.log(`📱 ${data.phone} (${countryCode}) via remote`);
@@ -38,7 +45,12 @@ export async function getPhoneNumber(countryCode, retries = 5, byPassVpn = true)
     } catch (error) {
       if (retries > 0) {
         const delay = 5;
-        console.log(`🔄 Remote error ${error.message} - Retry ${delay}s...`);
+        const status = error?.response?.status;
+        const statusText = error?.response?.statusText;
+        const code = error?.code;
+        const respDataRaw = error?.response?.data;
+        const respData = typeof respDataRaw === 'string' ? respDataRaw : (respDataRaw ? JSON.stringify(respDataRaw) : '');
+        console.log(`🔄 Remote error ${status || ''} ${statusText || ''} ${code || ''} ${error.message || ''} ${respData ? `- ${respData}` : ''} (baseURL=${remoteBaseURL || ''}) - Retry ${delay}s...`);
         await new Promise(r => setTimeout(r, delay * 1000));
         return getPhoneNumber(countryCode, retries - 1, byPassVpn);
       }
@@ -83,10 +95,14 @@ export async function requestSMS(countryCode, phoneNumber) {
   const activation = findActivation(phoneNumber);
   if (!activation) throw new Error(`Activation non trouvée pour ${phoneNumber}`);
 
-  const useRemote = !!(config?.sms?.remote?.enabled && config?.sms?.remote?.baseURL);
+  const remoteEnabled = process.env.SMS_REMOTE_ENABLED === 'true';
+  const remoteBaseURL = process.env.SMS_REMOTE_BASE_URL;
+  const useRemote = !!(remoteEnabled && remoteBaseURL);
   if (useRemote) {
-    const baseURL = String(config.sms.remote.baseURL).replace(/\/$/, '');
-    await axios.post(`${baseURL}/api/sms/request`, { id: activation.id }, { timeout: 10000 });
+    const baseURL = String(remoteBaseURL).replace(/\/$/, '');
+    const insecure = process.env.SMS_REMOTE_INSECURE === 'true';
+    const httpsAgent = insecure ? new https.Agent({ rejectUnauthorized: false }) : undefined;
+    await axios.post(`${baseURL}/api/sms/request`, { id: activation.id }, { timeout: 10000, httpsAgent });
     return;
   }
 
@@ -97,14 +113,18 @@ export async function waitForSMS(phoneNumber, timeout = 45000) {
   const activation = findActivation(phoneNumber);
   if (!activation) throw new Error('Activation non trouvée');
 
-  const useRemote = !!(config?.sms?.remote?.enabled && config?.sms?.remote?.baseURL);
+  const remoteEnabled = process.env.SMS_REMOTE_ENABLED === 'true';
+  const remoteBaseURL = process.env.SMS_REMOTE_BASE_URL;
+  const useRemote = !!(remoteEnabled && remoteBaseURL);
 
   console.log(`⏳ Attente SMS ${phoneNumber}...`);
   const start = Date.now();
 
   if (useRemote) {
-    const baseURL = String(config.sms.remote.baseURL).replace(/\/$/, '');
-    const { data } = await axios.get(`${baseURL}/api/sms/wait`, { params: { id: activation.id, timeout }, timeout: Math.max(timeout + 2000, 10000) });
+    const baseURL = String(remoteBaseURL).replace(/\/$/, '');
+    const insecure = process.env.SMS_REMOTE_INSECURE === 'true';
+    const httpsAgent = insecure ? new https.Agent({ rejectUnauthorized: false }) : undefined;
+    const { data } = await axios.get(`${baseURL}/api/sms/wait`, { params: { id: activation.id, timeout }, timeout: Math.max(timeout + 2000, 10000), httpsAgent });
     if (data && data.code) {
       const code = String(data.code);
       activations.delete(activation.id);
@@ -133,11 +153,15 @@ export async function waitForSMS(phoneNumber, timeout = 45000) {
 }
 
 export async function cancelAllActivations() {
-  const useRemote = !!(config?.sms?.remote?.enabled && config?.sms?.remote?.baseURL);
+  const remoteEnabled = process.env.SMS_REMOTE_ENABLED === 'true';
+  const remoteBaseURL = process.env.SMS_REMOTE_BASE_URL;
+  const useRemote = !!(remoteEnabled && remoteBaseURL);
   const ids = [...activations.keys()];
   if (useRemote && ids.length > 0) {
-    const baseURL = String(config.sms.remote.baseURL).replace(/\/$/, '');
-    await axios.post(`${baseURL}/api/sms/cancel-all`, { ids }, { timeout: 15000 });
+    const baseURL = String(remoteBaseURL).replace(/\/$/, '');
+    const insecure = process.env.SMS_REMOTE_INSECURE === 'true';
+    const httpsAgent = insecure ? new https.Agent({ rejectUnauthorized: false }) : undefined;
+    await axios.post(`${baseURL}/api/sms/cancel-all`, { ids }, { timeout: 15000, httpsAgent });
   } else {
     for (const [id] of activations) await apiCall({ action: 'setStatus', id, status: 8 });
   }
