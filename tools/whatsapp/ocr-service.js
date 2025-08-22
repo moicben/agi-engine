@@ -164,6 +164,9 @@ async function isPhoneWhatsApp(imagePath, options = {}) {
             const result = await extractRawTextFromImage(imagePath);
             if (!result.success) return true; // permissif par défaut
             const text = (result.text || '').toLowerCase();
+            if (text.includes('due to spam') || text.includes('disabled due to spam') || text.includes('blocked for spam')) {
+                return 'spam';
+            }
             if (text.includes('today')) return true; // inscrit
             if (text.includes("isn't on" || "try again" || "not on" || "Couldn't")) return false; // non inscrit
             return true;
@@ -183,7 +186,10 @@ async function isPhoneWhatsApp(imagePath, options = {}) {
                 filename = await takeScreenshot(device, `send-check-${Date.now()}.png`);
                 const result = await extractRawTextFromImage(filename);
                 const text = (result?.text || '').toLowerCase();
-                console.log(`🔄 isPhoneWhatsApp refresh:`, text.slice(0, 120));
+                //console.log(`🔄 isPhoneWhatsApp refresh:`, text.slice(0, 120));
+                if (text.includes('due to spam') || text.includes('disabled due to spam') || text.includes('blocked for spam')) {
+                    return 'spam';
+                }
                 if (text.includes('®@ message')) return true; // inscrit
                 if (text.includes("isn't on")) return false; // non inscrit
             } catch (_) {

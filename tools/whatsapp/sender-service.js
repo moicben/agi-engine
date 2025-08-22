@@ -47,7 +47,7 @@ function selectRandomMessage(message) {
     if (typeof message === 'object') {
         const versions = Object.values(message);
         if (versions.length === 1) {
-            return versions[0];
+            return versions[0]; 
         }
         // Sélection aléatoire
         const randomIndex = Math.floor(Math.random() * versions.length);
@@ -85,6 +85,9 @@ async function sendMessage(device, phone, message, campaign_id) {
     const screenshotPath = await takeScreenshot(device, screenshotFilename);
     // Polling rapide jusqu'à 6s, 500ms interval, quitte tôt si verdict
     const phoneExists = await ocrService.isPhoneWhatsApp(screenshotPath, { device, maxMs: 6000, interval: 500 });
+    if (phoneExists === 'spam') {
+        return 'spam_blocked';
+    }
     //console.log('phoneExists', phoneExists);
 
     // Envoyer ou non le message
