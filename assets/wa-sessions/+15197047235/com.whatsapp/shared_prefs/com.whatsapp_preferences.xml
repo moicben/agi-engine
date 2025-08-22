@@ -1,11 +1,14 @@
 <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
 <map>
-    <set name="ab_offline_props:offline_exposure_hash_strings">
-        <string>1377|android_eula_animation_value_prop_prod_20</string>
-    </set>
-    <string name="server_props:hash">1e1547c3aa928cc0e9b8333ef9bcf7dfdc8b0efee5f81ddce6db57816deb73b8</string>
-    <string name="ab_props:hash_v2">[2,&quot;RLGGJhaIcmTmRl7+W5ZL1LI3IR5aLBEZVt4eVv7OnZsu0rL0BS9oRTSCdhSazB+Rj21JvettFCjOr4dTyKTjpw&quot;,&quot;Z9yc+fmC\/nDcHpkOWNV5gw&quot;,&quot;Q7Tjcw&quot;,&quot;wx5YPoa\/e5BVdQRDpRnj3Q&quot;]</string>
+    <string name="server_props:hash">c4a55c1dfc990c2e76c17e55af831f5a98d9a38dc76a418bb61a85e0b212acfd</string>
+    <string name="ab_props:hash_v2">[2,&quot;mk8Te50F5LPc7qBhxA3nv8K0rIs3aOLnRwK5utkErgfIbOlj+Ju8nj965gmFhxtSvn2bGA3tlBVvOdq0IsMvig&quot;,&quot;AhedswmsosmnWfF2KNPULg&quot;,&quot;WoqJpA&quot;,&quot;FzczLiFNSkdGEjT6NFM9vg&quot;]</string>
+    <string name="file_date">20250822</string>
+    <int name="file_index" value="2" />
+    <int name="two_factor_auth_email_set" value="2" />
     <set name="ab_offline_props:offline_exposure_strings">
         <string>android_eula_animation_value_prop_prod_20|android_eula_animation_experiment_prod_20|test</string>
+    </set>
+    <set name="ab_offline_props:offline_exposure_hash_strings">
+        <string>1377|android_eula_animation_value_prop_prod_20</string>
     </set>
 </map>

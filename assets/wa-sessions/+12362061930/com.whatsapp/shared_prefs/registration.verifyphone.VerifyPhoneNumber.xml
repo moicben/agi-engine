@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<map>
-    <int name="com.whatsapp.registration.VerifyPhoneNumber.verification_state" value="0" />
-    <long name="com.whatsapp.registration.VerifyPhoneNumber.send_sms_retry_time" value="1754616697898" />
-</map>

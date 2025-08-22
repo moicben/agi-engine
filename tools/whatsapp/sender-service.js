@@ -7,6 +7,7 @@
 import { tap, press, sleep, randomSleep } from './helpers.js';
 import { executeCommand, takeScreenshot } from './adb.js';
 import { ocrService } from './ocr-service.js';
+import { deviceService } from './device-service.js';
 
 const UI_ELEMENTS = {
     searhInput: { x: 540, y: 205 },
@@ -14,10 +15,10 @@ const UI_ELEMENTS = {
     imageInput: { x: 820, y: 1840 },
     galleryMode: { x: 270, y: 1450 },
     firstImage: { x: 120, y: 1200 },
-    sendButton: { x: 1020, y: 1840 },
+    sendButton: { x: 1020, y: 1808 },
     returnButton: { x: 30, y: 100 },
     preventNotWhatsApp: { x: 825, y: 1040 },
-    preventDisapear: { x: 550, y: 1250 }
+    preventDisapear: { x: 550, y: 1650 }
 }
 
 // Nettoyer le numéro du contact pour utilisation wa.me/
@@ -68,16 +69,22 @@ async function sendMessage(device, phone, message, campaign_id) {
     // Nettoyer le numéro du contact
     const phoneNumber = await phoneWaCleaner(phone);
 
+    //
+
+
+    // Connexion au device
+    await deviceService.connectDevice(device);
+
     // Ouvrir le numéro dans WhatsApp
     await executeCommand(device, `shell am start -a android.intent.action.VIEW -d "https://wa.me/${phoneNumber}"`);    
-    await sleep(3000);
+    await sleep(2000);
 
     // Vérifier si numéro enregistré avec OCR
     //console.log('📸 Capture de l\'écran de profil...');
     const screenshotFilename = `send-${Date.now()}.png`;
     const screenshotPath = await takeScreenshot(device, screenshotFilename);
-    await sleep(2000);
-    const phoneExists = await ocrService.isPhoneWhatsApp(screenshotPath);
+    // Polling rapide jusqu'à 6s, 500ms interval, quitte tôt si verdict
+    const phoneExists = await ocrService.isPhoneWhatsApp(screenshotPath, { device, maxMs: 6000, interval: 500 });
     //console.log('phoneExists', phoneExists);
 
     // Envoyer ou non le message
@@ -85,11 +92,11 @@ async function sendMessage(device, phone, message, campaign_id) {
 
         // Fermer la popup de notifications messages éphémères
         await tap(device, UI_ELEMENTS.preventDisapear);
-        await randomSleep(2000, 3000);
+        await randomSleep(1500, 2500);
 
         // Envoyer le message
         await tap(device, UI_ELEMENTS.messageInput);
-        await randomSleep(1000, 3000);
+        await randomSleep(1000, 2000);
         // Traiter les retours à la ligne multiples
         const messageParts = selectedMessage
             .replace(/\n{2,}/g, '\n\n')  // Remplacer 3+ \n par seulement 2
@@ -148,6 +155,10 @@ async function sendMessage(device, phone, message, campaign_id) {
 
         // Mettre à jour le statut du contact
         contactedState = 'contacted';
+
+        // Délai avant le prochain contact
+        await randomSleep(4000, 10000);
+        //console.log(`\n⌛️ Délai avant le prochain contact...`);
     }
 
     else {

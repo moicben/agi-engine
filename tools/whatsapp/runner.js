@@ -3,12 +3,12 @@
 // SETUP: node tools/whatsapp/runner.js --workflow=setup --device=emulator-5554
 // INPUT: node tools/whatsapp/runner.js --workflow=input --device=6075 --country=ca
 // BRAND: node tools/whatsapp/runner.js --workflow=brand --device=emulator-5556 --masterDevice=emulator-5554 --brand=ID_BRAND
-// SEND: node tools/whatsapp/runner.js --workflow=send --device=émulateur-5554 --campaign=ID_CAMPAGNE
+// SEND: node tools/whatsapp/runner.js --workflow=send --device=emulator-5554 --campaign=ID_CAMPAGNE
 // CLEAR: node tools/whatsapp/runner.js --workflow=clear --device=all
 // TRANSFER: node tools/whatsapp/runner.js --workflow=transfer --device=6085 --target=emulator-5554 --country=ca
 // EXTRACT: node tools/whatsapp/runner.js --workflow=extract --device=emulator-5554
-// UPDATE: node tools/whatsapp/runner.js --workflow=update --device=emulator-5554 --session=+12362062469
-// IMPORT: node tools/whatsapp/runner.js --workflow=import --device=emulator-5554 --session=+12362062469
+// UPDATE: node tools/whatsapp/runner.js --workflow=update --device=emulator-5556 --session=+12362061930
+// IMPORT: node tools/whatsapp/runner.js --workflow=import --device=emulator-5556 --session=+12362061930
 
 import { parseArgs, sleep } from './helpers.js';
 import { deviceService } from './device-service.js';
@@ -114,8 +114,13 @@ async function run(workflow) {
         console.log('🔄 Exécution en parallèle...\n');
         
         const promises = devices.map((device, index) => {
-            // Délai échelonné pour éviter la surcharge
-            return sleep(index * 100).then(() => runSingleDevice(workflow, device, country, target, masterDevice, session));
+            if (workflow === 'send') {
+                // Délai échelonné pour éviter les doublons d'envoi
+                return sleep(index * 5000).then(() => runSingleDevice(workflow, device, country, target, masterDevice, session));
+            } else {
+                // Délai léger pour les autres workflows
+                return sleep(index * 1000).then(() => runSingleDevice(workflow, device, country, target, masterDevice, session));
+            }
         });
         
         const results = await Promise.allSettled(promises);

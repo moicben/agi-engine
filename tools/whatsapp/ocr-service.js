@@ -154,28 +154,53 @@ async function getSettingsPosition(device) {
     }
 }
 
-// Vérifier si le numéro affiché appartient à WhatsApp (heuristique simple)
-async function isPhoneWhatsApp(imagePath) {
-    try {
-        const result = await extractRawTextFromImage(imagePath);
-        if (!result.success) return true; // par défaut, on considère valide pour ne pas bloquer l'envoi
-        const text = (result.text || '').toLowerCase();
-        const negatives = [
-            "not on whatsapp",
-            "isn't on whatsapp",
-            "isn\'t on whatsapp",
-            "not registered",
-            "not a whatsapp user",
-            "n'est pas sur whatsapp",
-            "pas sur whatsapp",
-            "doesn't have whatsapp",
-            "doesn\'t have whatsapp"
-        ];
-        if (negatives.some(k => text.includes(k))) return false;
-        return true;
-    } catch (e) {
+// Vérifier si le numéro affiché appartient à WhatsApp avec polling rapide (<=6s)
+async function isPhoneWhatsApp(imagePath, options = {}) {
+    const { device, maxMs = 6000, interval = 500 } = options;
+
+    // Cas 1: vérification simple d'une image déjà fournie
+    if (imagePath && !device) {
+        try {
+            const result = await extractRawTextFromImage(imagePath);
+            if (!result.success) return true; // permissif par défaut
+            const text = (result.text || '').toLowerCase();
+            if (text.includes('today')) return true; // inscrit
+            if (text.includes("isn't on" || "try again" || "not on" || "Couldn't")) return false; // non inscrit
+            return true;
+        } catch (_) {
+            return true;
+        } finally {
+            try { cleanupTempFile(imagePath); } catch {}
+        }
+    }
+
+    // Cas 2: polling avec captures successives jusqu'à 6s
+    if (device) {
+        const deadline = Date.now() + maxMs;
+        while (Date.now() < deadline) {
+            let filename;
+            try {
+                filename = await takeScreenshot(device, `send-check-${Date.now()}.png`);
+                const result = await extractRawTextFromImage(filename);
+                const text = (result?.text || '').toLowerCase();
+                console.log(`🔄 isPhoneWhatsApp refresh:`, text.slice(0, 120));
+                if (text.includes('®@ message')) return true; // inscrit
+                if (text.includes("isn't on")) return false; // non inscrit
+            } catch (_) {
+                // ignorer et continuer jusqu'au timeout
+            } finally {
+                if (filename) {
+                    try { cleanupTempFile(filename); } catch {}
+                }
+            }
+            await new Promise(r => setTimeout(r, interval));
+        }
+        // Timeout -> état permissif (considéré inscrit pour ne pas bloquer)
         return true;
     }
+
+    // Cas par défaut
+    return true;
 }
 
 const ocrService = {

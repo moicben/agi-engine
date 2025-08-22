@@ -1,4 +1,9 @@
 <?xml version='1.0' encoding='utf-8' standalone='yes' ?>
 <map>
-    <long name="start_time_ms" value="1754557987403" />
+    <string name="447446162797@s.whatsapp.net_commerce">null,false,false,null,false,null,null,null,null,null</string>
+    <string name="447446162797@s.whatsapp.net_notification">2,2,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null</string>
+    <string name="thread_user_secret">Gty8w79w1OJgC7ULxFZloBbR4SGVyTmBpdiWwjDnzu4=</string>
+    <string name="447446162797@s.whatsapp.net_actions">0,null,null,null,null,null,null,false</string>
+    <long name="start_time_ms" value="1755767587403" />
+    <string name="447446162797@s.whatsapp.net">1,3,0,0,0,0,0,null,null,null,null,null,null,true,null,30,false,1755822901201,null,null,null,null,null,null,null,0,0,0,0,0,0,1,2,null,null,null,1,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,1,null,null,null,null,null,null,null,null,null,null,null,null,null</string>
 </map>

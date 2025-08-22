@@ -11,7 +11,7 @@ const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 
 function parseArgs() {
   const args = process.argv.slice(2);
-  const options = { lat: null, lng: null, q: null, zoom: '9z' };
+  const options = { lat: null, lng: null, q: null, zoom: '7z' };
   for (const arg of args) {
     if (arg.startsWith('--lat=')) options.lat = arg.split('=')[1];
     else if (arg.startsWith('--lng=')) options.lng = arg.split('=')[1];
@@ -28,10 +28,10 @@ function parseArgs() {
 function buildMapsUrl({ lat, lng, q, zoom }) {
   const encoded = encodeURIComponent(q);
   // https://www.google.com/maps/search/Adjointe+virtuelle/@45.6323999,-74.3066948,9z?hl=fr
-  return `https://www.google.com/maps/search/${encoded}/@${lat},${lng},${zoom}?hl=fr`;
+  return `https://www.google.com/maps/search/${encoded}/@${lat},${lng},${zoom}`;
 }
 
-async function autoScrollListings(page, maxRounds = 20) {
+async function autoScrollListings(page, maxRounds = 24) {
   // Scroller le panneau des résultats jusqu'à stabilisation
   for (let round = 0; round < maxRounds; round++) {
     const prevCount = await page.$$eval('div#QA0Szd div.Nv2PK', nodes => nodes.length).catch(() => 0);
@@ -40,7 +40,7 @@ async function autoScrollListings(page, maxRounds = 20) {
       if (feed) feed.scrollBy({ top: feed.scrollHeight, behavior: 'auto' });
       else window.scrollBy({ top: document.body.scrollHeight, behavior: 'auto' });
     });
-    await sleep(1200);
+    await sleep(4000);
     const nextCount = await page.$$eval('div#QA0Szd div.Nv2PK', nodes => nodes.length).catch(() => prevCount);
     if (nextCount <= prevCount) break;
   }
@@ -75,7 +75,7 @@ async function main() {
 
   // Extraire
   const items = await extractResults(page);
-  console.log(`📦 ${items.length} résultats extraits`);
+  //console.log(`📦 ${items.length} résultats extraits`);
 
   // Enregistrer
   let created = 0, updated = 0, duplicates = 0, errors = 0;

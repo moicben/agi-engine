@@ -168,27 +168,26 @@ function getDevice(device) {
 async function connectDevice(device) {
   try {
       //  console.log(`🔌 Connexion au device ${device}...`);
-
-       // Désactiver le clavier et la barre de navigation du device
-       await execAsync(`adb -s ${device} shell settings put system show_ime_with_hard_keyboard 0`);
-       await execAsync(`adb -s ${device} shell settings put system show_ime_with_full_screen_intent 0`);
-       await execAsync(`adb -s ${device} shell settings put system show_navigation_bar 0`);
-       await execAsync(`adb -s ${device} shell settings put system show_navigation_bar_with_hotkeys 0`);
-       await execAsync(`adb -s ${device} shell "settings put global policy_control immersive.navigation=*"`);
-
-
       
       // Les émulateurs sont généralement déjà connectés, pas besoin de adb connect
       if (device.match(/^(emulator|émulateur)-\d+$/i)) {
         // Vérifier si l'émulateur est accessible
         await execAsync(`adb -s ${device} shell echo "test"`);
-        console.log(`✅ Émulateur ${device} accessible`);
-        return true;
+        // console.log(`✅ Émulateur ${device} accessible`);
       }
-      
-      // Pour les adresses IP, utiliser adb connect
-      await execAsync('adb connect ' + device);
-      console.log(`✅ Device ${device} connecté`);
+      else {
+        // Pour les adresses IP, utiliser adb connect
+        await execAsync('adb connect ' + device);
+        // console.log(`✅ Device ${device} connecté`);
+      }
+
+      // Désactiver le clavier et la barre de navigation du device
+      await execAsync(`adb -s ${device} shell settings put secure show_ime_with_hard_keyboard 0`);
+      await execAsync(`adb -s ${device} shell settings put secure show_ime_with_full_screen_intent 0`);
+      await execAsync(`adb -s ${device} shell settings put secure show_navigation_bar 0`);
+      await execAsync(`adb -s ${device} shell settings put secure show_navigation_bar_with_hotkeys 0`);
+      await execAsync(`adb -s ${device} shell "settings put global policy_control immersive.navigation=*"`);
+
       return true;
   } catch (error) {
       console.error(`❌ Impossible de se connecter au device ${device}:`, error.message);

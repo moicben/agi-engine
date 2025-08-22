@@ -28,8 +28,10 @@ async function sendWorkflow(campaign, device) {
         console.log(`📞 ${contacts.length} nouveaux contacts récupérés`);
 
         // Étape 3 : Définir le status de tous ces contacts à "in_progress"
-        for (const contact of contacts) {
-            await updateContactStatus(contact.id, 'in_progress', campaign);
+        const BATCH = 10;
+        for (let i = 0; i < contacts.length; i += BATCH) {
+            const slice = contacts.slice(i, i + BATCH);
+            await Promise.allSettled(slice.map(c => updateContactStatus(c.id, 'in_progress', campaign)));
         }
 
         // Étape 4 : Envoyer les messages à chaque contact séquentiellement
@@ -46,10 +48,6 @@ async function sendWorkflow(campaign, device) {
 
                 count++;
                 console.log(`\n⌛️ ${count} / ${contacts.length}\n`);
-
-                // Délai avant le prochain contact
-                await randomSleep(10000, 20000);
-                //console.log(`\n⌛️ Délai avant le prochain contact...`);
 
             } catch (contactError) {
                 console.error(`❌ Erreur pour le contact ${contact.phone}:`, contactError.message);

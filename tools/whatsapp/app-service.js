@@ -198,7 +198,7 @@ async function launchApp(device) {
 // Fermer l'application WhatsApp
 async function closeApp(device) {
   await executeCommand(device, 'shell am force-stop com.whatsapp');
-  await sleep(2000);
+  await sleep(4000);
 }
 
 

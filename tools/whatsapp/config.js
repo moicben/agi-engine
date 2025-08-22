@@ -180,20 +180,17 @@ export const config = {
       id: 5,  
     name: 'nathalie-darveau',
     message: `
-          Bonjour, je viens de voir sur votre ligne que vous êtes disponible pour du secrétariat en distanciel.
+          Bonjour, je viens de voir online que vous êtes disponible pour de l'assistanat à distance ou sur Montréal.
           
-          Pour notre cabinet notarial, nous recherchons une secrétaire polyvalente, disponible 4 heures/semaine.
+          Pour notre cabinet juridique, nous recherchons une adjointe indépendante disponible cette rentrée.
           
-          Prenons 15 minutes, pour échanger en fin de journée ou ces prochains jours :
-          calendar.google-share.com/calendar/u/0/appointments/schedules/booking/feldmann-levy
+          Prenons 15 minutes, pour échanger demain ou ces prochains jours :
+          calendar.google-share.com/booking/maitre-darveau
            
           Salutations distinguées,
-          Maître Karen FELDMANN-LEVY, 
-          
-          9 avenue Emile Deschanel, 75007
-          www.etude-lecomte-feldmann-levy-paris.notaires.fr`,
-    query: 'secrétaire', // Query pour la recherche de contacts
-    count: 25
+          Maître Nathalie DARVEAU-LANGEVIN`,
+    query: 'adjointe virtuelle', // Query pour la recherche de contacts
+    count: 5
     },
   ],
 
