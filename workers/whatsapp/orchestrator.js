@@ -1,7 +1,7 @@
 // Main Workflow Orchestrator, using node runners/runner.js
 
-import { execAsync, parseArgs, sleep } from './helpers.js';
-import { deviceService } from './device-service.js';
+import { execAsync, parseArgs, sleep } from '../../tools/whatsapp/helpers.js';
+import { deviceService } from '../../tools/whatsapp/device-service.js';
 
 async function main() {
   const args = parseArgs();

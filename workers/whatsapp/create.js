@@ -17,6 +17,7 @@ export async function createOrchestrator(device, country = 'ca') {
     // 3) Extraire la session (utilise le numéro si fourni)
     const sessionPath = await extractWorkflow(device, phoneNumber); 
 
+
     console.log(`✅ Création terminée pour ${device}`);
     return { sessionPath, phoneNumber };
 

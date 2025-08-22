@@ -1,0 +1,63 @@
+{
+  "name": "@agi-engine/nordvpn-service",
+  "version": "1.0.0",
+  "description": "Service NordVPN modulaire pour automatisation WhatsApp et autres applications",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node test.js",
+    "demo": "node demo.js",
+    "example": "node example-whatsapp.js",
+    "lint": "eslint *.js",
+    "docs": "node -e \"console.log(require('./README.md').toString())\""
+  },
+  "keywords": [
+    "nordvpn",
+    "vpn",
+    "automation",
+    "whatsapp",
+    "proxy",
+    "rotation",
+    "ip-rotation"
+  ],
+  "author": "AGI Engine",
+  "license": "MIT",
+  "dependencies": {},
+  "peerDependencies": {
+    "nordvpn": ">=3.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "files": [
+    "*.js",
+    "*.md",
+    "!test.js",
+    "!demo.js",
+    "!example-whatsapp.js"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agi-engine/nordvpn-service.git"
+  },
+  "bugs": {
+    "url": "https://github.com/agi-engine/nordvpn-service/issues"
+  },
+  "homepage": "https://github.com/agi-engine/nordvpn-service#readme",
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/sponsors/agi-engine"
+  },
+  "bin": {
+    "nordvpn-service": "./index.js"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./service": "./nordvpn-service.js",
+    "./server-manager": "./server-manager.js",
+    "./monitor": "./monitor.js",
+    "./rotator": "./rotator.js",
+    "./config": "./config.js",
+    "./legacy": "./legacy-bridge.js"
+  }
+}

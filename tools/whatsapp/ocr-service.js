@@ -7,17 +7,26 @@ import { sleep } from './helpers.js';
 /**
  * Analyser une capture pour vérification SMS
  */
-async function analyzeScreenshot(filename, options = {}) {
+async function analyzeScreenshot(filename, type = '') {
   try {
     const result = await extractTextFromImage(filename);
-    
-    // Vérification des différents cas de figure
-    if (result === false) return { status: 'failed', text: '', reason: result.error };
-    if (result.text.includes('contacts and media')) return { status: 'to confirm', text: result.text};
-    if (result.text.includes('code sent')) return { status: 'success', text: result.text};
-    if (result.text.includes(['can\'t receive', 'couldn\'t send', 'Wait before', 'recently.'])) return { status: 'rejected', text: result.text};
-    if (result.text.includes('sending code', 'connecting...')) return { status: 'frozen', text: result.text};
-    return { status: 'failed', text: result.text};
+    console.log("[OCR] Status : ", result.text);
+    switch (type) {
+        case 'checkSubmission':
+            if (result === false) return { status: 'failed', text: '', reason: result.error };
+            if (result.text.includes('contacts and media')) return { status: 'to confirm', text: result.text};
+            if (result.text.includes('code sent')) return { status: 'success', text: result.text};
+            if (result.text.includes(['can\'t receive', 'couldn\'t send', 'Wait before', 'recently.'])) return { status: 'rejected', text: result.text};
+            if (result.text.includes('sending code', 'connecting...')) return { status: 'frozen', text: result.text};
+            return { status: 'failed', text: result.text};
+        case 'checkWhatsAppStatus':
+            if (result === false) return { status: 'failed', text: '', reason: result.error };
+            if (result.text.includes('can\'t receive', 'couldn\'t send', 'Wait before', 'recently.')) return { status: 'rejected', text: result.text};
+            return { status: 'success', text: result.text};
+        default:
+            return { status: 'failed', text: '', reason: 'Erreur analyse' };
+    }
+
   } catch (error) {
     return { status: 'failed', text: '', reason: 'Erreur analyse' };
   } finally {
@@ -30,27 +39,12 @@ async function analyzeScreenshot(filename, options = {}) {
  */
 async function checkSubmission(device) {
     const filename = await takeScreenshot(device, `submission_${Date.now()}.png`);
-    return analyzeScreenshot(filename);
+    return analyzeScreenshot(filename, 'checkSubmission');
 } 
 
 async function checkWhatsAppStatus(device) {
-    let filename;
-    try {
-        filename = await takeScreenshot(device, `status_${Date.now()}.png`);
-        const result = await extractTextFromImage(filename);
-        if (!result.success) return false;
-        
-        // TODO: Définir KEYWORDS.whatsappStatus.reject ou utiliser une autre méthode
-        // const check = checkKeywords(result.text, [], KEYWORDS.whatsappStatus.reject);
-        // return check.valid; // valid = true si aucun rejet trouvé
-        return true; // Retourner true par défaut pour l'instant
-    } catch (error) {
-        return false;
-    } finally {
-        if (filename) {
-            cleanupTempFile(filename);
-        }
-    }
+    const filename = await takeScreenshot(device, `status_${Date.now()}.png`);
+    return analyzeScreenshot(filename, 'checkWhatsAppStatus');
 }
 
 async function extractPhoneFromProfile(device, retryCount = 0) {

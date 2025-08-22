@@ -1,7 +1,7 @@
 // Workflow de configuration d'un compte WhatsApp
 
-import { whatsappService } from './app-service.js';
-import { deviceService } from './device-service.js';
+import { whatsappService } from '../../tools/whatsapp/app-service.js';
+import { deviceService } from '../../tools/whatsapp/device-service.js';
 
 // Fonction principale du workflow
 async function setupWorkflow(device) {

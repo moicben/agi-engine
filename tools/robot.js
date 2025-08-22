@@ -6,7 +6,7 @@ try {
 } catch (e) {
   robot = null;
 }
-import { sleep } from './helpers.js';
+import { sleep } from './whatsapp/helpers.js';
 
 // Fonction pour cliquer sur l'écran
 async function clickScreen(x, y, delay) {

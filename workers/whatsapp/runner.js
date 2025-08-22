@@ -24,8 +24,8 @@
 // SENDS SLAVES: node tools/whatsapp/runner.js --workflow=send --device=5554,5556,5558,5560,5562 --campaign=ID --count=3
 
 
-import { parseArgs, sleep } from './helpers.js';
-import { deviceService } from './device-service.js';
+import { parseArgs, sleep } from '../../tools/whatsapp/helpers.js';
+import { deviceService } from '../../tools/whatsapp/device-service.js';
 import { config as sendConfig } from './config.js';
 
 
@@ -49,7 +49,7 @@ async function runSingleDevice(workflow, device, country, target, masterDevice, 
         console.log(`🚀 Démarrage du workflow ${workflow} pour device ${device}...`);
 
         if (workflow === 'input') {
-            const { inputWorkflow } = await import('./input.js');
+            const { inputWorkflow } = await import('../../tools/whatsapp/input.js');
             await inputWorkflow(device, country);
         } else if (workflow === 'clear') {
             const { clearWorkflow } = await import('./clear.js');
@@ -73,7 +73,7 @@ async function runSingleDevice(workflow, device, country, target, masterDevice, 
             await createOrchestrator(device, country, target, masterDevice, session, style);
         }
         else if (workflow === 'send') {
-            const { senderOrchestrator } = await import('./sender.js');
+            const { senderOrchestrator } = await import('../../tools/whatsapp/sender.js');
             // Récupération et validation de la campagne
             const campaignId = parseInt(args.campaign);
             const countNum = Number(args.count);
@@ -89,23 +89,23 @@ async function runSingleDevice(workflow, device, country, target, masterDevice, 
             // senderOrchestrator attend un tableau de devices
             await senderOrchestrator(campaign, [device], countNum, session);
         } else if (workflow === 'setup') {
-            const { setupWorkflow } = await import('./setup.js');
+            const { setupWorkflow } = await import('../../tools/whatsapp/setup.js');
             await setupWorkflow(device, country);
         }
         else if (workflow === 'transfer') {
-            const { transferWorkflow } = await import('./transfer.js');
+            const { transferWorkflow } = await import('../../tools/whatsapp/transfer.js');
             await transferWorkflow(device, country, target);
         }
         else if (workflow === 'update') {
-            const { updateWorkflow } = await import('./update.js');
+            const { updateWorkflow } = await import('../../tools/whatsapp/update.js');
             await updateWorkflow(device,session);
         }
         else if (workflow === 'extract') {
-            const { extractWorkflow } = await import('./extract.js');
+            const { extractWorkflow } = await import('../../tools/whatsapp/extract.js');
             await extractWorkflow(device);
         }
         else if (workflow === 'import') {
-            const { importWorkflow } = await import('./import.js');
+            const { importWorkflow } = await import('../../tools/whatsapp/import.js');
             const sessionDir = new URL('../../assets/wa-sessions/', import.meta.url);
             await importWorkflow(device, `${sessionDir.pathname}${args.session}`);
         }
@@ -140,7 +140,7 @@ async function run(workflow) {
     
     // Cas spécial: SEND doit orchestrer tous les devices en une seule passe pour éviter les doublons
     if (workflow === 'send') {
-        const { senderOrchestrator } = await import('./sender.js');
+        const { senderOrchestrator } = await import('../../tools/whatsapp/sender.js');
         const campaignId = parseInt(args.campaign);
         const countNum = Number(args.count);
         if (!args.campaign || Number.isNaN(campaignId) || Number.isNaN(countNum)) {

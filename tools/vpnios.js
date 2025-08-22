@@ -6,7 +6,7 @@ try {
 } catch (e) {
   robot = null;
 }
-import { sleep } from './helpers.js';
+import { sleep } from './whatsapp/helpers.js';
 import { clickScreen, writeText, pressKey } from './robot.js';
 
 // === VPN UNIQUE ===

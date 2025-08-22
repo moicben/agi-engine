@@ -1,6 +1,6 @@
 // Runner du workflow link-device.js
 
-import { linkDeviceWorkflow } from './link-device.js';
+import { linkDeviceWorkflow } from '../../tools/whatsapp/link-device.js';
 import { config } from '../../core/config.js';
 
 let device = '127.0.0.1';

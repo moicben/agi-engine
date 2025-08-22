@@ -1,19 +1,26 @@
-import { randomSleep } from './utils.js';
+/**
+ * Ancien fichier nordvpn.js - REDIRIGÉ VERS NOUVELLE ARCHITECTURE
+ *
+ * Ce fichier utilise maintenant le nouveau service NordVPN modulaire.
+ * Pour migrer votre code:
+ *
+ * ❌ ANCIEN:
+ * import { getRandomServer, connectToServer } from './tools/nordvpn.js';
+ * await connectToServer('ca');
+ *
+ * ✅ NOUVEAU:
+ * import { nordVPNService } from './tools/nordvpn/index.js';
+ * await nordVPNService.initialize();
+ * await nordVPNService.connectToCountry('ca');
+ *
+ * 📖 Documentation complète: tools/nordvpn/README.md
+ */
 
+// Redirection vers le nouveau service
+export * from './tools/nordvpn/legacy-bridge.js';
 
-// Choisir un aléatoirement un serveur NordVPN
-export async function getRandomServer(country) {
-    const servers = require(`../assets/vpn/${country}-nordvpn-servers.json`);
-    return servers[Math.floor(Math.random() * servers.length)];
-}
-
-export async function connectToServer(country) {
-    console.log(`🔌 Connexion au serveur ${server}...`);
-    await randomSleep(1000, 2000);
-    const 
-}
-
-export async function disconnectFromServer() {
-    console.log(`🔌 Déconnexion du serveur...`);
-    await randomSleep(1000, 2000);
-}
+// Message de migration
+console.log('⚠️  ATTENTION: Ce fichier utilise maintenant la nouvelle architecture NordVPN');
+console.log('💡 Pour la meilleure expérience, migrez vers:');
+console.log('   import { nordVPNService } from "./tools/nordvpn/index.js"');
+console.log('📖 Documentation: tools/nordvpn/README.md\n');

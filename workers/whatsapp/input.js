@@ -2,10 +2,11 @@
 
 import { whatsappService } from './app-service.js';
 import { deviceService } from './device-service.js';
-import vpnIosService from './vpnios-service.js';
-import smsService from './sms-service.js';
+import vpnIosService from '../vpnios.js';
 import { ocrService } from './ocr-service.js';
 import { randomSleep, sleep } from './helpers.js';
+import smsCurlService from './sms-curl-service.js';
+import smsService from './sms-service.js';
 
 /**
  * Orchestrateur léger pour gérer les cas de soumission
@@ -55,8 +56,8 @@ async function handleSuccess(message, phoneNumber, device, country) {
     const countryCode = country.toUpperCase() === 'CANADA' ? 'CA' : country.toUpperCase();
     
     try {
-        await smsService.requestSMS(countryCode, phoneNumber);
-        const codeSMS = await smsService.waitForSMS(phoneNumber);
+        await smsCurlService.requestSMS(countryCode, phoneNumber);
+        const codeSMS = await smsCurlService.waitForSMS(phoneNumber);
         
         if (codeSMS) {
             // Si code SMS reçu, l'entrer et finaliser la création
@@ -110,7 +111,7 @@ async function inputWorkflow(device, country, vpn = false) {
     await deviceService.connectDevice(device);
 
     // Obtenir un numéro WhatsApp du pays spécifié  
-    const phoneNumber = await smsService.getPhoneNumber(countryCode, 25);
+    const phoneNumber = await smsCurlService.getPhoneNumber(countryCode, 25);
     await randomSleep(50, 500);
 
     if (vpn) {

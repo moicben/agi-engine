@@ -1,56 +1,44 @@
 /**
- * SMS Service minimaliste
- * Interface avec SMS-Activate API
+ * SMS Service - Service SMS principal minimaliste
+ * Utilise soit les appels HTTP directs, soit les commandes curl selon la configuration
  */
 
-import axios from 'axios';
 import 'dotenv/config';
-import https from "https";
-import { execSync } from "node:child_process";
-import dns from "node:dns";
+import { SmsHttpClient, SmsLocalClient } from './sms-http-client.js';
+import { execSync } from 'node:child_process';
 
-const SMS_API_URL = 'https://api.sms-activate.org/stubs/handler_api.php';
 const activations = new Map();
-const countryMap = { FR: 78, UK: 16, US: 187, PH: 4, DE: 43, ES: 56, CA: 36 };
 
-const apiCall = async (params) => {
-  if (!process.env.SMS_ACTIVATE_API_KEY) throw new Error('SMS_ACTIVATE_API_KEY manquante');
-  const { data } = await axios.get(SMS_API_URL, { params: { api_key: process.env.SMS_ACTIVATE_API_KEY, ...params } });
-  return data;
-};
+// Configuration
+const SMS_REMOTE_ENABLED = process.env.SMS_REMOTE_ENABLED === 'true';
+const SMS_REMOTE_BASE_URL = process.env.SMS_REMOTE_BASE_URL;
+const SMS_ACTIVATE_API_KEY = process.env.SMS_ACTIVATE_API_KEY;
 
-const findActivation = (phoneNumber) => [...activations.values()].find(a => a.phone === phoneNumber.replace('+', ''));
-
+/**
+ * Obtenir un numéro de téléphone
+ */
 export async function getPhoneNumber(countryCode, retries = 5, byPassVpn = true) {
-  const remoteEnabled = process.env.SMS_REMOTE_ENABLED === 'true';
-  const remoteBaseURL = process.env.SMS_REMOTE_BASE_URL;
-  const useRemote = !!(remoteEnabled && remoteBaseURL);
-
-  if (useRemote) {
+  // Si routing distant activé, utiliser le client HTTP
+  if (SMS_REMOTE_ENABLED && SMS_REMOTE_BASE_URL) {
     try {
-      const baseURL = String(remoteBaseURL).replace(/\/$/, '');
-      const insecure = process.env.SMS_REMOTE_INSECURE === 'true';
-      const httpsAgent = insecure ? new https.Agent({ rejectUnauthorized: false }) : undefined;
-      const { data } = await axios.get(`${baseURL}/api/sms/get-number`, {
-        params: { country: countryCode, bypass: byPassVpn ? 'true' : 'false' },
-        timeout: 10000,
-        httpsAgent,
-      });
-      if (data && data.id && data.phone) {
-        activations.set(data.id, { id: data.id, phone: data.phone.replace('+', ''), country: countryCode });
-        console.log(`📱 ${data.phone} (${countryCode}) via remote`);
-        return data.phone;
+      const client = new SmsHttpClient(SMS_REMOTE_BASE_URL, { timeout: 15000 });
+      const result = await client.getPhoneNumber(countryCode, byPassVpn);
+
+      if (result.success) {
+        activations.set(result.id, {
+          id: result.id,
+          phone: result.phone.replace('+', ''),
+          country: result.country
+        });
+        console.log(`📱 ${result.phone} (${result.country}) via remote`);
+        return result.phone;
       }
-      throw new Error(`Remote get-number: ${JSON.stringify(data)}`);
+
+      throw new Error(result.error);
     } catch (error) {
       if (retries > 0) {
         const delay = 5;
-        const status = error?.response?.status;
-        const statusText = error?.response?.statusText;
-        const code = error?.code;
-        const respDataRaw = error?.response?.data;
-        const respData = typeof respDataRaw === 'string' ? respDataRaw : (respDataRaw ? JSON.stringify(respDataRaw) : '');
-        console.log(`🔄 Remote error ${status || ''} ${statusText || ''} ${code || ''} ${error.message || ''} ${respData ? `- ${respData}` : ''} (baseURL=${remoteBaseURL || ''}) - Retry ${delay}s...`);
+        console.log(`🔄 Remote error ${error.message} - Retry ${delay}s...`);
         await new Promise(r => setTimeout(r, delay * 1000));
         return getPhoneNumber(countryCode, retries - 1, byPassVpn);
       }
@@ -58,117 +46,144 @@ export async function getPhoneNumber(countryCode, retries = 5, byPassVpn = true)
     }
   }
 
+  // Mode local avec bypass VPN
   if (byPassVpn) {
-    const en0 = execSync("ipconfig getifaddr en0 || echo").toString().trim();
-    if (!en0) throw new Error("Adresse IP en0 introuvable. Assurez-vous que l'interface est active.");
+    try {
+      const client = new SmsLocalClient({ timeout: 7000 });
+      const result = await client.getPhoneNumber(countryCode);
 
-    const agent = new https.Agent({ localAddress: en0, keepAlive: true });
-    const ipv4Lookup = (hostname, opts, cb) => dns.lookup(hostname, { family: 4, all: false }, cb);
+      if (result.success) {
+        activations.set(result.id, {
+          id: result.id,
+          phone: result.phone.replace('+', ''),
+          country: result.country
+        });
+        console.log(`📱 ${result.phone} (${result.country})`);
+        return result.phone;
+      }
 
-    axios.defaults.httpsAgent = agent;
-    axios.defaults.proxy = false;
-    axios.defaults.lookup = ipv4Lookup;
-    axios.defaults.timeout = 7000;
+      throw new Error(result.error);
+    } catch (error) {
+      if (retries > 0) {
+        const delay = error.message.includes('NO_NUMBERS') ? 5 : 5;
+        console.log(`🔄 ${error.message} - Retry ${delay}s...`);
+        await new Promise(r => setTimeout(r, delay * 1000));
+        return getPhoneNumber(countryCode, retries - 1, byPassVpn);
+      }
+      throw error;
+    }
   }
 
-  try {
-    const data = await apiCall({ action: 'getNumber', service: 'wa', country: countryMap[countryCode] || 16 });
-    if (data.includes('ACCESS_NUMBER')) {
-      const [, id, phone] = data.split(':');
-      activations.set(id, { id, phone, country: countryCode });
-      console.log(`📱 +${phone} (${countryCode})`);
-      return `+${phone}`;
-    }
-    throw new Error(`SMS-Activate: ${data}`);
-  } catch (error) {
-    if (retries > 0) {
-      const delay = error.message.includes('NO_NUMBERS') ? 5 : 5;
-      console.log(`🔄 ${error.message} - Retry ${delay}s...`);
-      await new Promise(r => setTimeout(r, delay * 1000));
-      return getPhoneNumber(countryCode, retries - 1, byPassVpn);
-    }
-    throw error;
-  }
+  throw new Error('Configuration SMS invalide');
 }
 
+/**
+ * Demander l'envoi du SMS
+ */
 export async function requestSMS(countryCode, phoneNumber) {
   const activation = findActivation(phoneNumber);
   if (!activation) throw new Error(`Activation non trouvée pour ${phoneNumber}`);
 
-  const remoteEnabled = process.env.SMS_REMOTE_ENABLED === 'true';
-  const remoteBaseURL = process.env.SMS_REMOTE_BASE_URL;
-  const useRemote = !!(remoteEnabled && remoteBaseURL);
-  if (useRemote) {
-    const baseURL = String(remoteBaseURL).replace(/\/$/, '');
-    const insecure = process.env.SMS_REMOTE_INSECURE === 'true';
-    const httpsAgent = insecure ? new https.Agent({ rejectUnauthorized: false }) : undefined;
-    await axios.post(`${baseURL}/api/sms/request`, { id: activation.id }, { timeout: 10000, httpsAgent });
+  if (SMS_REMOTE_ENABLED && SMS_REMOTE_BASE_URL) {
+    const client = new SmsHttpClient(SMS_REMOTE_BASE_URL);
+    const result = await client.requestSms(activation.id);
+    if (!result.success) throw new Error(result.error);
     return;
   }
 
-  await apiCall({ action: 'setStatus', id: activation.id, status: 1 });
+  // Mode local
+  if (!SMS_ACTIVATE_API_KEY) throw new Error('SMS_ACTIVATE_API_KEY manquante');
+  const { data } = await import('axios').then(axios =>
+    axios.get('https://api.sms-activate.org/stubs/handler_api.php', {
+      params: { api_key: SMS_ACTIVATE_API_KEY, action: 'setStatus', id: activation.id, status: 1 }
+    })
+  );
+  console.log(`SMS demandé pour ${phoneNumber}`);
 }
 
+/**
+ * Attendre la réception du SMS
+ */
 export async function waitForSMS(phoneNumber, timeout = 45000) {
   const activation = findActivation(phoneNumber);
   if (!activation) throw new Error('Activation non trouvée');
 
-  const remoteEnabled = process.env.SMS_REMOTE_ENABLED === 'true';
-  const remoteBaseURL = process.env.SMS_REMOTE_BASE_URL;
-  const useRemote = !!(remoteEnabled && remoteBaseURL);
-
   console.log(`⏳ Attente SMS ${phoneNumber}...`);
   const start = Date.now();
 
-  if (useRemote) {
-    const baseURL = String(remoteBaseURL).replace(/\/$/, '');
-    const insecure = process.env.SMS_REMOTE_INSECURE === 'true';
-    const httpsAgent = insecure ? new https.Agent({ rejectUnauthorized: false }) : undefined;
-    const { data } = await axios.get(`${baseURL}/api/sms/wait`, { params: { id: activation.id, timeout }, timeout: Math.max(timeout + 2000, 10000), httpsAgent });
-    if (data && data.code) {
-      const code = String(data.code);
+  if (SMS_REMOTE_ENABLED && SMS_REMOTE_BASE_URL) {
+    const client = new SmsHttpClient(SMS_REMOTE_BASE_URL, { timeout: Math.max(timeout + 2000, 15000) });
+    const result = await client.waitForSms(activation.id, timeout);
+
+    if (result.success) {
       activations.delete(activation.id);
-      return code;
+      return result.code;
     }
-    throw new Error(data?.error ? String(data.error) : 'SMS non reçu (remote)');
+    throw new Error(result.error);
   }
 
+  // Mode local
   while (Date.now() - start < timeout) {
     try {
-      const data = await apiCall({ action: 'getStatus', id: activation.id });
+      if (!SMS_ACTIVATE_API_KEY) throw new Error('SMS_ACTIVATE_API_KEY manquante');
+      const { data } = await import('axios').then(axios =>
+        axios.get('https://api.sms-activate.org/stubs/handler_api.php', {
+          params: { api_key: SMS_ACTIVATE_API_KEY, action: 'getStatus', id: activation.id }
+        })
+      );
+
       if (data.includes('STATUS_OK')) {
         const code = data.split(':')[1];
         console.log(`✅ Code: ${code}`);
-        await apiCall({ action: 'setStatus', id: activation.id, status: 6 });
         activations.delete(activation.id);
         return code;
       }
+
       if (data !== 'STATUS_WAIT_CODE') throw new Error(`Status: ${data}`);
     } catch (error) {
       console.error('❌', error.message);
     }
+
     await new Promise(r => setTimeout(r, 5000));
   }
+
   throw new Error('Timeout: SMS non reçu');
 }
 
+/**
+ * Annuler toutes les activations
+ */
 export async function cancelAllActivations() {
-  const remoteEnabled = process.env.SMS_REMOTE_ENABLED === 'true';
-  const remoteBaseURL = process.env.SMS_REMOTE_BASE_URL;
-  const useRemote = !!(remoteEnabled && remoteBaseURL);
   const ids = [...activations.keys()];
-  if (useRemote && ids.length > 0) {
-    const baseURL = String(remoteBaseURL).replace(/\/$/, '');
-    const insecure = process.env.SMS_REMOTE_INSECURE === 'true';
-    const httpsAgent = insecure ? new https.Agent({ rejectUnauthorized: false }) : undefined;
-    await axios.post(`${baseURL}/api/sms/cancel-all`, { ids }, { timeout: 15000, httpsAgent });
-  } else {
-    for (const [id] of activations) await apiCall({ action: 'setStatus', id, status: 8 });
+
+  if (SMS_REMOTE_ENABLED && SMS_REMOTE_BASE_URL && ids.length > 0) {
+    const client = new SmsHttpClient(SMS_REMOTE_BASE_URL);
+    const result = await client.cancelAllActivations(ids);
+    if (!result.success) console.error('Erreur annulation remote:', result.error);
+  } else if (SMS_ACTIVATE_API_KEY) {
+    for (const id of ids) {
+      try {
+        await import('axios').then(axios =>
+          axios.get('https://api.sms-activate.org/stubs/handler_api.php', {
+            params: { api_key: SMS_ACTIVATE_API_KEY, action: 'setStatus', id, status: 8 }
+          })
+        );
+      } catch (error) {
+        console.error(`Erreur annulation ${id}:`, error.message);
+      }
+    }
   }
+
   activations.clear();
   console.log('🧹 Activations annulées');
 }
 
-const smsService = { getPhoneNumber, requestSMS, waitForSMS, cancelAllActivations };
+/**
+ * Trouver une activation par numéro de téléphone
+ */
+function findActivation(phoneNumber) {
+  return [...activations.values()].find(a => a.phone === phoneNumber.replace('+', ''));
+}
 
+const smsService = { getPhoneNumber, requestSMS, waitForSMS, cancelAllActivations };
 export default smsService;

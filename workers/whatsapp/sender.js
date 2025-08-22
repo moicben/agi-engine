@@ -1,11 +1,11 @@
 // SENDER MICRO-ORCHESTRATOR (parallèle par device, répartition équitable)
 
-import { deviceService } from './device-service.js';
-import { senderService } from './sender-service.js';
-import { getNewContacts, updateContactStatus } from '../supabase/contacts.js';
-import { incrementCampaignCounters } from '../supabase/campaigns.js';
-import { importWorkflow } from './import.js';
-import { getCampaignById } from '../supabase/campaigns.js';
+import { deviceService } from '../../tools/whatsapp/device-service.js';
+import { senderService } from '../../tools/whatsapp/sender-service.js';
+import { getNewContacts, updateContactStatus } from '../../tools/supabase/contacts.js';
+import { incrementCampaignCounters } from '../../tools/supabase/campaigns.js';
+import { importWorkflow } from '../../tools/whatsapp/import.js';
+import { getCampaignById } from '../../tools/supabase/campaigns.js';
 import { config } from './config.js';
 
 /**

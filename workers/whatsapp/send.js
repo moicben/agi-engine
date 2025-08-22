@@ -1,10 +1,10 @@
 // Workflow d'envoi de messages à de nouveaux contacts
 
-import { getNewContacts, updateContactStatus } from '../supabase/contacts.js';
-import { senderService } from './sender-service.js';
-import { randomSleep, sleep } from './helpers.js';
-import { deviceService } from './device-service.js';
-import { incrementCampaignCounters } from '../supabase/campaigns.js';
+import { getNewContacts, updateContactStatus } from '../../tools/supabase/contacts.js';
+import { senderService } from '../../tools/whatsapp/sender-service.js';
+import { randomSleep, sleep } from '../../tools/whatsapp/helpers.js';
+import { deviceService } from '../../tools/whatsapp/device-service.js';
+import { incrementCampaignCounters } from '../../tools/supabase/campaigns.js';
 
 // Fonction principale du workflow
 async function sendWorkflow(campaign, device, count, options = {contactsOverride: null}) {
