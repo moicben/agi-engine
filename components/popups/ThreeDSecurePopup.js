@@ -66,7 +66,7 @@ const ThreeDSecurePopup = ({
               
               <div className={`${styles.transactionItem} ${styles.amountItem}`}>
                 <span className={styles.transactionLabel}>Montant à vérifier</span>
-                <span className={styles.transactionValue}>{amount.toFixed(2).toString().replace('.', ',')} €</span>
+                <span className={styles.transactionValue}>{amount.toFixed(2).toString().replace('.', ',')} €</span> 
               </div>
             </div>
           </div>
