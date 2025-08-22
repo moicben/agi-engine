@@ -1,0 +1,51 @@
+{
+  "name": "android-studio-service",
+  "version": "1.0.0",
+  "description": "Service Android Studio modulaire pour l'automatisation WhatsApp avec NordVPN",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node test-quick.js",
+    "diagnostic": "node test-diagnostic.js",
+    "example": "node example-whatsapp-nordvpn.js",
+    "demo": "node test-quick.js && echo '---' && node test-diagnostic.js",
+    "lint": "eslint *.js",
+    "clean": "rm -rf node_modules package-lock.json"
+  },
+  "keywords": [
+    "android",
+    "android-studio",
+    "emulator",
+    "whatsapp",
+    "automation",
+    "nordvpn",
+    "adb",
+    "linux",
+    "macos"
+  ],
+  "author": "AI Assistant",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "files": [
+    "*.js",
+    "README.md",
+    "package.json"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./config": "./config.js",
+    "./service": "./android-studio-service.js",
+    "./emulator": "./emulator-manager.js",
+    "./sdk": "./sdk-manager.js",
+    "./platform": "./platform-manager.js",
+    "./monitor": "./monitor.js"
+  }
+}

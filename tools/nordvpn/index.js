@@ -7,11 +7,12 @@ export { NordVPNService, nordVPNService } from './nordvpn-service.js';
 export { NordVPNServerManager } from './server-manager.js';
 export { NordVPNMonitor } from './monitor.js';
 export { NordVPNRotator } from './rotator.js';
-export { NordVPNConfig, defaultConfig, whatsappConfig } from './config.js';
+export { NordVPNConfig, whatsappConfig } from './config.js';
+export { defaultConfig } from './config.js';
 
 // Fonctions utilitaires pour usage rapide
 import { nordVPNService } from './nordvpn-service.js';
-import { whatsappConfig } from './config.js';
+import { whatsappConfig, defaultConfig } from './config.js';
 
 /**
  * Initialisation rapide

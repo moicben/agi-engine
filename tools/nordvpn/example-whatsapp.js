@@ -5,7 +5,7 @@
 
 import { NordVPNService } from './index.js';
 import { whatsappConfig } from './config.js';
-import { sleep } from '../helpers.js';
+import { sleep } from '../whatsapp/helpers.js';
 
 /**
  * Classe d'exemple pour automatisation WhatsApp avec NordVPN

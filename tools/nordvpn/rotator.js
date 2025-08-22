@@ -3,7 +3,7 @@
  * Optimisé pour l'usage WhatsApp et autres applications anti-bot
  */
 
-import { sleep, randomSleep } from '../helpers.js';
+import { sleep, randomSleep } from '../whatsapp/helpers.js';
 
 export class NordVPNRotator {
   constructor(config, serverManager) {

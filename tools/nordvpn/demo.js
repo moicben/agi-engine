@@ -6,7 +6,7 @@
  */
 
 import { NordVPNService } from './index.js';
-import { sleep } from '../helpers.js';
+import { sleep } from '../whatsapp/helpers.js';
 
 async function demo() {
   console.log('🎬 Démonstration du service NordVPN\n');

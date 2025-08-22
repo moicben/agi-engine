@@ -4,7 +4,7 @@
  */
 
 import { EventEmitter } from 'events';
-import { sleep } from '../helpers.js';
+import { sleep } from '../whatsapp/helpers.js';
 
 export class NordVPNMonitor extends EventEmitter {
   constructor(config) {

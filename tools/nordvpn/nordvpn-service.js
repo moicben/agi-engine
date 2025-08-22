@@ -3,8 +3,8 @@
  * Supporte: Local, Serveurs, Instances Cloud, Multi-pays
  */
 
-import { execAsync } from '../helpers.js';
-import { sleep, randomSleep } from '../helpers.js';
+import { execAsync } from '../whatsapp/helpers.js';
+import { sleep, randomSleep } from '../whatsapp/helpers.js';
 import { NordVPNServerManager } from './server-manager.js';
 import { NordVPNMonitor } from './monitor.js';
 import { NordVPNRotator } from './rotator.js';

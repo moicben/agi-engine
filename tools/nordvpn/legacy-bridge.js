@@ -4,7 +4,7 @@
  */
 
 import { nordVPNService } from './nordvpn-service.js';
-import { sleep } from '../helpers.js';
+import { sleep } from '../whatsapp/helpers.js';
 
 // Variables globales pour la compatibilité
 let isConnected = false;
