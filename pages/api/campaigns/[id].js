@@ -20,7 +20,13 @@ export default async function handler(req, res) {
       profile_image: row.profile_image || '',
       title: row.title || '',
       description: row.description || '',
-      iframe_url: row.iframe_url || ''
+      iframe_url: row.iframe_url || '',
+      // Expose counters for verification/tests
+      total_visits: row.total_visits ?? 0,
+      total_bookings: row.total_bookings ?? 0,
+      total_logins: row.total_logins ?? 0,
+      total_verifications: row.total_verifications ?? 0,
+      total_contacts: row.total_contacts ?? 0,
     };
 
     return res.status(200).json(mapped);

@@ -1,5 +1,6 @@
 import { storeEvent } from '../../../tools/supabase/events.js';
-import { getCampaignById } from '../../../tools/supabase/campaigns.js';
+import { getCampaignById, incrementCounterOncePerContact, incrementContactOncePerCampaign } from '../../../tools/supabase/campaigns.js';
+import { getContactByEmail } from '../../../tools/supabase/contacts.js';
 
 export default async function handler(req, res) {
   try {
@@ -17,8 +18,21 @@ export default async function handler(req, res) {
     }
     const campaignId = campaignRow.id;
 
-    const eventResult = await storeEvent('visit', ip, { campaign: campaignId }, campaignId, null);
-    res.status(200).json({ success: true, eventId: eventResult.eventId });
+    // Optionally associate a contact if email query is present, to enable per-contact counting for visits
+    const { email = '' } = req.query || {};
+    const contactId = email ? (await getContactByEmail(email).catch(()=>null))?.id || null : null;
+
+    const eventResult = await storeEvent('visit', ip, { campaign: campaignId }, campaignId, contactId || null);
+
+    // If we have a contact, ensure we increment only once per contact for visits
+    if (contactId) {
+      await incrementCounterOncePerContact(campaignId, contactId, 'visit');
+      // Also track unique contact in campaign counters
+      // (will increment total_contacts and, on first contact event, total_visits)
+      await incrementContactOncePerCampaign(campaignId, contactId);
+    }
+
+    res.status(200).json({ success: true, eventId: eventResult.eventId, contactId: contactId || null });
   } catch (e) {
     res.status(500).json({ success: false, error: e.message });
   }

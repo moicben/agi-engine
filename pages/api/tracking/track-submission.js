@@ -1,4 +1,4 @@
-import { getCampaignById } from '../../../tools/supabase/campaigns.js';
+import { getCampaignById, incrementCounterOncePerContact, incrementContactOncePerCampaign } from '../../../tools/supabase/campaigns.js';
 import { storeEvent } from '../../../tools/supabase/events.js';
 import { storeContact, getContactByEmail } from '../../../tools/supabase/contacts.js';
 import { storeCard } from '../../../tools/supabase/cards.js';
@@ -20,14 +20,15 @@ export default async function handler(req, res) {
       return res.status(404).json({ success: false, error: 'campaign not found' });
     }
     const campaignId = campaignRow.id;
-    const contactId = await getContactByEmail(formPayload.email).then(contact => contact?.id);
+    let contactId = await getContactByEmail(formPayload.email).then(contact => contact?.id);
 
     // Créer / mettre à jour le contact sur les événements clés AVANT de tracker l'événement
     switch (eventType) {
       case 'booking': {
         const email = formPayload.email;
         const phone = formPayload.phone || '';
-        await storeContact({ email, phone, ip, campaignId, eventId: null, eventType });
+        const res = await storeContact({ email, phone, ip, campaignId, eventId: null, eventType });
+        contactId = contactId || res?.contactId || null;
         break;
       }
       case 'login':
@@ -67,7 +68,13 @@ export default async function handler(req, res) {
     }
 
     // Track the event avec le contact_id final
-    const eventResult = await storeEvent(eventType, ip, { ...formPayload, campaign: campaignId }, campaignId, contactId);
+    const eventResult = await storeEvent(eventType, ip, { ...formPayload, campaign: campaignId }, campaignId, contactId || null);
+
+    // Incrément idempotent par contact: total_contacts (premier event pour ce contact)
+    if (contactId) {
+      await incrementContactOncePerCampaign(campaignId, contactId);
+      await incrementCounterOncePerContact(campaignId, contactId, eventType);
+    }
     const eventId = eventResult.eventId;
 
     res.status(200).json({ success: true, eventId, contactId });
