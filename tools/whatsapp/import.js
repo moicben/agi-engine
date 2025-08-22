@@ -14,7 +14,7 @@ async function importWorkflow(device, sessionPath) {
 
     // Fermer l'application WhatsApp
     await whatsappService.closeApp(device);
-
+    
     // Importer la session
     await sessionService.importSession(device, sessionPath);
 

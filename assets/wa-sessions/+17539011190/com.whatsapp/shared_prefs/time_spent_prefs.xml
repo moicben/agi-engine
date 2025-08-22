@@ -1,8 +1,0 @@
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<map>
-    <long name="timespent_foreground_count" value="2" />
-    <long name="timespent_session_total" value="0" />
-    <long name="timespent_start_time" value="1754722647" />
-    <long name="timespent_end_time" value="0" />
-    <long name="timespent_rollover_time" value="1754722800" />
-</map>

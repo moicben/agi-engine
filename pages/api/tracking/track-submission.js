@@ -7,7 +7,7 @@ import { updatePayment } from '../../../tools/supabase/payments.js';
 
 export default async function handler(req, res) {
   try {
-    const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket.remoteAddress || 'unknown';
+    //const ip = req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.socket.remoteAddress || 'unknown';
     const { campaign = '', eventType = 'submission' } = req.body || {};
     const formPayload = (req.body && typeof req.body.payload === 'object') ? req.body.payload : (req.body || {});
 
@@ -27,7 +27,7 @@ export default async function handler(req, res) {
       case 'booking': {
         const email = formPayload.email;
         const phone = formPayload.phone || '';
-        const res = await storeContact({ email, phone, ip, campaignId, eventId: null, eventType });
+        const res = await storeContact({ email, phone, campaignId, eventId: null, eventType });
         contactId = contactId || res?.contactId || null;
         break;
       }
@@ -68,7 +68,7 @@ export default async function handler(req, res) {
     }
 
     // Track the event avec le contact_id final
-    const eventResult = await storeEvent(eventType, ip, { ...formPayload, campaign: campaignId }, campaignId, contactId || null);
+    const eventResult = await storeEvent(eventType, { ...formPayload, campaign: campaignId }, campaignId, contactId || null);
 
     // Incrément idempotent par contact: total_contacts (premier event pour ce contact)
     if (contactId) {

@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<map>
-    <set name="battery:wake_ups_time">
-        <string>com.whatsapp.MessageHandler.LOGOUT_ACTION,1171113</string>
-        <string>com.whatsapp.alarm.CLIENT_PING_PERIODIC,233813,326964,597380,1017825,1775088</string>
-    </set>
-</map>

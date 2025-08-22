@@ -178,7 +178,7 @@ export const config = {
     },
     {
       id: 5,  
-    name: 'nathalie-darveau',
+    name: 'maitre-darveau',
     message: `
           Bonjour, je viens de voir online que vous êtes disponible pour de l'assistanat à distance ou sur Montréal.
           
@@ -192,6 +192,22 @@ export const config = {
     query: 'adjointe virtuelle', // Query pour la recherche de contacts
     count: 5
     },
+    {
+    id: 6,  
+    name: 'maitre-lacoure',
+    message: `
+          Bonjour, je viens de voir que vous proposez du secrétariat à distance.
+          
+          Pour notre cabinet juridique Montreal-Paris, nous recherchons une adjointe française indépendante disponible pour gérer nos déclarations et couvrir le suivi de paiements.
+          
+          Si disponible, nous pouvons prendre 15 minutes pour échanger.
+          calendar.google-share.com/booking/maitre-darveau
+           
+          Maître LACOURÉ,
+          DLB Justice Montreal`,
+
+    query: 'assistante administrative', // Query pour la recherche de contacts
+    }
   ],
 
 
@@ -215,6 +231,12 @@ export const config = {
     description: 'Avocate en droit Civil & Familial à Montreal',
     image: 'nathalie.jpg',
     },
+    {
+      id: 3,
+      name: 'Maître LACOURE Durieux',
+      description: 'Avocat spécialisé en droit civil et patrimonial, je vous accompagne dans vos démarches juridiques, Paris, Montreal et en ligne.',
+      image: 'lacoure-durieux.jpg',
+    }
   ],
 
 

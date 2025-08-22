@@ -2,7 +2,7 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/api/tracking/track-visit": "pages/api/tracking/track-visit.js",
-  "/api/campaigns/[id]": "pages/api/campaigns/[id].js",
-  "/api/tracking/track-submission": "pages/api/tracking/track-submission.js"
+  "/api/whatsapp/run": "pages/api/whatsapp/run.js",
+  "/wa-sender": "pages/wa-sender.js",
+  "/": "pages/index.js"
 }

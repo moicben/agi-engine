@@ -7,17 +7,21 @@ import { deviceService } from './device-service.js';
 import { incrementCampaignCounters } from '../supabase/campaigns.js';
 
 // Fonction principale du workflow
-async function sendWorkflow(campaign, device, options = {}) {
+async function sendWorkflow(campaign, device, count, options = {contactsOverride: null}) {
     try {
         // Service d'envoi WhatsApp
+
+        // Récupérer le nombre de messages à envoyer
+        const countMsg = count ? count : campaign.count;
 
         // Étape 0 : Initialiter les informations du workflow
         console.log(`⚙️  Initialisation du workflow...`);
         console.log(`⚙️ Campagne: ${campaign.name}`);
-        console.log(`⚙️ Device: ${device}`);
-        console.log(`⚙️ Message: ${campaign.message}`);
+        console.log(`⚙️ Device: ${device}`);    
+        const msgPreview = typeof campaign.message === 'string' ? campaign.message.slice(0, 30) : '[message objet]';
+        console.log(`⚙️ Message: ${msgPreview}...`);
         console.log(`⚙️ Query: ${campaign.query}`);
-        console.log(`⚙️ Count: ${campaign.count}`);
+        console.log(`⚙️ Count: ${countMsg}`);
         console.log(`\n`);
 
         // Étape 1 : Connexion adb au device (préventive)
@@ -26,17 +30,12 @@ async function sendWorkflow(campaign, device, options = {}) {
 
         // Étape 2 : Récupérer les nouveaux contacts à traiter (ou simuler)
         let contacts = [];
-        const simulate = options?.simulate === true;
-        if (simulate) {
-            const n = Number((options.contactsOverride && options.contactsOverride.length) ? options.contactsOverride.length : (campaign.count || 0));
-            if (options.contactsOverride && options.contactsOverride.length) {
-                contacts = options.contactsOverride;
-            } else {
-                contacts = Array.from({ length: n }, (_, i) => ({ id: `sim-${i+1}`, phone: `06${String(10000000 + i).slice(-8)}` }));
-            }
-            console.log(`📞 [SIM] ${contacts.length} contacts simulés`);
+        const contactsOverride = options?.contactsOverride;
+        if (contactsOverride) {
+            contacts = contactsOverride;
+            console.log(`📞 ${contacts.length} contacts récupérés`);
         } else {
-            contacts = await getNewContacts(campaign.query, campaign.count);
+            contacts = await getNewContacts(campaign.query, countMsg);
             console.log(`📞 ${contacts.length} nouveaux contacts récupérés`);
         }
 
@@ -57,7 +56,7 @@ async function sendWorkflow(campaign, device, options = {}) {
         }
 
         // Étape 4 : Envoyer les messages à chaque contact séquentiellement
-        let count = 0;
+        let processed = 0;
         let sentCount = 0;
         for (let idx = 0; idx < contacts.length; idx++) {   
             const contact = contacts[idx];
@@ -74,8 +73,8 @@ async function sendWorkflow(campaign, device, options = {}) {
                 }
                 //console.log(`✅ Statut mis à jour pour ${contact.phone}`);
 
-                count++;
-                console.log(`\n⌛️ ${count} / ${contacts.length}\n`);
+                processed++;
+                console.log(`⌛️ ${processed} / ${contacts.length}`);
 
                 if (contactedState === 'contacted') {
                     sentCount++;

@@ -133,35 +133,41 @@ async function discoverBluestacksInstance(startPort = 5555) {
  */
 function getDevice(device) {
   const deviceStr = String(device).trim();
+
+
+  // Si c'est un numéro de device, le retourner tel quel
+  if (!isNaN(deviceStr)) {
+    return deviceStr;
+  }
   
   // Si c'est déjà une adresse IP complète (contient :), la retourner
-  if (deviceStr.includes(':')) {
-    return deviceStr;
-  }
+  // if (deviceStr.includes(':')) {
+  //   return deviceStr;
+  // }
   
   // Si c'est un émulateur (commence par "emulator-" ou "émulateur-"), le retourner tel quel
-  if (deviceStr.match(/^(emulator|émulateur)-\d+$/i)) {
-    return deviceStr;
-  }
+  // if (deviceStr.match(/^(emulator|émulateur)-\d+$/i)) {
+  //   return deviceStr;
+  // }
   
   // Essayer de convertir en entier pour les ports
   const deviceId = parseInt(deviceStr);
   
   // Si ce n'est pas un nombre, retourner tel quel (peut être un nom de device spécial)
-  if (isNaN(deviceId)) {
-    return deviceStr;
-  }
+  // if (isNaN(deviceId)) {
+  //   return deviceStr;
+  // }
   
   // Chercher dans la configuration pour les ports
   const deviceConfig = coreConfig.devicePorts?.find(d => d.id === deviceId);
   
-  if (deviceConfig) {
-    // Trouvé dans la config, utiliser le port configuré
-    return `127.0.0.1:${deviceConfig.port}`;
-  } else {
-    // Pas trouvé dans config, on assume que c'est un port direct
-    return `127.0.0.1:${deviceStr}`;
-  }
+  // if (deviceConfig) {
+  //   // Trouvé dans la config, utiliser le port configuré
+  //   return `127.0.0.1:${deviceConfig.port}`;
+  // } else {
+  //   // Pas trouvé dans config, on assume que c'est un port direct
+  //   return `127.0.0.1:${deviceStr}`;
+  // }
 }
 
 // Se connecter à un device

@@ -1,5 +1,0 @@
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<map>
-    <int name="build_version" value="252077010" />
-    <string name="critical_event_client_config">xpm-integration-failed:1:1758518295402;TemplateMessageHasNullInButtonList:250:1758518385593;TemplateMessageHasMoreThanTwoURLButtons:250:1758518385593;AppMessagingXmppHandler/onLogNotification:1:1758518295402;SpamXmppMethods/noMessagesFromSusBanner:250:1758518385593;WhatsAppLibLoader/loadStartupLibs:1:1758518295402;Mp4Ops/uploadMp4FailureLogs:10:1758518385593;ForcedDatabaseMigrationManager/failedToMigrate:10:1758518385593;TemplateMessageHasMoreThanTenTemplateButtons:250:1758518385593;message-drop-placeholder:1:1758518385593;TemplateMessageHasTemplateButtonWithEmptyText:250:1758518385593;AccountSwitcher/recoverFromFailureToSwitchAccountsDuringAppStartup:1:1758518385593;TemplateMessageHasStaggeredTemplateButtons:250:1758518385593;wamsysJniBridge:1:1758518295402;db-thread-stuck:100:1758518385593;MediaDataV2Error:1000000:1758518385593;AbstractAppShell/maybeReportDecompressionFailure:1:1758518295402;TemplateMessageHasMoreThanOneCallButton:250:1758518385593;</string>
-</map>

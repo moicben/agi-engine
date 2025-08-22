@@ -61,7 +61,7 @@ export async function incrementCampaignCounters(campaignId, increments = {}) {
   // Fetch current values to compute the increment
   const { data: current, error: selErr } = await supabase
     .from('campaigns')
-    .select('id,total_visits,total_bookings,total_logins,total_verifications,total_contacts')
+    .select('id,total_visits,total_bookings,total_logins,total_verifications,total_contacts,total_count,sent_count')
     .eq('id', campaignId)
     .single();
   if (selErr) return { success: false, error: selErr.message };
@@ -77,6 +77,8 @@ export async function incrementCampaignCounters(campaignId, increments = {}) {
   add('total_logins');
   add('total_verifications');
   add('total_contacts');
+  add('total_count');
+  add('sent_count');
 
   if (Object.keys(update).length === 0) return { success: true };
 

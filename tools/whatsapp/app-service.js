@@ -28,11 +28,12 @@ const UI_ELEMENTS = {
   indicatifInput: { x: 380, y: 500 },
   phoneInput: { x: 540, y: 500 },
   nextButton: { x: 540, y: 1850 },
-  failedAccept: { x: 820, y: 1040 },
+  failedAccept: { x: 550, y: 1040 },
+  refuseAutoVerify: { x: 670, y: 1215 },
   wrongNumber: { x: 755, y: 340 },
   smsOptionsButton: { x: 540, y: 1550 },
   confirmSMSButton: { x: 540, y: 1805 },
-  confirmButton: { x: 805, y: 1070 },
+  confirmButton: { x: 810, y: 1040 },
   codeInput: { x: 540, y: 415 },
   permissionsButton: { x: 655, y: 1240 },
   backupButton: { x: 655, y: 1200 },
@@ -54,7 +55,7 @@ const UI_ELEMENTS = {
   nameInput: { x: 540, y: 720 },
   descriptionInput: { x: 540, y: 850 },
   editDescription: { x: 540, y: 320 },
-  saveEditButton: { x: 1000, y: 1840 },
+  saveEditButton: { x: 1000, y: 1740 },
   backButton: { x: 50, y: 100 }
 };
 
@@ -96,35 +97,59 @@ async function setupApp(device) {
       await sleep(2000);
     }
 
-    // Supprimer les données temporaires
-    await executeCommand(device, 'shell rm -rf /sdcard/WhatsApp/');
-    await executeCommand(device, 'shell rm -rf /sdcard/Android/data/com.whatsapp/');
-    await sleep(2000);
+      // Supprimer les données temporaires
+      await executeCommand(device, 'shell rm -rf /sdcard/WhatsApp/');
+      await executeCommand(device, 'shell rm -rf /sdcard/Android/data/com.whatsapp/');
+      await sleep(2000);
 
-}
+  }
+
+    // Normaliser quelques réglages non sensibles (best-effort)
+    try {
+      await executeCommand(device, 'shell settings put system device_name Device-$(date +%s)');
+    } catch (e) {
+      // Ignorer si non supporté
+    }
+  
+
 
   // Installer WhatsApp si APK trouvé, ou si non installé
   if (apkPath) {
-    console.log('📦 Installation de WhatsApp...');
+    //console.log('📦 Installation de WhatsApp...');
     await executeCommand(device, `install "${apkPath}"`);
     await sleep(6000);
+    // Vérifier l'installation
+    const afterInstall = await executeCommand(device, 'shell pm list packages');
+    const afterInstallRaw = afterInstall.stdout || afterInstall;
+    if (!afterInstallRaw.includes('com.whatsapp')) {
+      throw new Error('Installation de WhatsApp échouée.');
+    }
   } else if (!isInstalled) {
     throw new Error('APK WhatsApp introuvable. Placez le fichier à assets/apk/whatsapp.apk ou installez manuellement com.whatsapp sur le device.');
   }
 
-  // Étape 5 : Nettoyer les screenshots
-  console.log(`📸 Nettoyage des screenshots...`);
-  await executeCommand(device, 'shell rm -f /sdcard/*.png');
-  await executeCommand(device, 'shell rm -f /sdcard/DCIM/Screenshots/*.png');
+  // Étape 5 : Nettoyage des données temporaires
+  await executeCommand(device, 'shell rm -rf /sdcard/WhatsApp/');
+  await executeCommand(device, 'shell rm -rf /sdcard/DCIM/Screenshots/');
+  await executeCommand(device, 'shell rm -rf /sdcard/Android/data/com.whatsapp/');
   await sleep(1000);
 
-  // Étape 6 : Donner les permissions de storage
-  await executeCommand(device, 'shell pm grant com.whatsapp android.permission.READ_EXTERNAL_STORAGE');
-  await executeCommand(device, 'shell pm grant com.whatsapp android.permission.WRITE_EXTERNAL_STORAGE');
-  await executeCommand(device, 'shell pm grant com.whatsapp android.permission.CAMERA');
-  await executeCommand(device, 'shell pm grant com.whatsapp android.permission.READ_CONTACTS');
-  await executeCommand(device, 'shell pm grant com.whatsapp android.permission.WRITE_CONTACTS');
-  await sleep(2000);
+  // Étape 6 : Donner les permissions (best-effort)
+  const permissions = [
+    'android.permission.READ_EXTERNAL_STORAGE',
+    'android.permission.WRITE_EXTERNAL_STORAGE',
+    'android.permission.CAMERA',
+    'android.permission.READ_CONTACTS',
+    'android.permission.WRITE_CONTACTS'
+  ];
+  for (const perm of permissions) {
+    try {
+      await executeCommand(device, `shell pm grant com.whatsapp ${perm}`);
+    } catch (e) {
+      // Certaines versions Android restreignent ces permissions via ADB
+    }
+  }
+  await sleep(1500);
 
 
   // (Optionel) Choisir la langue (FR)
@@ -170,35 +195,44 @@ async function launchApp(device) {
   await tap(device, UI_ELEMENTS.firstLanguage.x, UI_ELEMENTS.firstLanguage.y);
   await sleep(3000);
 
-  // Ignorer le ROM (si demandé)
+  // Ignorer le ROM (toujours)
   await tap(device, UI_ELEMENTS.ignoreROM.x, UI_ELEMENTS.ignoreROM.y);
   await sleep(3000);
-
-  // Accepter les conditions si nécessaire -> Momentanément désactivé
-  // await tap(device, UI_ELEMENTS.agreeButton.x, UI_ELEMENTS.agreeButton.y);
-  // await sleep(3500);
 
   // REMOVE MODE LINKED DEVICES (OPTIONAL)
   // await tap(device, UI_ELEMENTS.threeDotButton.x, UI_ELEMENTS.threeDotButton.y);
   // await sleep(2000);
 
-  // // Cliquer sur "Créer un nouveau compte"
+  // Cliquer sur "Créer un nouveau compte" (OPTIONAL)
   // await press(device, 20, 2); // TAB
   // await sleep(500);
   // await press(device, 66); // ESPACE
   // await sleep(2000);
 
-  // Accepter les notifications What's App
-  await tap(device, UI_ELEMENTS.notificationsButton.x, UI_ELEMENTS.notificationsButton.y);
+  // Accepter les conditions What's App
+  await tap(device, UI_ELEMENTS.agreeButton.x, UI_ELEMENTS.agreeButton.y);
   await sleep(4000);
 
-  return true;
+  // [OCR] Vérifier si demande de notification
+  const notifAsk = await ocrService.extractNotifAsk(device);
+  if (notifAsk) {
+    console.log("🔄 Notification détectée, refus...");
+    await tap(device, UI_ELEMENTS.notificationsButton.x, UI_ELEMENTS.notificationsButton.y);
+    await sleep(2000);
+  }
 }
 
 // Fermer l'application WhatsApp
 async function closeApp(device) {
+
+  // Retourner sur le menu du téléphone avec adb
+  await executeCommand(device, 'shell input keyevent 3');
+
+  // Fermer l'application WhatsApp
   await executeCommand(device, 'shell am force-stop com.whatsapp');
-  await sleep(4000);
+
+
+  await sleep(2000);
 }
 
 
@@ -223,12 +257,11 @@ async function inputNewNumber(device, phoneNumber, country) {
 
   // Cliquer sur le champ de sélection du pays
   await tap(device, UI_ELEMENTS.countrySelector.x, UI_ELEMENTS.countrySelector.y);
-  await tap(device, UI_ELEMENTS.countrySelector.x, UI_ELEMENTS.countrySelector.y);
-  await sleep(2000);
+  await sleep(3000);
 
   // Appuyer sur l'icone de recherche
   await tap(device, UI_ELEMENTS.searchInput.x, UI_ELEMENTS.searchInput.y);
-  await sleep(1500);
+  await sleep(2000);
 
   // Rechercher le pays
   //console.log(`🔍 Recherche du pays: ${countryName}`);
@@ -262,7 +295,16 @@ async function confirmNumber(device) {
   console.log(`📨 Demande du code SMS...`);
   // Confirmer que c'est le bon numéro
   await tap(device, UI_ELEMENTS.confirmButton.x, UI_ELEMENTS.confirmButton.y);
-  await sleep(14000);
+  await sleep(3000);
+
+  // [OCR] Vérifier si demande de permission d'accès au SMS
+  const autoVerify = await ocrService.extractAutoVerify(device);
+  if (autoVerify) {
+    console.log("🔄 Auto-verify détecté, refus...");
+    await tap(device, UI_ELEMENTS.refuseAutoVerify.x, UI_ELEMENTS.refuseAutoVerify.y);
+    await sleep(4000);
+  }
+  await sleep(10000);
 }
 
 
@@ -457,11 +499,11 @@ async function goToSettings(device) {
   
   // Fermer l'application WhatsApp
   await executeCommand(device, 'shell am force-stop com.whatsapp');
-  await sleep(5000);
+  await sleep(2000);
 
   // Ouvrir WhatsApp (sans reset)
   await executeCommand(device, 'shell monkey -p com.whatsapp -c android.intent.category.LAUNCHER 1');
-  await sleep(5000);
+  await sleep(4000);
   
   // 1. Cliquer sur les 3 points
   await tap(device, UI_ELEMENTS.threeDotButton.x, UI_ELEMENTS.threeDotButton.y);
@@ -491,37 +533,42 @@ async function goToSettings(device) {
 
 
 // Paramètres du compte WhatsApp
-async function brandAccount(device, brand) {
+async function brandAccount(device, brand, style = 'full') {
   console.log('🔄 Paramètres du compte...');
 
-  // Cliquer sur la notification reçue
-  await tap(device, UI_ELEMENTS.notificationBox.x, UI_ELEMENTS.notificationBox.y);
-  await sleep(5000);
+  if (style === 'full') {
+    // Cliquer sur la notification reçue
+    await tap(device, UI_ELEMENTS.notificationBox.x, UI_ELEMENTS.notificationBox.y);
+    await sleep(5000);
 
-  // Télécharger l'image reçue
-  await tap(device, UI_ELEMENTS.receivedImage.x, UI_ELEMENTS.receivedImage.y);
-  await sleep(2000);
-  await tap(device, UI_ELEMENTS.receivedImage.x, UI_ELEMENTS.receivedImage.y);
-  await sleep(3000);
+    // Télécharger l'image reçue
+    await tap(device, UI_ELEMENTS.receivedImage.x, UI_ELEMENTS.receivedImage.y);
+    await sleep(2000);
+    await tap(device, UI_ELEMENTS.receivedImage.x, UI_ELEMENTS.receivedImage.y);
+    await sleep(3000);
 
-  // Se rendre dans les paramètres du compte
-  await goToSettings(device);
+    // Se rendre dans les paramètres du compte
+    await goToSettings(device);
 
-  // Modifier l'image de profil
-  await tap(device, UI_ELEMENTS.editImageButton.x, UI_ELEMENTS.editImageButton.y);
-  await sleep(3000);
+    // Modifier l'image de profil
+    await tap(device, UI_ELEMENTS.editImageButton.x, UI_ELEMENTS.editImageButton.y);
+    await sleep(3000);
 
-  // Sélectionner la galerie
-  await tap(device, UI_ELEMENTS.galleryMode.x, UI_ELEMENTS.galleryMode.y);
-  await sleep(3000);
+    // Sélectionner la galerie
+    await tap(device, UI_ELEMENTS.galleryMode.x, UI_ELEMENTS.galleryMode.y);
+    await sleep(3000);
 
-  // Sélectionner la première image
-  await tap(device, UI_ELEMENTS.firstImage.x, UI_ELEMENTS.firstImage.y);
-  await sleep(4000);
+    // Sélectionner la première image
+    await tap(device, UI_ELEMENTS.firstImage.x, UI_ELEMENTS.firstImage.y);
+    await sleep(4000);
 
-  // Confirmer l'image
-  await tap(device, UI_ELEMENTS.confirmImage.x, UI_ELEMENTS.confirmImage.y);
-  await sleep(3000);
+    // Confirmer l'image
+    await tap(device, UI_ELEMENTS.confirmImage.x, UI_ELEMENTS.confirmImage.y);
+    await sleep(3000);
+  }
+  else if (style === 'simple') {
+    await goToSettings(device);
+  }
 
   // Modifier le nom 
   await tap(device, UI_ELEMENTS.nameInput.x, UI_ELEMENTS.nameInput.y);
@@ -531,21 +578,21 @@ async function brandAccount(device, brand) {
   await press(device, 67, 25); // SUPPRIMER 25 FOIS
   await sleep(500);
   await writeContent(device, brand.name);
-  await sleep(1000);
+  await sleep(2000);
 
   // Sauvegarder le nom
   await tap(device, UI_ELEMENTS.saveEditButton.x, UI_ELEMENTS.saveEditButton.y);
   await sleep(3000);
 
-  // Modifier la description 
+  // Activer la modification de la description 
   await tap(device, UI_ELEMENTS.descriptionInput.x, UI_ELEMENTS.descriptionInput.y);
-  await sleep(3000);
+  await sleep(2000);
 
   // Modifier la description 
   await tap(device, UI_ELEMENTS.editDescription.x, UI_ELEMENTS.editDescription.y);
   await sleep(3000);
   await writeContent(device, brand.description);
-  await sleep(1000);
+  await sleep(2000);
 
   // Enregistrer les modifications
   await tap(device, UI_ELEMENTS.saveEditButton.x, UI_ELEMENTS.saveEditButton.y);

@@ -6,7 +6,7 @@ import { config } from './config.js';
 import { senderService } from './sender-service.js';
 import { sleep } from './helpers.js';
 
-export async function brandWorkflow(brandConfig, device, masterDevice) {
+export async function brandWorkflow(brandConfig, device, style, masterDevice) {
 
     //adb -s emulator-5554 push avocate-enfant /sdcard/avocate-enfant
     
@@ -15,12 +15,15 @@ export async function brandWorkflow(brandConfig, device, masterDevice) {
         console.log(`⚙️ Initialisation du workflow...`);
         console.log(`⚙️ Device: ${device}`);
         console.log(`⚙️ Brand: ${brandConfig.name}`);
+        console.log(`⚙️ Style: ${style}`);
         console.log(`\n`);
 
         // Étape 1 : Connexion adb au device (préventive)
         console.log(`⚙️ Connexion adb au device...`);
         await deviceService.connectDevice(device);
         await deviceService.connectDevice(masterDevice);
+
+        if (style === 'full') {
 
         // Étape 2 : Récupérer le numéro WhatsApp du compte actif
         console.log(`⚙️ Récupération du numéro WhatsApp...`);
@@ -39,6 +42,11 @@ export async function brandWorkflow(brandConfig, device, masterDevice) {
         await whatsappService.brandAccount(device, brandConfig);
 
         console.log(`✅ Branding terminé pour ${device}`);
+    }
+    else if (style === 'simple') {
+        await whatsappService.brandAccount(device, brandConfig, style);
+        console.log(`✅ Branding terminé pour ${device}`);
+    }
 
     } catch (error) {
         console.error(`❌ Erreur fatale sur ${device}: ${error.message}`);

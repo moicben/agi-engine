@@ -12,14 +12,14 @@ async function clearWorkflow(device) {
         console.log(`🧹 Démarrage du nettoyage pour device ${device}...`);
 
         // Étape 1 : Connexion au device
-        console.log(`🔌 Connexion au device...`);
+        //console.log(`🔌 Connexion au device...`);
         await deviceService.connectDevice(device);
 
         // Étape 2 : Reset de WhatsApp (clear des données, désinstallation, nettoyage)
-        console.log(`🧹 Nettoyage de WhatsApp...`);
+        //console.log(`🧹 Nettoyage de WhatsApp...`);
         await whatsappService.setupApp(device);
 
-        console.log(`✅ Nettoyage terminé pour device ${device}`);
+        //console.log(`✅ Nettoyage terminé pour device ${device}`);
         return { success: true };
 
     } catch (error) {

@@ -209,12 +209,28 @@ async function isPhoneWhatsApp(imagePath, options = {}) {
     return true;
 }
 
+async function extractAutoVerify(device) {
+    const filename = await takeScreenshot(device, `auto_verify_${Date.now()}.png`);
+    const result = await extractRawTextFromImage(filename);
+    //console.log("OCR Auto-verify: ", result.text);
+    return result.text.includes('detect your verification');
+}
+
+async function extractNotifAsk(device) {
+    const filename = await takeScreenshot(device, `notif_ask_${Date.now()}.png`);
+    const result = await extractRawTextFromImage(filename);
+    //console.log("OCR Notif-ask: ", result.text);
+    return result.text.includes('allow WhatsApp to send notifications');
+}
+
 const ocrService = {
     checkSubmission,
     checkWhatsAppStatus,
     extractPhoneFromProfile,
     extractTransferCode,
     getSettingsPosition,
-    isPhoneWhatsApp
+    isPhoneWhatsApp,
+    extractAutoVerify,
+    extractNotifAsk
 }
 export { ocrService };

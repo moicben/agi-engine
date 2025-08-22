@@ -5,6 +5,9 @@
 
 import { executeCommand } from './adb.js';
 import { exec, execSync } from 'child_process';
+import path from 'path';
+import fs from 'fs';
+
 
 /**z
  * Attendre un délai en ms
@@ -197,3 +200,22 @@ export function parseArgs() {
 }
         
 
+
+export async function listLocalSessions(sessionsDir) {
+  const directory = sessionsDir
+  if (!fs.existsSync(directory)) return [];
+  const entries = fs.readdirSync(directory, { withFileTypes: true });
+  return entries
+    .filter((e) => e.isDirectory())
+    .map((e) => path.join(directory, e.name))
+    .sort((a, b) => a.localeCompare(b));
+}
+
+export async function deleteSessionDir(sessionPath) {
+  try {
+    fs.rmSync(sessionPath, { recursive: true, force: true });
+    return true;
+  } catch (_) {
+    return false;
+  }
+}

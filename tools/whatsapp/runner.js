@@ -1,14 +1,28 @@
 // Runner des workflows input, clear, brand, send
 // Exemples d'utilisation:
-// SETUP: node tools/whatsapp/runner.js --workflow=setup --device=emulator-5554
+// SETUP: node tools/whatsapp/runner.js --workflow=setup --device=5554
 // INPUT: node tools/whatsapp/runner.js --workflow=input --device=6075 --country=ca
-// BRAND: node tools/whatsapp/runner.js --workflow=brand --device=emulator-5556 --masterDevice=emulator-5554 --brand=ID_BRAND
-// SEND: node tools/whatsapp/runner.js --workflow=send --device=emulator-5554 --campaign=ID_CAMPAGNE
+// BRAND: node tools/whatsapp/runner.js --workflow=brand --device=5556 --masterDevice=5554 --brand=ID_BRAND
+// SEND: node tools/whatsapp/runner.js --workflow=send --device=5554 --campaign=6 --count=3 --style=simple --session=+6285758033963
 // CLEAR: node tools/whatsapp/runner.js --workflow=clear --device=all
-// TRANSFER: node tools/whatsapp/runner.js --workflow=transfer --device=6085 --target=emulator-5554 --country=ca
-// EXTRACT: node tools/whatsapp/runner.js --workflow=extract --device=emulator-5554
-// UPDATE: node tools/whatsapp/runner.js --workflow=update --device=emulator-5556 --session=+12362061930
-// IMPORT: node tools/whatsapp/runner.js --workflow=import --device=emulator-5556 --session=+12362061930
+// TRANSFER: node tools/whatsapp/runner.js --workflow=transfer --device=6085 --target=5554 --country=ca
+// EXTRACT: node tools/whatsapp/runner.js --workflow=extract --device=5554
+// UPDATE: node tools/whatsapp/runner.js --workflow=update --device=5556 --session=+15197047235
+// IMPORT: node tools/whatsapp/runner.js --workflow=import --device=5556 --session=+6285758033963
+
+
+// SENDER: node tools/whatsapp/runner.js --workflow=send --device=5554 --campaign=6 --count=3 --style=simple --session=+6285758033963
+// CREATE: node tools/whatsapp/runner.js --workflow=create --device=5554 --country=ca
+
+
+
+// LOCAL WORKFLOW :
+//
+// IMPORT SUR MASTER: node tools/whatsapp/runner.js --workflow=import --device=5562 --session=+17052017869
+// UPDATE SUR MASTER: node tools/whatsapp/runner.js --workflow=update --device=5562 --session=+17052017869
+// IMPORTS SLAVES: node tools/whatsapp/runner.js --workflow=import --device=5554,5556,5558,5560,5562 --session=+17052017869
+// SENDS SLAVES: node tools/whatsapp/runner.js --workflow=send --device=5554,5556,5558,5560,5562 --campaign=ID --count=3
+
 
 import { parseArgs, sleep } from './helpers.js';
 import { deviceService } from './device-service.js';
@@ -24,7 +38,13 @@ if (!args.device) {
 }
 
 // Exécuter le workflow pour un device unique
-async function runSingleDevice(workflow, device, country, target, masterDevice, session) {
+async function runSingleDevice(workflow, device, country, target, masterDevice, session, style) {
+
+
+    // TEMPORAIRE
+    device = 'emulator-' + device;
+
+
     try {
         console.log(`🚀 Démarrage du workflow ${workflow} pour device ${device}...`);
 
@@ -46,13 +66,19 @@ async function runSingleDevice(workflow, device, country, target, masterDevice, 
                 console.error(`❌ Erreur: Brand ${args.brand} non trouvé dans la configuration`);
                 process.exit(1);
             }
-            await brandWorkflow(brandConfig, device, masterDevice || 'emulator-5554');
-        } else if (workflow === 'send') {
-            const { sendWorkflow } = await import('./send.js');
+            await brandWorkflow(brandConfig, device, style, masterDevice || 'emulator-5554');
+        } 
+        else if (workflow === 'create') {
+            const { createOrchestrator } = await import('./create.js');
+            await createOrchestrator(device, country, target, masterDevice, session, style);
+        }
+        else if (workflow === 'send') {
+            const { senderOrchestrator } = await import('./sender.js');
             // Récupération et validation de la campagne
             const campaignId = parseInt(args.campaign);
-            if (!args.campaign || Number.isNaN(campaignId)) {
-                console.error('❌ Erreur: Campagne non spécifiée ou invalide, utiliser --campaign=<campaign_id>');
+            const countNum = Number(args.count);
+            if (!args.campaign || Number.isNaN(campaignId) || Number.isNaN(countNum)) {
+                console.error('❌ Erreur: Paramètres invalides. Utiliser --campaign=<campaign_id> et --count=<nombre_de_messages>');
                 process.exit(1);
             }
             const campaign = sendConfig.send.find(c => c.id === campaignId);
@@ -60,7 +86,8 @@ async function runSingleDevice(workflow, device, country, target, masterDevice, 
                 console.error(`❌ Erreur: Campagne ${args.campaign} non trouvée dans la configuration`);
                 process.exit(1);
             }
-            await sendWorkflow(campaign, device);
+            // senderOrchestrator attend un tableau de devices
+            await senderOrchestrator(campaign, [device], countNum, session);
         } else if (workflow === 'setup') {
             const { setupWorkflow } = await import('./setup.js');
             await setupWorkflow(device, country);
@@ -98,29 +125,47 @@ async function run(workflow) {
     const target = args.target;
     const masterDevice = args.masterDevice;
     const session = args.session;
+    const count = args.count;
+    const style = args.style;
     // console.log(`📱 Devices bruts reçus: ${rawDevices.join(', ')}`);
     // console.log(`📱 Devices normalisés: ${devices.join(', ')}`);
     console.log(`\n📱 Device(s): ${devices.join(', ')}`);
-    console.log(`${target ? `🎯 Target: ${target}` : ''}`);
-    console.log(`${country ? `🌍 Pays: ${country}` : ''}`);
-    console.log(`${masterDevice ? `🎯 Master Device: ${masterDevice}` : ''}`);
-    console.log(`${session ? `🔗 Session: ${session}` : ''}`);
+    target && console.log(`🎯 Target: ${target}`);
+    country && console.log(`🌍 Pays: ${country}`);
+    masterDevice && console.log(`🎯 Master Device: ${masterDevice}`);
+    session && console.log(`🔗 Session: ${session}`);
+    count && console.log(`🔄 Nombre de messages: ${count}`);
+    style && console.log(`🔄 Style: ${style}`);
+    console.log(`🔄 Workflow: ${workflow}`);
     
+    // Cas spécial: SEND doit orchestrer tous les devices en une seule passe pour éviter les doublons
+    if (workflow === 'send') {
+        const { senderOrchestrator } = await import('./sender.js');
+        const campaignId = parseInt(args.campaign);
+        const countNum = Number(args.count);
+        if (!args.campaign || Number.isNaN(campaignId) || Number.isNaN(countNum)) {
+            console.error('❌ Erreur: Paramètres invalides. Utiliser --campaign=<campaign_id> et --count=<nombre_de_messages>');
+            process.exit(1);
+        }
+        const campaign = sendConfig.send.find(c => c.id === campaignId);
+        if (!campaign) {
+            console.error(`❌ Erreur: Campagne ${args.campaign} non trouvée dans la configuration`);
+            process.exit(1);
+        }
+        await senderOrchestrator(campaign, devices, countNum, session);
+        return;
+    }
+
     if (devices.length === 1) {
         // Un seul device - exécution simple
-        await runSingleDevice(workflow, devices[0], country, target, masterDevice, session);
+        await runSingleDevice(workflow, devices[0], country, target, masterDevice, session, style);
     } else {
         // Plusieurs devices - exécution en parallèle
         console.log('🔄 Exécution en parallèle...\n');
         
         const promises = devices.map((device, index) => {
-            if (workflow === 'send') {
-                // Délai échelonné pour éviter les doublons d'envoi
-                return sleep(index * 5000).then(() => runSingleDevice(workflow, device, country, target, masterDevice, session));
-            } else {
-                // Délai léger pour les autres workflows
-                return sleep(index * 1000).then(() => runSingleDevice(workflow, device, country, target, masterDevice, session));
-            }
+            // Délai léger pour les autres workflows
+            return sleep(index * 1000).then(() => runSingleDevice(workflow, device, country, target, masterDevice, session, style));
         });
         
         const results = await Promise.allSettled(promises);

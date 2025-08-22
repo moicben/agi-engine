@@ -1,9 +1,0 @@
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<map>
-    <long name="fire-global" value="1755822440906" />
-    <string name="last-used-date">2025-08-22</string>
-    <set name="device-name/sdk_phone_arm64 fire-fcm/23.4.1 android-installer/ kotlin/2.1.0 fire-core-ktx/20.4.2 fire-core/20.4.2 fire-android/24 device-model/generic_arm64 device-brand/Android fire-installations/17.2.0 android-platform/ android-min-sdk/21 android-target-sdk/35 fire-transport/18.1.7">
-        <string>2025-08-22</string>
-    </set>
-    <long name="fire-count" value="1" />
-</map>

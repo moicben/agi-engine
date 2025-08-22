@@ -3,7 +3,7 @@
 import { whatsappService } from './app-service.js';
 import { deviceService } from './device-service.js';
 import vpnIosService from './vpnios-service.js';
-import { smsService } from './sms-service.js';
+import smsService from './sms-service.js';
 import { ocrService } from './ocr-service.js';
 import { randomSleep, sleep } from './helpers.js';
 
@@ -12,7 +12,6 @@ import { randomSleep, sleep } from './helpers.js';
  */
 async function orchestrator(submissionResult, device, country, phoneNumber, recurse) {
     const status = submissionResult.status;
-    let result;
 
     if (status === 'to confirm') {
         console.log('📝 Compte à confirmer...');
@@ -24,30 +23,28 @@ async function orchestrator(submissionResult, device, country, phoneNumber, recu
 
         switch (newStatus) {
             case 'success':
-                result = await handleSuccess('✅ Numéro accepté après confirmation...', phoneNumber, device, country);
-                break;
+                await handleSuccess('✅ Numéro accepté après confirmation...', phoneNumber, device, country);
+                return phoneNumber;
             case 'rejected':
-                result = await handleRejected(device, '❌ Numéro refusé après confirmation...', recurse);
-                break;
+                await handleRejected(device, '❌ Numéro refusé après confirmation...', recurse);
+                return await recurse(device, country);
             case 'frozen':
-                result = await handleFrozen(device, '⚙️  Erreur de connexion...', recurse);
-                break;
+                await handleFrozen(device, '⚙️  Erreur de connexion...', recurse);
+                return await recurse(device, country);
             default:
-                result = await handleRejected(device, '❌ Numéro refusé...', recurse);
-                break;
+                await handleRejected(device, '❌ Numéro refusé...', recurse);
+                return await recurse(device, country);
         }
     } else if (status === 'success') {
-        result = await handleSuccess('✅ Numéro accepté directement...', phoneNumber, device, country);
+        await handleSuccess('✅ Numéro accepté directement...', phoneNumber, device, country);
+        return phoneNumber;
     } else if (status === 'frozen') {
-        result = await handleFrozen(device, '⚙️  Erreur de connexion...', recurse);
+        await handleFrozen(device, '⚙️  Erreur de connexion...', recurse);
+        return await recurse(device, country);
     } else {
-        result = await handleRejected(device, '❌ Numéro refusé...', recurse);
+        await handleRejected(device, '❌ Numéro refusé...', recurse);
+        return await recurse(device, country);
     }
-
-    if (result.action === 'recurse') {
-        await recurse(device, country);
-    }
-    // Pour 'return', on laisse simplement la fonction se terminer
 } 
 
 // Fonctions d'actions décisionnelles de l'orchestrateur
@@ -92,9 +89,12 @@ async function handleFrozen(device, message, recurse) {
 
 
 // Workflow pour entrer un numéro de téléphone
-async function inputWorkflow(device, country) {
-    // Reset VPN pour nouveau workflow/récursion
-    await vpnIosService.resetVPNCycle();
+async function inputWorkflow(device, country, vpn = false) {
+
+    if (vpn) {
+        // Reset VPN pour nouveau workflow/récursion
+        await vpnIosService.resetVPNCycle();
+    }
     
     // Convertir le pays en code pays
     let countryCode = country.toUpperCase();
@@ -113,9 +113,11 @@ async function inputWorkflow(device, country) {
     const phoneNumber = await smsService.getPhoneNumber(countryCode, 25);
     await randomSleep(50, 500);
 
-    // Changer de VPN IOS
-    // await vpnIosService.changeVPN(country);
-    // await randomSleep(3000, 6000);
+    if (vpn) {
+        // Changer de VPN IOS
+        await vpnIosService.changeVPN(country);
+        await randomSleep(3000, 6000);
+    }
     
     // Lancement de WhatsApp
     await whatsappService.launchApp(device);
@@ -123,9 +125,6 @@ async function inputWorkflow(device, country) {
     // Entrer le numéro de téléphone et le pays
     await whatsappService.inputNewNumber(device, phoneNumber, country);
     
-    // Changer de VPN IOS
-    //await vpnIosService.changeVPN(country);
-
     // Confimer le numéro / demander le SMS
     await whatsappService.confirmNumber(device);
 
@@ -133,7 +132,8 @@ async function inputWorkflow(device, country) {
     const submissionResult = await ocrService.checkSubmission(device);
     
     // Déléguer la gestion des cas à l'orchestrateur
-    await orchestrator(submissionResult, device, country, phoneNumber, inputWorkflow);
+    const acceptedNumber = await orchestrator(submissionResult, device, country, phoneNumber, inputWorkflow);
+    return acceptedNumber;
 }
 
 export { inputWorkflow };

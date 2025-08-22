@@ -18,7 +18,7 @@ if (!loaded) {
   } catch {}
 }
 
-export const config = {
+export  const config = {
     // Config pour le LLM
     llm: {
         model: 'gpt-4o-mini',
@@ -90,5 +90,12 @@ export const config = {
     // Paramètres d'exécution divers
     runtime: {
         sessionIdDefault: 'session-test-1',
+    },
+    // Paramètres SMS (routing local/serveur)
+    sms: {
+        remote: {
+            enabled: process.env.SMS_REMOTE_ENABLED === 'true',
+            baseURL: process.env.SMS_REMOTE_BASE_URL,
+        },
     },
 }
